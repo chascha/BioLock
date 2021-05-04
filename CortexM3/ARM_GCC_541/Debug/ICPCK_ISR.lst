@@ -1,0 +1,2021 @@
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ICPCK_ISR.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ICPCK_ISR_Interrupt,"ax",%progbits
+  20              		.align	2
+  21              		.global	ICPCK_ISR_Interrupt
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	ICPCK_ISR_Interrupt, %function
+  25              	ICPCK_ISR_Interrupt:
+  26              	.LFB4:
+  27              		.file 1 "Generated_Source\\PSoC5\\ICPCK_ISR.c"
+   1:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/ICPCK_ISR.c **** * File Name: ICPCK_ISR.c  
+   3:Generated_Source\PSoC5/ICPCK_ISR.c **** * Version 1.71
+   4:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+   5:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Description:
+   6:Generated_Source\PSoC5/ICPCK_ISR.c **** *   API for controlling the state of an interrupt.
+   7:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+   8:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+   9:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Note:
+  10:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  11:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+  12:Generated_Source\PSoC5/ICPCK_ISR.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  13:Generated_Source\PSoC5/ICPCK_ISR.c **** * You may use this file only in accordance with the license, terms, conditions, 
+  14:Generated_Source\PSoC5/ICPCK_ISR.c **** * disclaimers, and limitations in the end user license agreement accompanying 
+  15:Generated_Source\PSoC5/ICPCK_ISR.c **** * the software package with which this file was provided.
+  16:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+  17:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  18:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  19:Generated_Source\PSoC5/ICPCK_ISR.c **** #include <cydevice_trm.h>
+  20:Generated_Source\PSoC5/ICPCK_ISR.c **** #include <CyLib.h>
+  21:Generated_Source\PSoC5/ICPCK_ISR.c **** #include <ICPCK_ISR.h>
+  22:Generated_Source\PSoC5/ICPCK_ISR.c **** #include "cyapicallbacks.h"
+  23:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  24:Generated_Source\PSoC5/ICPCK_ISR.c **** #if !defined(ICPCK_ISR__REMOVED) /* Check for removal by optimization */
+  25:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  26:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+  27:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Place your includes, defines and code here 
+  28:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************/
+  29:Generated_Source\PSoC5/ICPCK_ISR.c **** /* `#START ICPCK_ISR_intc` */
+  30:Generated_Source\PSoC5/ICPCK_ISR.c ****     volatile uint8 buttonID;
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 2
+
+
+  31:Generated_Source\PSoC5/ICPCK_ISR.c ****     volatile uint8 FPSID;
+  32:Generated_Source\PSoC5/ICPCK_ISR.c ****     volatile uint8 FPSmPos;
+  33:Generated_Source\PSoC5/ICPCK_ISR.c ****     volatile unsigned int mPos;
+  34:Generated_Source\PSoC5/ICPCK_ISR.c ****     #include "UART.h"
+  35:Generated_Source\PSoC5/ICPCK_ISR.c ****     #include "LCD_I2C_FUNCS.h"
+  36:Generated_Source\PSoC5/ICPCK_ISR.c ****     #include "I2C.h"
+  37:Generated_Source\PSoC5/ICPCK_ISR.c ****     #include "stdio.h"
+  38:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  39:Generated_Source\PSoC5/ICPCK_ISR.c **** /* `#END` */
+  40:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  41:Generated_Source\PSoC5/ICPCK_ISR.c **** #ifndef CYINT_IRQ_BASE
+  42:Generated_Source\PSoC5/ICPCK_ISR.c **** #define CYINT_IRQ_BASE      16
+  43:Generated_Source\PSoC5/ICPCK_ISR.c **** #endif /* CYINT_IRQ_BASE */
+  44:Generated_Source\PSoC5/ICPCK_ISR.c **** #ifndef CYINT_VECT_TABLE
+  45:Generated_Source\PSoC5/ICPCK_ISR.c **** #define CYINT_VECT_TABLE    ((cyisraddress **) CYREG_NVIC_VECT_OFFSET)
+  46:Generated_Source\PSoC5/ICPCK_ISR.c **** #endif /* CYINT_VECT_TABLE */
+  47:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  48:Generated_Source\PSoC5/ICPCK_ISR.c **** /* Declared in startup, used to set unused interrupts to. */
+  49:Generated_Source\PSoC5/ICPCK_ISR.c **** CY_ISR_PROTO(IntDefaultHandler);
+  50:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  51:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  52:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+  53:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_Start
+  54:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+  55:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  56:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+  57:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Set up the interrupt and enable it. This function disables the interrupt, 
+  58:Generated_Source\PSoC5/ICPCK_ISR.c **** *  sets the default interrupt vector, sets the priority from the value in the
+  59:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Design Wide Resources Interrupt Editor, then enables the interrupt to the 
+  60:Generated_Source\PSoC5/ICPCK_ISR.c **** *  interrupt controller.
+  61:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  62:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:  
+  63:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+  64:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  65:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+  66:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+  67:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  68:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+  69:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_Start(void)
+  70:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+  71:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* For all we know the interrupt is active. */
+  72:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_Disable();
+  73:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  74:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Set the ISR to point to the ICPCK_ISR Interrupt. */
+  75:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_SetVector(&ICPCK_ISR_Interrupt);
+  76:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  77:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Set the priority. */
+  78:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_SetPriority((uint8)ICPCK_ISR_INTC_PRIOR_NUMBER);
+  79:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  80:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Enable it. */
+  81:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_Enable();
+  82:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+  83:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  84:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+  85:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+  86:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_StartEx
+  87:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 3
+
+
+  88:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+  89:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+  90:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Sets up the interrupt and enables it. This function disables the interrupt,
+  91:Generated_Source\PSoC5/ICPCK_ISR.c **** *  sets the interrupt vector based on the address passed in, sets the priority 
+  92:Generated_Source\PSoC5/ICPCK_ISR.c **** *  from the value in the Design Wide Resources Interrupt Editor, then enables 
+  93:Generated_Source\PSoC5/ICPCK_ISR.c **** *  the interrupt to the interrupt controller.
+  94:Generated_Source\PSoC5/ICPCK_ISR.c **** *  
+  95:Generated_Source\PSoC5/ICPCK_ISR.c **** *  When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+  96:Generated_Source\PSoC5/ICPCK_ISR.c **** *  used to provide consistent definition across compilers:
+  97:Generated_Source\PSoC5/ICPCK_ISR.c **** *  
+  98:Generated_Source\PSoC5/ICPCK_ISR.c **** *  Function definition example:
+  99:Generated_Source\PSoC5/ICPCK_ISR.c **** *   CY_ISR(MyISR)
+ 100:Generated_Source\PSoC5/ICPCK_ISR.c **** *   {
+ 101:Generated_Source\PSoC5/ICPCK_ISR.c **** *   }
+ 102:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Function prototype example:
+ 103:Generated_Source\PSoC5/ICPCK_ISR.c **** *   CY_ISR_PROTO(MyISR);
+ 104:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 105:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:  
+ 106:Generated_Source\PSoC5/ICPCK_ISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 107:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 108:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 109:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 110:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 111:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 112:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_StartEx(cyisraddress address)
+ 113:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 114:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* For all we know the interrupt is active. */
+ 115:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_Disable();
+ 116:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 117:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Set the ISR to point to the ICPCK_ISR Interrupt. */
+ 118:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_SetVector(address);
+ 119:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 120:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Set the priority. */
+ 121:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_SetPriority((uint8)ICPCK_ISR_INTC_PRIOR_NUMBER);
+ 122:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 123:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Enable it. */
+ 124:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_Enable();
+ 125:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 126:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 127:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 128:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 129:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_Stop
+ 130:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 131:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 132:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 133:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Disables and removes the interrupt.
+ 134:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 135:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:  
+ 136:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 137:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 138:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 139:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 140:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 141:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 142:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_Stop(void)
+ 143:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 144:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Disable this interrupt. */
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 4
+
+
+ 145:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_Disable();
+ 146:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 147:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Set the ISR to point to the passive one. */
+ 148:Generated_Source\PSoC5/ICPCK_ISR.c ****     ICPCK_ISR_SetVector(&IntDefaultHandler);
+ 149:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 150:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 151:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 152:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 153:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_Interrupt
+ 154:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 155:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 156:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 157:Generated_Source\PSoC5/ICPCK_ISR.c **** *   The default Interrupt Service Routine for ICPCK_ISR.
+ 158:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 159:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Add custom code between the coments to keep the next version of this file
+ 160:Generated_Source\PSoC5/ICPCK_ISR.c **** *   from over writting your code.
+ 161:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 162:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:  
+ 163:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 164:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 165:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 166:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 167:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 168:Generated_Source\PSoC5/ICPCK_ISR.c **** CY_ISR(ICPCK_ISR_Interrupt)
+ 169:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+  28              		.loc 1 169 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+ 170:Generated_Source\PSoC5/ICPCK_ISR.c ****     #ifdef ICPCK_ISR_INTERRUPT_INTERRUPT_CALLBACK
+ 171:Generated_Source\PSoC5/ICPCK_ISR.c ****         ICPCK_ISR_Interrupt_InterruptCallback();
+ 172:Generated_Source\PSoC5/ICPCK_ISR.c ****     #endif /* ICPCK_ISR_INTERRUPT_INTERRUPT_CALLBACK */ 
+ 173:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 174:Generated_Source\PSoC5/ICPCK_ISR.c ****     /*  Place your Interrupt code here. */
+ 175:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* `#START ICPCK_ISR_Interrupt` */
+ 176:Generated_Source\PSoC5/ICPCK_ISR.c ****     if(buttonID == 10)
+  36              		.loc 1 176 0
+  37 0002 084B     		ldr	r3, .L4
+  38 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  39 0006 DBB2     		uxtb	r3, r3
+  40 0008 0A2B     		cmp	r3, #10
+  41 000a 02D1     		bne	.L2
+ 177:Generated_Source\PSoC5/ICPCK_ISR.c ****     {
+ 178:Generated_Source\PSoC5/ICPCK_ISR.c ****         buttonID = 0;   
+  42              		.loc 1 178 0
+  43 000c 0022     		movs	r2, #0
+  44 000e 054B     		ldr	r3, .L4
+  45 0010 1A70     		strb	r2, [r3]
+  46              	.L2:
+ 179:Generated_Source\PSoC5/ICPCK_ISR.c ****     }
+ 180:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 181:Generated_Source\PSoC5/ICPCK_ISR.c ****     buttonID++;
+  47              		.loc 1 181 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 5
+
+
+  48 0012 044A     		ldr	r2, .L4
+  49 0014 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  50 0016 0133     		adds	r3, r3, #1
+  51 0018 DBB2     		uxtb	r3, r3
+  52 001a 1370     		strb	r3, [r2]
+ 182:Generated_Source\PSoC5/ICPCK_ISR.c ****     I2C_Start();
+  53              		.loc 1 182 0
+  54 001c FFF7FEFF 		bl	I2C_Start
+  55              	.LVL0:
+  56 0020 08BD     		pop	{r3, pc}
+  57              	.L5:
+  58 0022 00BF     		.align	2
+  59              	.L4:
+  60 0024 00000000 		.word	buttonID
+  61              		.cfi_endproc
+  62              	.LFE4:
+  63              		.size	ICPCK_ISR_Interrupt, .-ICPCK_ISR_Interrupt
+  64              		.section	.text.ICPCK_ISR_SetVector,"ax",%progbits
+  65              		.align	2
+  66              		.global	ICPCK_ISR_SetVector
+  67              		.thumb
+  68              		.thumb_func
+  69              		.type	ICPCK_ISR_SetVector, %function
+  70              	ICPCK_ISR_SetVector:
+  71              	.LFB5:
+ 183:Generated_Source\PSoC5/ICPCK_ISR.c ****     
+ 184:Generated_Source\PSoC5/ICPCK_ISR.c ****     
+ 185:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* `#END` */
+ 186:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 187:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 188:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 189:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 190:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_SetVector
+ 191:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 192:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 193:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 194:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Change the ISR vector for the Interrupt. Note calling ICPCK_ISR_Start
+ 195:Generated_Source\PSoC5/ICPCK_ISR.c **** *   will override any effect this method would have had. To set the vector 
+ 196:Generated_Source\PSoC5/ICPCK_ISR.c **** *   before the component has been started use ICPCK_ISR_StartEx instead.
+ 197:Generated_Source\PSoC5/ICPCK_ISR.c **** * 
+ 198:Generated_Source\PSoC5/ICPCK_ISR.c **** *   When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+ 199:Generated_Source\PSoC5/ICPCK_ISR.c **** *   used to provide consistent definition across compilers:
+ 200:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 201:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Function definition example:
+ 202:Generated_Source\PSoC5/ICPCK_ISR.c **** *   CY_ISR(MyISR)
+ 203:Generated_Source\PSoC5/ICPCK_ISR.c **** *   {
+ 204:Generated_Source\PSoC5/ICPCK_ISR.c **** *   }
+ 205:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 206:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Function prototype example:
+ 207:Generated_Source\PSoC5/ICPCK_ISR.c **** *     CY_ISR_PROTO(MyISR);
+ 208:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 209:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 210:Generated_Source\PSoC5/ICPCK_ISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 211:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 212:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 213:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 214:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 6
+
+
+ 215:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 216:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_SetVector(cyisraddress address)
+ 217:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+  72              		.loc 1 217 0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76              		@ link register save eliminated.
+  77              	.LVL1:
+ 218:Generated_Source\PSoC5/ICPCK_ISR.c ****     cyisraddress * ramVectorTable;
+ 219:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 220:Generated_Source\PSoC5/ICPCK_ISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+  78              		.loc 1 220 0
+  79 0000 014B     		ldr	r3, .L7
+  80 0002 1B68     		ldr	r3, [r3]
+  81              	.LVL2:
+ 221:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 222:Generated_Source\PSoC5/ICPCK_ISR.c ****     ramVectorTable[CYINT_IRQ_BASE + (uint32)ICPCK_ISR__INTC_NUMBER] = address;
+  82              		.loc 1 222 0
+  83 0004 1865     		str	r0, [r3, #80]
+  84 0006 7047     		bx	lr
+  85              	.L8:
+  86              		.align	2
+  87              	.L7:
+  88 0008 08ED00E0 		.word	-536810232
+  89              		.cfi_endproc
+  90              	.LFE5:
+  91              		.size	ICPCK_ISR_SetVector, .-ICPCK_ISR_SetVector
+  92              		.section	.text.ICPCK_ISR_GetVector,"ax",%progbits
+  93              		.align	2
+  94              		.global	ICPCK_ISR_GetVector
+  95              		.thumb
+  96              		.thumb_func
+  97              		.type	ICPCK_ISR_GetVector, %function
+  98              	ICPCK_ISR_GetVector:
+  99              	.LFB6:
+ 223:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 224:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 225:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 226:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 227:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_GetVector
+ 228:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 229:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 230:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 231:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Gets the "address" of the current ISR vector for the Interrupt.
+ 232:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 233:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 234:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 235:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 236:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 237:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Address of the ISR in the interrupt vector table.
+ 238:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 239:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 240:Generated_Source\PSoC5/ICPCK_ISR.c **** cyisraddress ICPCK_ISR_GetVector(void)
+ 241:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 100              		.loc 1 241 0
+ 101              		.cfi_startproc
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 7
+
+
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              		@ link register save eliminated.
+ 242:Generated_Source\PSoC5/ICPCK_ISR.c ****     cyisraddress * ramVectorTable;
+ 243:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 244:Generated_Source\PSoC5/ICPCK_ISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+ 105              		.loc 1 244 0
+ 106 0000 014B     		ldr	r3, .L10
+ 107 0002 1B68     		ldr	r3, [r3]
+ 108              	.LVL3:
+ 245:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 246:Generated_Source\PSoC5/ICPCK_ISR.c ****     return ramVectorTable[CYINT_IRQ_BASE + (uint32)ICPCK_ISR__INTC_NUMBER];
+ 247:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 109              		.loc 1 247 0
+ 110 0004 186D     		ldr	r0, [r3, #80]
+ 111 0006 7047     		bx	lr
+ 112              	.L11:
+ 113              		.align	2
+ 114              	.L10:
+ 115 0008 08ED00E0 		.word	-536810232
+ 116              		.cfi_endproc
+ 117              	.LFE6:
+ 118              		.size	ICPCK_ISR_GetVector, .-ICPCK_ISR_GetVector
+ 119              		.section	.text.ICPCK_ISR_SetPriority,"ax",%progbits
+ 120              		.align	2
+ 121              		.global	ICPCK_ISR_SetPriority
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.type	ICPCK_ISR_SetPriority, %function
+ 125              	ICPCK_ISR_SetPriority:
+ 126              	.LFB7:
+ 248:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 249:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 250:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 251:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_SetPriority
+ 252:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 253:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 254:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 255:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Sets the Priority of the Interrupt. 
+ 256:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 257:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Note calling ICPCK_ISR_Start or ICPCK_ISR_StartEx will 
+ 258:Generated_Source\PSoC5/ICPCK_ISR.c **** *   override any effect this API would have had. This API should only be called
+ 259:Generated_Source\PSoC5/ICPCK_ISR.c **** *   after ICPCK_ISR_Start or ICPCK_ISR_StartEx has been called. 
+ 260:Generated_Source\PSoC5/ICPCK_ISR.c **** *   To set the initial priority for the component, use the Design-Wide Resources
+ 261:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Interrupt Editor.
+ 262:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 263:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Note This API has no effect on Non-maskable interrupt NMI).
+ 264:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 265:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 266:Generated_Source\PSoC5/ICPCK_ISR.c **** *   priority: Priority of the interrupt, 0 being the highest priority
+ 267:Generated_Source\PSoC5/ICPCK_ISR.c **** *             PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 268:Generated_Source\PSoC5/ICPCK_ISR.c **** *             PSoC 4: Priority is from 0 to 3.
+ 269:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 270:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 271:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 272:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 273:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 8
+
+
+ 274:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_SetPriority(uint8 priority)
+ 275:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 127              		.loc 1 275 0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131              		@ link register save eliminated.
+ 132              	.LVL4:
+ 276:Generated_Source\PSoC5/ICPCK_ISR.c ****     *ICPCK_ISR_INTC_PRIOR = priority << 5;
+ 133              		.loc 1 276 0
+ 134 0000 4001     		lsls	r0, r0, #5
+ 135              	.LVL5:
+ 136 0002 C0B2     		uxtb	r0, r0
+ 137 0004 014B     		ldr	r3, .L13
+ 138 0006 1870     		strb	r0, [r3]
+ 139 0008 7047     		bx	lr
+ 140              	.L14:
+ 141 000a 00BF     		.align	2
+ 142              	.L13:
+ 143 000c 04E400E0 		.word	-536812540
+ 144              		.cfi_endproc
+ 145              	.LFE7:
+ 146              		.size	ICPCK_ISR_SetPriority, .-ICPCK_ISR_SetPriority
+ 147              		.section	.text.ICPCK_ISR_GetPriority,"ax",%progbits
+ 148              		.align	2
+ 149              		.global	ICPCK_ISR_GetPriority
+ 150              		.thumb
+ 151              		.thumb_func
+ 152              		.type	ICPCK_ISR_GetPriority, %function
+ 153              	ICPCK_ISR_GetPriority:
+ 154              	.LFB8:
+ 277:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 278:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 279:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 280:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 281:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_GetPriority
+ 282:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 283:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 284:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 285:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Gets the Priority of the Interrupt.
+ 286:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 287:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 288:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 289:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 290:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 291:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Priority of the interrupt, 0 being the highest priority
+ 292:Generated_Source\PSoC5/ICPCK_ISR.c **** *    PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 293:Generated_Source\PSoC5/ICPCK_ISR.c **** *    PSoC 4: Priority is from 0 to 3.
+ 294:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 295:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 296:Generated_Source\PSoC5/ICPCK_ISR.c **** uint8 ICPCK_ISR_GetPriority(void)
+ 297:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 155              		.loc 1 297 0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159              		@ link register save eliminated.
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 9
+
+
+ 298:Generated_Source\PSoC5/ICPCK_ISR.c ****     uint8 priority;
+ 299:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 300:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 301:Generated_Source\PSoC5/ICPCK_ISR.c ****     priority = *ICPCK_ISR_INTC_PRIOR >> 5;
+ 160              		.loc 1 301 0
+ 161 0000 014B     		ldr	r3, .L16
+ 162 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 163              	.LVL6:
+ 302:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 303:Generated_Source\PSoC5/ICPCK_ISR.c ****     return priority;
+ 304:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 164              		.loc 1 304 0
+ 165 0004 4009     		lsrs	r0, r0, #5
+ 166              	.LVL7:
+ 167 0006 7047     		bx	lr
+ 168              	.L17:
+ 169              		.align	2
+ 170              	.L16:
+ 171 0008 04E400E0 		.word	-536812540
+ 172              		.cfi_endproc
+ 173              	.LFE8:
+ 174              		.size	ICPCK_ISR_GetPriority, .-ICPCK_ISR_GetPriority
+ 175              		.section	.text.ICPCK_ISR_Enable,"ax",%progbits
+ 176              		.align	2
+ 177              		.global	ICPCK_ISR_Enable
+ 178              		.thumb
+ 179              		.thumb_func
+ 180              		.type	ICPCK_ISR_Enable, %function
+ 181              	ICPCK_ISR_Enable:
+ 182              	.LFB9:
+ 305:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 306:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 307:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 308:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_Enable
+ 309:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 310:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 311:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 312:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Enables the interrupt to the interrupt controller. Do not call this function
+ 313:Generated_Source\PSoC5/ICPCK_ISR.c **** *   unless ISR_Start() has been called or the functionality of the ISR_Start() 
+ 314:Generated_Source\PSoC5/ICPCK_ISR.c **** *   function, which sets the vector and the priority, has been called.
+ 315:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 316:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 317:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 318:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 319:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 320:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 321:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 322:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 323:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_Enable(void)
+ 324:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 183              		.loc 1 324 0
+ 184              		.cfi_startproc
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187              		@ link register save eliminated.
+ 325:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Enable the general interrupt. */
+ 326:Generated_Source\PSoC5/ICPCK_ISR.c ****     *ICPCK_ISR_INTC_SET_EN = ICPCK_ISR__INTC_MASK;
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 10
+
+
+ 188              		.loc 1 326 0
+ 189 0000 1022     		movs	r2, #16
+ 190 0002 014B     		ldr	r3, .L19
+ 191 0004 1A60     		str	r2, [r3]
+ 192 0006 7047     		bx	lr
+ 193              	.L20:
+ 194              		.align	2
+ 195              	.L19:
+ 196 0008 00E100E0 		.word	-536813312
+ 197              		.cfi_endproc
+ 198              	.LFE9:
+ 199              		.size	ICPCK_ISR_Enable, .-ICPCK_ISR_Enable
+ 200              		.section	.text.ICPCK_ISR_GetState,"ax",%progbits
+ 201              		.align	2
+ 202              		.global	ICPCK_ISR_GetState
+ 203              		.thumb
+ 204              		.thumb_func
+ 205              		.type	ICPCK_ISR_GetState, %function
+ 206              	ICPCK_ISR_GetState:
+ 207              	.LFB10:
+ 327:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 328:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 329:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 330:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 331:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_GetState
+ 332:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 333:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 334:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 335:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Gets the state (enabled, disabled) of the Interrupt.
+ 336:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 337:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 338:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 339:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 340:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 341:Generated_Source\PSoC5/ICPCK_ISR.c **** *   1 if enabled, 0 if disabled.
+ 342:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 343:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 344:Generated_Source\PSoC5/ICPCK_ISR.c **** uint8 ICPCK_ISR_GetState(void)
+ 345:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 208              		.loc 1 345 0
+ 209              		.cfi_startproc
+ 210              		@ args = 0, pretend = 0, frame = 0
+ 211              		@ frame_needed = 0, uses_anonymous_args = 0
+ 212              		@ link register save eliminated.
+ 346:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Get the state of the general interrupt. */
+ 347:Generated_Source\PSoC5/ICPCK_ISR.c ****     return ((*ICPCK_ISR_INTC_SET_EN & (uint32)ICPCK_ISR__INTC_MASK) != 0u) ? 1u:0u;
+ 213              		.loc 1 347 0
+ 214 0000 044B     		ldr	r3, .L24
+ 215 0002 1B68     		ldr	r3, [r3]
+ 216 0004 13F0100F 		tst	r3, #16
+ 217 0008 01D0     		beq	.L23
+ 218 000a 0120     		movs	r0, #1
+ 219 000c 7047     		bx	lr
+ 220              	.L23:
+ 221 000e 0020     		movs	r0, #0
+ 348:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 222              		.loc 1 348 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 11
+
+
+ 223 0010 7047     		bx	lr
+ 224              	.L25:
+ 225 0012 00BF     		.align	2
+ 226              	.L24:
+ 227 0014 00E100E0 		.word	-536813312
+ 228              		.cfi_endproc
+ 229              	.LFE10:
+ 230              		.size	ICPCK_ISR_GetState, .-ICPCK_ISR_GetState
+ 231              		.section	.text.ICPCK_ISR_Disable,"ax",%progbits
+ 232              		.align	2
+ 233              		.global	ICPCK_ISR_Disable
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.type	ICPCK_ISR_Disable, %function
+ 237              	ICPCK_ISR_Disable:
+ 238              	.LFB11:
+ 349:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 350:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 351:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 352:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_Disable
+ 353:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 354:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 355:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 356:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Disables the Interrupt in the interrupt controller.
+ 357:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 358:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 359:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 360:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 361:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 362:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 363:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 364:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 365:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_Disable(void)
+ 366:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 239              		.loc 1 366 0
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 0
+ 242              		@ frame_needed = 0, uses_anonymous_args = 0
+ 243              		@ link register save eliminated.
+ 367:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Disable the general interrupt. */
+ 368:Generated_Source\PSoC5/ICPCK_ISR.c ****     *ICPCK_ISR_INTC_CLR_EN = ICPCK_ISR__INTC_MASK;
+ 244              		.loc 1 368 0
+ 245 0000 1022     		movs	r2, #16
+ 246 0002 014B     		ldr	r3, .L27
+ 247 0004 1A60     		str	r2, [r3]
+ 248 0006 7047     		bx	lr
+ 249              	.L28:
+ 250              		.align	2
+ 251              	.L27:
+ 252 0008 80E100E0 		.word	-536813184
+ 253              		.cfi_endproc
+ 254              	.LFE11:
+ 255              		.size	ICPCK_ISR_Disable, .-ICPCK_ISR_Disable
+ 256              		.section	.text.ICPCK_ISR_Start,"ax",%progbits
+ 257              		.align	2
+ 258              		.global	ICPCK_ISR_Start
+ 259              		.thumb
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 12
+
+
+ 260              		.thumb_func
+ 261              		.type	ICPCK_ISR_Start, %function
+ 262              	ICPCK_ISR_Start:
+ 263              	.LFB1:
+  70:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* For all we know the interrupt is active. */
+ 264              		.loc 1 70 0
+ 265              		.cfi_startproc
+ 266              		@ args = 0, pretend = 0, frame = 0
+ 267              		@ frame_needed = 0, uses_anonymous_args = 0
+ 268 0000 08B5     		push	{r3, lr}
+ 269              		.cfi_def_cfa_offset 8
+ 270              		.cfi_offset 3, -8
+ 271              		.cfi_offset 14, -4
+  72:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 272              		.loc 1 72 0
+ 273 0002 FFF7FEFF 		bl	ICPCK_ISR_Disable
+ 274              	.LVL8:
+  75:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 275              		.loc 1 75 0
+ 276 0006 0448     		ldr	r0, .L31
+ 277 0008 FFF7FEFF 		bl	ICPCK_ISR_SetVector
+ 278              	.LVL9:
+  78:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 279              		.loc 1 78 0
+ 280 000c 0720     		movs	r0, #7
+ 281 000e FFF7FEFF 		bl	ICPCK_ISR_SetPriority
+ 282              	.LVL10:
+  81:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 283              		.loc 1 81 0
+ 284 0012 FFF7FEFF 		bl	ICPCK_ISR_Enable
+ 285              	.LVL11:
+ 286 0016 08BD     		pop	{r3, pc}
+ 287              	.L32:
+ 288              		.align	2
+ 289              	.L31:
+ 290 0018 00000000 		.word	ICPCK_ISR_Interrupt
+ 291              		.cfi_endproc
+ 292              	.LFE1:
+ 293              		.size	ICPCK_ISR_Start, .-ICPCK_ISR_Start
+ 294              		.section	.text.ICPCK_ISR_StartEx,"ax",%progbits
+ 295              		.align	2
+ 296              		.global	ICPCK_ISR_StartEx
+ 297              		.thumb
+ 298              		.thumb_func
+ 299              		.type	ICPCK_ISR_StartEx, %function
+ 300              	ICPCK_ISR_StartEx:
+ 301              	.LFB2:
+ 113:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* For all we know the interrupt is active. */
+ 302              		.loc 1 113 0
+ 303              		.cfi_startproc
+ 304              		@ args = 0, pretend = 0, frame = 0
+ 305              		@ frame_needed = 0, uses_anonymous_args = 0
+ 306              	.LVL12:
+ 307 0000 10B5     		push	{r4, lr}
+ 308              		.cfi_def_cfa_offset 8
+ 309              		.cfi_offset 4, -8
+ 310              		.cfi_offset 14, -4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 13
+
+
+ 311 0002 0446     		mov	r4, r0
+ 115:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 312              		.loc 1 115 0
+ 313 0004 FFF7FEFF 		bl	ICPCK_ISR_Disable
+ 314              	.LVL13:
+ 118:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 315              		.loc 1 118 0
+ 316 0008 2046     		mov	r0, r4
+ 317 000a FFF7FEFF 		bl	ICPCK_ISR_SetVector
+ 318              	.LVL14:
+ 121:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 319              		.loc 1 121 0
+ 320 000e 0720     		movs	r0, #7
+ 321 0010 FFF7FEFF 		bl	ICPCK_ISR_SetPriority
+ 322              	.LVL15:
+ 124:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 323              		.loc 1 124 0
+ 324 0014 FFF7FEFF 		bl	ICPCK_ISR_Enable
+ 325              	.LVL16:
+ 326 0018 10BD     		pop	{r4, pc}
+ 327              		.cfi_endproc
+ 328              	.LFE2:
+ 329              		.size	ICPCK_ISR_StartEx, .-ICPCK_ISR_StartEx
+ 330 001a 00BF     		.section	.text.ICPCK_ISR_Stop,"ax",%progbits
+ 331              		.align	2
+ 332              		.global	ICPCK_ISR_Stop
+ 333              		.thumb
+ 334              		.thumb_func
+ 335              		.type	ICPCK_ISR_Stop, %function
+ 336              	ICPCK_ISR_Stop:
+ 337              	.LFB3:
+ 143:Generated_Source\PSoC5/ICPCK_ISR.c ****     /* Disable this interrupt. */
+ 338              		.loc 1 143 0
+ 339              		.cfi_startproc
+ 340              		@ args = 0, pretend = 0, frame = 0
+ 341              		@ frame_needed = 0, uses_anonymous_args = 0
+ 342 0000 08B5     		push	{r3, lr}
+ 343              		.cfi_def_cfa_offset 8
+ 344              		.cfi_offset 3, -8
+ 345              		.cfi_offset 14, -4
+ 145:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 346              		.loc 1 145 0
+ 347 0002 FFF7FEFF 		bl	ICPCK_ISR_Disable
+ 348              	.LVL17:
+ 148:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 349              		.loc 1 148 0
+ 350 0006 0248     		ldr	r0, .L37
+ 351 0008 FFF7FEFF 		bl	ICPCK_ISR_SetVector
+ 352              	.LVL18:
+ 353 000c 08BD     		pop	{r3, pc}
+ 354              	.L38:
+ 355 000e 00BF     		.align	2
+ 356              	.L37:
+ 357 0010 00000000 		.word	IntDefaultHandler
+ 358              		.cfi_endproc
+ 359              	.LFE3:
+ 360              		.size	ICPCK_ISR_Stop, .-ICPCK_ISR_Stop
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 14
+
+
+ 361              		.section	.text.ICPCK_ISR_SetPending,"ax",%progbits
+ 362              		.align	2
+ 363              		.global	ICPCK_ISR_SetPending
+ 364              		.thumb
+ 365              		.thumb_func
+ 366              		.type	ICPCK_ISR_SetPending, %function
+ 367              	ICPCK_ISR_SetPending:
+ 368              	.LFB12:
+ 369:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 370:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 371:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 372:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 373:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_SetPending
+ 374:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 375:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 376:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 377:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Causes the Interrupt to enter the pending state, a software method of
+ 378:Generated_Source\PSoC5/ICPCK_ISR.c **** *   generating the interrupt.
+ 379:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 380:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 381:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 382:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 383:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 384:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 385:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 386:Generated_Source\PSoC5/ICPCK_ISR.c **** * Side Effects:
+ 387:Generated_Source\PSoC5/ICPCK_ISR.c **** *   If interrupts are enabled and the interrupt is set up properly, the ISR is
+ 388:Generated_Source\PSoC5/ICPCK_ISR.c **** *   entered (depending on the priority of this interrupt and other pending 
+ 389:Generated_Source\PSoC5/ICPCK_ISR.c **** *   interrupts).
+ 390:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 391:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 392:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_SetPending(void)
+ 393:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 369              		.loc 1 393 0
+ 370              		.cfi_startproc
+ 371              		@ args = 0, pretend = 0, frame = 0
+ 372              		@ frame_needed = 0, uses_anonymous_args = 0
+ 373              		@ link register save eliminated.
+ 394:Generated_Source\PSoC5/ICPCK_ISR.c ****     *ICPCK_ISR_INTC_SET_PD = ICPCK_ISR__INTC_MASK;
+ 374              		.loc 1 394 0
+ 375 0000 1022     		movs	r2, #16
+ 376 0002 014B     		ldr	r3, .L40
+ 377 0004 1A60     		str	r2, [r3]
+ 378 0006 7047     		bx	lr
+ 379              	.L41:
+ 380              		.align	2
+ 381              	.L40:
+ 382 0008 00E200E0 		.word	-536813056
+ 383              		.cfi_endproc
+ 384              	.LFE12:
+ 385              		.size	ICPCK_ISR_SetPending, .-ICPCK_ISR_SetPending
+ 386              		.section	.text.ICPCK_ISR_ClearPending,"ax",%progbits
+ 387              		.align	2
+ 388              		.global	ICPCK_ISR_ClearPending
+ 389              		.thumb
+ 390              		.thumb_func
+ 391              		.type	ICPCK_ISR_ClearPending, %function
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 15
+
+
+ 392              	ICPCK_ISR_ClearPending:
+ 393              	.LFB13:
+ 395:Generated_Source\PSoC5/ICPCK_ISR.c **** }
+ 396:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 397:Generated_Source\PSoC5/ICPCK_ISR.c **** 
+ 398:Generated_Source\PSoC5/ICPCK_ISR.c **** /*******************************************************************************
+ 399:Generated_Source\PSoC5/ICPCK_ISR.c **** * Function Name: ICPCK_ISR_ClearPending
+ 400:Generated_Source\PSoC5/ICPCK_ISR.c **** ********************************************************************************
+ 401:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 402:Generated_Source\PSoC5/ICPCK_ISR.c **** * Summary:
+ 403:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Clears a pending interrupt in the interrupt controller.
+ 404:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 405:Generated_Source\PSoC5/ICPCK_ISR.c **** *   Note Some interrupt sources are clear-on-read and require the block 
+ 406:Generated_Source\PSoC5/ICPCK_ISR.c **** *   interrupt/status register to be read/cleared with the appropriate block API 
+ 407:Generated_Source\PSoC5/ICPCK_ISR.c **** *   (GPIO, UART, and so on). Otherwise the ISR will continue to remain in 
+ 408:Generated_Source\PSoC5/ICPCK_ISR.c **** *   pending state even though the interrupt itself is cleared using this API.
+ 409:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 410:Generated_Source\PSoC5/ICPCK_ISR.c **** * Parameters:
+ 411:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 412:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 413:Generated_Source\PSoC5/ICPCK_ISR.c **** * Return:
+ 414:Generated_Source\PSoC5/ICPCK_ISR.c **** *   None
+ 415:Generated_Source\PSoC5/ICPCK_ISR.c **** *
+ 416:Generated_Source\PSoC5/ICPCK_ISR.c **** *******************************************************************************/
+ 417:Generated_Source\PSoC5/ICPCK_ISR.c **** void ICPCK_ISR_ClearPending(void)
+ 418:Generated_Source\PSoC5/ICPCK_ISR.c **** {
+ 394              		.loc 1 418 0
+ 395              		.cfi_startproc
+ 396              		@ args = 0, pretend = 0, frame = 0
+ 397              		@ frame_needed = 0, uses_anonymous_args = 0
+ 398              		@ link register save eliminated.
+ 419:Generated_Source\PSoC5/ICPCK_ISR.c ****     *ICPCK_ISR_INTC_CLR_PD = ICPCK_ISR__INTC_MASK;
+ 399              		.loc 1 419 0
+ 400 0000 1022     		movs	r2, #16
+ 401 0002 014B     		ldr	r3, .L43
+ 402 0004 1A60     		str	r2, [r3]
+ 403 0006 7047     		bx	lr
+ 404              	.L44:
+ 405              		.align	2
+ 406              	.L43:
+ 407 0008 80E200E0 		.word	-536812928
+ 408              		.cfi_endproc
+ 409              	.LFE13:
+ 410              		.size	ICPCK_ISR_ClearPending, .-ICPCK_ISR_ClearPending
+ 411              		.comm	mPos,4,4
+ 412              		.comm	FPSmPos,1,1
+ 413              		.comm	FPSID,1,1
+ 414              		.comm	buttonID,1,1
+ 415              		.text
+ 416              	.Letext0:
+ 417              		.file 2 "Generated_Source\\PSoC5/cytypes.h"
+ 418              		.file 3 "Generated_Source\\PSoC5\\I2C.h"
+ 419              		.section	.debug_info,"",%progbits
+ 420              	.Ldebug_info0:
+ 421 0000 30030000 		.4byte	0x330
+ 422 0004 0400     		.2byte	0x4
+ 423 0006 00000000 		.4byte	.Ldebug_abbrev0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 16
+
+
+ 424 000a 04       		.byte	0x4
+ 425 000b 01       		.uleb128 0x1
+ 426 000c B0000000 		.4byte	.LASF38
+ 427 0010 0C       		.byte	0xc
+ 428 0011 43010000 		.4byte	.LASF39
+ 429 0015 9B010000 		.4byte	.LASF40
+ 430 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 431 001d 00000000 		.4byte	0
+ 432 0021 00000000 		.4byte	.Ldebug_line0
+ 433 0025 02       		.uleb128 0x2
+ 434 0026 04       		.byte	0x4
+ 435 0027 05       		.byte	0x5
+ 436 0028 696E7400 		.ascii	"int\000"
+ 437 002c 03       		.uleb128 0x3
+ 438 002d 04       		.byte	0x4
+ 439 002e 07       		.byte	0x7
+ 440 002f EA010000 		.4byte	.LASF0
+ 441 0033 03       		.uleb128 0x3
+ 442 0034 08       		.byte	0x8
+ 443 0035 05       		.byte	0x5
+ 444 0036 79020000 		.4byte	.LASF1
+ 445 003a 03       		.uleb128 0x3
+ 446 003b 08       		.byte	0x8
+ 447 003c 04       		.byte	0x4
+ 448 003d C6020000 		.4byte	.LASF2
+ 449 0041 03       		.uleb128 0x3
+ 450 0042 01       		.byte	0x1
+ 451 0043 06       		.byte	0x6
+ 452 0044 D2020000 		.4byte	.LASF3
+ 453 0048 03       		.uleb128 0x3
+ 454 0049 01       		.byte	0x1
+ 455 004a 08       		.byte	0x8
+ 456 004b A2000000 		.4byte	.LASF4
+ 457 004f 03       		.uleb128 0x3
+ 458 0050 02       		.byte	0x2
+ 459 0051 05       		.byte	0x5
+ 460 0052 A1020000 		.4byte	.LASF5
+ 461 0056 03       		.uleb128 0x3
+ 462 0057 02       		.byte	0x2
+ 463 0058 07       		.byte	0x7
+ 464 0059 2E000000 		.4byte	.LASF6
+ 465 005d 03       		.uleb128 0x3
+ 466 005e 04       		.byte	0x4
+ 467 005f 05       		.byte	0x5
+ 468 0060 BD020000 		.4byte	.LASF7
+ 469 0064 03       		.uleb128 0x3
+ 470 0065 04       		.byte	0x4
+ 471 0066 07       		.byte	0x7
+ 472 0067 66010000 		.4byte	.LASF8
+ 473 006b 03       		.uleb128 0x3
+ 474 006c 08       		.byte	0x8
+ 475 006d 07       		.byte	0x7
+ 476 006e FF010000 		.4byte	.LASF9
+ 477 0072 03       		.uleb128 0x3
+ 478 0073 04       		.byte	0x4
+ 479 0074 07       		.byte	0x7
+ 480 0075 60020000 		.4byte	.LASF10
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 17
+
+
+ 481 0079 03       		.uleb128 0x3
+ 482 007a 01       		.byte	0x1
+ 483 007b 08       		.byte	0x8
+ 484 007c 87020000 		.4byte	.LASF11
+ 485 0080 04       		.uleb128 0x4
+ 486 0081 04       		.byte	0x4
+ 487 0082 86000000 		.4byte	0x86
+ 488 0086 05       		.uleb128 0x5
+ 489 0087 06       		.uleb128 0x6
+ 490 0088 80010000 		.4byte	.LASF12
+ 491 008c 02       		.byte	0x2
+ 492 008d E701     		.2byte	0x1e7
+ 493 008f 48000000 		.4byte	0x48
+ 494 0093 06       		.uleb128 0x6
+ 495 0094 C0010000 		.4byte	.LASF13
+ 496 0098 02       		.byte	0x2
+ 497 0099 E901     		.2byte	0x1e9
+ 498 009b 64000000 		.4byte	0x64
+ 499 009f 03       		.uleb128 0x3
+ 500 00a0 04       		.byte	0x4
+ 501 00a1 04       		.byte	0x4
+ 502 00a2 9C000000 		.4byte	.LASF14
+ 503 00a6 03       		.uleb128 0x3
+ 504 00a7 08       		.byte	0x8
+ 505 00a8 04       		.byte	0x4
+ 506 00a9 94010000 		.4byte	.LASF15
+ 507 00ad 06       		.uleb128 0x6
+ 508 00ae 3E010000 		.4byte	.LASF16
+ 509 00b2 02       		.byte	0x2
+ 510 00b3 9102     		.2byte	0x291
+ 511 00b5 B9000000 		.4byte	0xb9
+ 512 00b9 07       		.uleb128 0x7
+ 513 00ba 87000000 		.4byte	0x87
+ 514 00be 06       		.uleb128 0x6
+ 515 00bf 00000000 		.4byte	.LASF17
+ 516 00c3 02       		.byte	0x2
+ 517 00c4 9302     		.2byte	0x293
+ 518 00c6 CA000000 		.4byte	0xca
+ 519 00ca 07       		.uleb128 0x7
+ 520 00cb 93000000 		.4byte	0x93
+ 521 00cf 06       		.uleb128 0x6
+ 522 00d0 29020000 		.4byte	.LASF18
+ 523 00d4 02       		.byte	0x2
+ 524 00d5 A302     		.2byte	0x2a3
+ 525 00d7 80000000 		.4byte	0x80
+ 526 00db 08       		.uleb128 0x8
+ 527 00dc 1A000000 		.4byte	.LASF19
+ 528 00e0 01       		.byte	0x1
+ 529 00e1 A8       		.byte	0xa8
+ 530 00e2 00000000 		.4byte	.LFB4
+ 531 00e6 28000000 		.4byte	.LFE4-.LFB4
+ 532 00ea 01       		.uleb128 0x1
+ 533 00eb 9C       		.byte	0x9c
+ 534 00ec FA000000 		.4byte	0xfa
+ 535 00f0 09       		.uleb128 0x9
+ 536 00f1 20000000 		.4byte	.LVL0
+ 537 00f5 28030000 		.4byte	0x328
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 18
+
+
+ 538 00f9 00       		.byte	0
+ 539 00fa 08       		.uleb128 0x8
+ 540 00fb 4C020000 		.4byte	.LASF20
+ 541 00ff 01       		.byte	0x1
+ 542 0100 D8       		.byte	0xd8
+ 543 0101 00000000 		.4byte	.LFB5
+ 544 0105 0C000000 		.4byte	.LFE5-.LFB5
+ 545 0109 01       		.uleb128 0x1
+ 546 010a 9C       		.byte	0x9c
+ 547 010b 2A010000 		.4byte	0x12a
+ 548 010f 0A       		.uleb128 0xa
+ 549 0110 F7010000 		.4byte	.LASF23
+ 550 0114 01       		.byte	0x1
+ 551 0115 D8       		.byte	0xd8
+ 552 0116 CF000000 		.4byte	0xcf
+ 553 011a 01       		.uleb128 0x1
+ 554 011b 50       		.byte	0x50
+ 555 011c 0B       		.uleb128 0xb
+ 556 011d 8C020000 		.4byte	.LASF21
+ 557 0121 01       		.byte	0x1
+ 558 0122 DA       		.byte	0xda
+ 559 0123 2A010000 		.4byte	0x12a
+ 560 0127 01       		.uleb128 0x1
+ 561 0128 53       		.byte	0x53
+ 562 0129 00       		.byte	0
+ 563 012a 04       		.uleb128 0x4
+ 564 012b 04       		.byte	0x4
+ 565 012c CF000000 		.4byte	0xcf
+ 566 0130 0C       		.uleb128 0xc
+ 567 0131 06000000 		.4byte	.LASF25
+ 568 0135 01       		.byte	0x1
+ 569 0136 F0       		.byte	0xf0
+ 570 0137 CF000000 		.4byte	0xcf
+ 571 013b 00000000 		.4byte	.LFB6
+ 572 013f 0C000000 		.4byte	.LFE6-.LFB6
+ 573 0143 01       		.uleb128 0x1
+ 574 0144 9C       		.byte	0x9c
+ 575 0145 57010000 		.4byte	0x157
+ 576 0149 0B       		.uleb128 0xb
+ 577 014a 8C020000 		.4byte	.LASF21
+ 578 014e 01       		.byte	0x1
+ 579 014f F2       		.byte	0xf2
+ 580 0150 2A010000 		.4byte	0x12a
+ 581 0154 01       		.uleb128 0x1
+ 582 0155 53       		.byte	0x53
+ 583 0156 00       		.byte	0
+ 584 0157 0D       		.uleb128 0xd
+ 585 0158 36020000 		.4byte	.LASF22
+ 586 015c 01       		.byte	0x1
+ 587 015d 1201     		.2byte	0x112
+ 588 015f 00000000 		.4byte	.LFB7
+ 589 0163 10000000 		.4byte	.LFE7-.LFB7
+ 590 0167 01       		.uleb128 0x1
+ 591 0168 9C       		.byte	0x9c
+ 592 0169 7E010000 		.4byte	0x17e
+ 593 016d 0E       		.uleb128 0xe
+ 594 016e 8B010000 		.4byte	.LASF24
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 19
+
+
+ 595 0172 01       		.byte	0x1
+ 596 0173 1201     		.2byte	0x112
+ 597 0175 87000000 		.4byte	0x87
+ 598 0179 00000000 		.4byte	.LLST0
+ 599 017d 00       		.byte	0
+ 600 017e 0F       		.uleb128 0xf
+ 601 017f 77000000 		.4byte	.LASF26
+ 602 0183 01       		.byte	0x1
+ 603 0184 2801     		.2byte	0x128
+ 604 0186 87000000 		.4byte	0x87
+ 605 018a 00000000 		.4byte	.LFB8
+ 606 018e 0C000000 		.4byte	.LFE8-.LFB8
+ 607 0192 01       		.uleb128 0x1
+ 608 0193 9C       		.byte	0x9c
+ 609 0194 A9010000 		.4byte	0x1a9
+ 610 0198 10       		.uleb128 0x10
+ 611 0199 8B010000 		.4byte	.LASF24
+ 612 019d 01       		.byte	0x1
+ 613 019e 2A01     		.2byte	0x12a
+ 614 01a0 87000000 		.4byte	0x87
+ 615 01a4 21000000 		.4byte	.LLST1
+ 616 01a8 00       		.byte	0
+ 617 01a9 11       		.uleb128 0x11
+ 618 01aa C7010000 		.4byte	.LASF27
+ 619 01ae 01       		.byte	0x1
+ 620 01af 4301     		.2byte	0x143
+ 621 01b1 00000000 		.4byte	.LFB9
+ 622 01b5 0C000000 		.4byte	.LFE9-.LFB9
+ 623 01b9 01       		.uleb128 0x1
+ 624 01ba 9C       		.byte	0x9c
+ 625 01bb 12       		.uleb128 0x12
+ 626 01bc 16020000 		.4byte	.LASF41
+ 627 01c0 01       		.byte	0x1
+ 628 01c1 5801     		.2byte	0x158
+ 629 01c3 87000000 		.4byte	0x87
+ 630 01c7 00000000 		.4byte	.LFB10
+ 631 01cb 18000000 		.4byte	.LFE10-.LFB10
+ 632 01cf 01       		.uleb128 0x1
+ 633 01d0 9C       		.byte	0x9c
+ 634 01d1 11       		.uleb128 0x11
+ 635 01d2 AB020000 		.4byte	.LASF28
+ 636 01d6 01       		.byte	0x1
+ 637 01d7 6D01     		.2byte	0x16d
+ 638 01d9 00000000 		.4byte	.LFB11
+ 639 01dd 0C000000 		.4byte	.LFE11-.LFB11
+ 640 01e1 01       		.uleb128 0x1
+ 641 01e2 9C       		.byte	0x9c
+ 642 01e3 08       		.uleb128 0x8
+ 643 01e4 69020000 		.4byte	.LASF29
+ 644 01e8 01       		.byte	0x1
+ 645 01e9 45       		.byte	0x45
+ 646 01ea 00000000 		.4byte	.LFB1
+ 647 01ee 1C000000 		.4byte	.LFE1-.LFB1
+ 648 01f2 01       		.uleb128 0x1
+ 649 01f3 9C       		.byte	0x9c
+ 650 01f4 35020000 		.4byte	0x235
+ 651 01f8 09       		.uleb128 0x9
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 20
+
+
+ 652 01f9 06000000 		.4byte	.LVL8
+ 653 01fd D1010000 		.4byte	0x1d1
+ 654 0201 13       		.uleb128 0x13
+ 655 0202 0C000000 		.4byte	.LVL9
+ 656 0206 FA000000 		.4byte	0xfa
+ 657 020a 18020000 		.4byte	0x218
+ 658 020e 14       		.uleb128 0x14
+ 659 020f 01       		.uleb128 0x1
+ 660 0210 50       		.byte	0x50
+ 661 0211 05       		.uleb128 0x5
+ 662 0212 03       		.byte	0x3
+ 663 0213 00000000 		.4byte	ICPCK_ISR_Interrupt
+ 664 0217 00       		.byte	0
+ 665 0218 13       		.uleb128 0x13
+ 666 0219 12000000 		.4byte	.LVL10
+ 667 021d 57010000 		.4byte	0x157
+ 668 0221 2B020000 		.4byte	0x22b
+ 669 0225 14       		.uleb128 0x14
+ 670 0226 01       		.uleb128 0x1
+ 671 0227 50       		.byte	0x50
+ 672 0228 01       		.uleb128 0x1
+ 673 0229 37       		.byte	0x37
+ 674 022a 00       		.byte	0
+ 675 022b 09       		.uleb128 0x9
+ 676 022c 16000000 		.4byte	.LVL11
+ 677 0230 A9010000 		.4byte	0x1a9
+ 678 0234 00       		.byte	0
+ 679 0235 08       		.uleb128 0x8
+ 680 0236 D8010000 		.4byte	.LASF30
+ 681 023a 01       		.byte	0x1
+ 682 023b 70       		.byte	0x70
+ 683 023c 00000000 		.4byte	.LFB2
+ 684 0240 1A000000 		.4byte	.LFE2-.LFB2
+ 685 0244 01       		.uleb128 0x1
+ 686 0245 9C       		.byte	0x9c
+ 687 0246 93020000 		.4byte	0x293
+ 688 024a 15       		.uleb128 0x15
+ 689 024b F7010000 		.4byte	.LASF23
+ 690 024f 01       		.byte	0x1
+ 691 0250 70       		.byte	0x70
+ 692 0251 CF000000 		.4byte	0xcf
+ 693 0255 38000000 		.4byte	.LLST2
+ 694 0259 09       		.uleb128 0x9
+ 695 025a 08000000 		.4byte	.LVL13
+ 696 025e D1010000 		.4byte	0x1d1
+ 697 0262 13       		.uleb128 0x13
+ 698 0263 0E000000 		.4byte	.LVL14
+ 699 0267 FA000000 		.4byte	0xfa
+ 700 026b 76020000 		.4byte	0x276
+ 701 026f 14       		.uleb128 0x14
+ 702 0270 01       		.uleb128 0x1
+ 703 0271 50       		.byte	0x50
+ 704 0272 02       		.uleb128 0x2
+ 705 0273 74       		.byte	0x74
+ 706 0274 00       		.sleb128 0
+ 707 0275 00       		.byte	0
+ 708 0276 13       		.uleb128 0x13
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 21
+
+
+ 709 0277 14000000 		.4byte	.LVL15
+ 710 027b 57010000 		.4byte	0x157
+ 711 027f 89020000 		.4byte	0x289
+ 712 0283 14       		.uleb128 0x14
+ 713 0284 01       		.uleb128 0x1
+ 714 0285 50       		.byte	0x50
+ 715 0286 01       		.uleb128 0x1
+ 716 0287 37       		.byte	0x37
+ 717 0288 00       		.byte	0
+ 718 0289 09       		.uleb128 0x9
+ 719 028a 18000000 		.4byte	.LVL16
+ 720 028e A9010000 		.4byte	0x1a9
+ 721 0292 00       		.byte	0
+ 722 0293 08       		.uleb128 0x8
+ 723 0294 8D000000 		.4byte	.LASF31
+ 724 0298 01       		.byte	0x1
+ 725 0299 8E       		.byte	0x8e
+ 726 029a 00000000 		.4byte	.LFB3
+ 727 029e 14000000 		.4byte	.LFE3-.LFB3
+ 728 02a2 01       		.uleb128 0x1
+ 729 02a3 9C       		.byte	0x9c
+ 730 02a4 BB020000 		.4byte	0x2bb
+ 731 02a8 09       		.uleb128 0x9
+ 732 02a9 06000000 		.4byte	.LVL17
+ 733 02ad D1010000 		.4byte	0x1d1
+ 734 02b1 09       		.uleb128 0x9
+ 735 02b2 0C000000 		.4byte	.LVL18
+ 736 02b6 FA000000 		.4byte	0xfa
+ 737 02ba 00       		.byte	0
+ 738 02bb 11       		.uleb128 0x11
+ 739 02bc 41000000 		.4byte	.LASF32
+ 740 02c0 01       		.byte	0x1
+ 741 02c1 8801     		.2byte	0x188
+ 742 02c3 00000000 		.4byte	.LFB12
+ 743 02c7 0C000000 		.4byte	.LFE12-.LFB12
+ 744 02cb 01       		.uleb128 0x1
+ 745 02cc 9C       		.byte	0x9c
+ 746 02cd 11       		.uleb128 0x11
+ 747 02ce 60000000 		.4byte	.LASF33
+ 748 02d2 01       		.byte	0x1
+ 749 02d3 A101     		.2byte	0x1a1
+ 750 02d5 00000000 		.4byte	.LFB13
+ 751 02d9 0C000000 		.4byte	.LFE13-.LFB13
+ 752 02dd 01       		.uleb128 0x1
+ 753 02de 9C       		.byte	0x9c
+ 754 02df 16       		.uleb128 0x16
+ 755 02e0 DE020000 		.4byte	.LASF34
+ 756 02e4 01       		.byte	0x1
+ 757 02e5 1E       		.byte	0x1e
+ 758 02e6 B9000000 		.4byte	0xb9
+ 759 02ea 05       		.uleb128 0x5
+ 760 02eb 03       		.byte	0x3
+ 761 02ec 00000000 		.4byte	buttonID
+ 762 02f0 16       		.uleb128 0x16
+ 763 02f1 9B020000 		.4byte	.LASF35
+ 764 02f5 01       		.byte	0x1
+ 765 02f6 1F       		.byte	0x1f
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 22
+
+
+ 766 02f7 B9000000 		.4byte	0xb9
+ 767 02fb 05       		.uleb128 0x5
+ 768 02fc 03       		.byte	0x3
+ 769 02fd 00000000 		.4byte	FPSID
+ 770 0301 16       		.uleb128 0x16
+ 771 0302 78010000 		.4byte	.LASF36
+ 772 0306 01       		.byte	0x1
+ 773 0307 20       		.byte	0x20
+ 774 0308 B9000000 		.4byte	0xb9
+ 775 030c 05       		.uleb128 0x5
+ 776 030d 03       		.byte	0x3
+ 777 030e 00000000 		.4byte	FPSmPos
+ 778 0312 16       		.uleb128 0x16
+ 779 0313 86010000 		.4byte	.LASF37
+ 780 0317 01       		.byte	0x1
+ 781 0318 21       		.byte	0x21
+ 782 0319 23030000 		.4byte	0x323
+ 783 031d 05       		.uleb128 0x5
+ 784 031e 03       		.byte	0x3
+ 785 031f 00000000 		.4byte	mPos
+ 786 0323 07       		.uleb128 0x7
+ 787 0324 2C000000 		.4byte	0x2c
+ 788 0328 17       		.uleb128 0x17
+ 789 0329 56000000 		.4byte	.LASF42
+ 790 032d 56000000 		.4byte	.LASF42
+ 791 0331 03       		.byte	0x3
+ 792 0332 93       		.byte	0x93
+ 793 0333 00       		.byte	0
+ 794              		.section	.debug_abbrev,"",%progbits
+ 795              	.Ldebug_abbrev0:
+ 796 0000 01       		.uleb128 0x1
+ 797 0001 11       		.uleb128 0x11
+ 798 0002 01       		.byte	0x1
+ 799 0003 25       		.uleb128 0x25
+ 800 0004 0E       		.uleb128 0xe
+ 801 0005 13       		.uleb128 0x13
+ 802 0006 0B       		.uleb128 0xb
+ 803 0007 03       		.uleb128 0x3
+ 804 0008 0E       		.uleb128 0xe
+ 805 0009 1B       		.uleb128 0x1b
+ 806 000a 0E       		.uleb128 0xe
+ 807 000b 55       		.uleb128 0x55
+ 808 000c 17       		.uleb128 0x17
+ 809 000d 11       		.uleb128 0x11
+ 810 000e 01       		.uleb128 0x1
+ 811 000f 10       		.uleb128 0x10
+ 812 0010 17       		.uleb128 0x17
+ 813 0011 00       		.byte	0
+ 814 0012 00       		.byte	0
+ 815 0013 02       		.uleb128 0x2
+ 816 0014 24       		.uleb128 0x24
+ 817 0015 00       		.byte	0
+ 818 0016 0B       		.uleb128 0xb
+ 819 0017 0B       		.uleb128 0xb
+ 820 0018 3E       		.uleb128 0x3e
+ 821 0019 0B       		.uleb128 0xb
+ 822 001a 03       		.uleb128 0x3
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 23
+
+
+ 823 001b 08       		.uleb128 0x8
+ 824 001c 00       		.byte	0
+ 825 001d 00       		.byte	0
+ 826 001e 03       		.uleb128 0x3
+ 827 001f 24       		.uleb128 0x24
+ 828 0020 00       		.byte	0
+ 829 0021 0B       		.uleb128 0xb
+ 830 0022 0B       		.uleb128 0xb
+ 831 0023 3E       		.uleb128 0x3e
+ 832 0024 0B       		.uleb128 0xb
+ 833 0025 03       		.uleb128 0x3
+ 834 0026 0E       		.uleb128 0xe
+ 835 0027 00       		.byte	0
+ 836 0028 00       		.byte	0
+ 837 0029 04       		.uleb128 0x4
+ 838 002a 0F       		.uleb128 0xf
+ 839 002b 00       		.byte	0
+ 840 002c 0B       		.uleb128 0xb
+ 841 002d 0B       		.uleb128 0xb
+ 842 002e 49       		.uleb128 0x49
+ 843 002f 13       		.uleb128 0x13
+ 844 0030 00       		.byte	0
+ 845 0031 00       		.byte	0
+ 846 0032 05       		.uleb128 0x5
+ 847 0033 15       		.uleb128 0x15
+ 848 0034 00       		.byte	0
+ 849 0035 27       		.uleb128 0x27
+ 850 0036 19       		.uleb128 0x19
+ 851 0037 00       		.byte	0
+ 852 0038 00       		.byte	0
+ 853 0039 06       		.uleb128 0x6
+ 854 003a 16       		.uleb128 0x16
+ 855 003b 00       		.byte	0
+ 856 003c 03       		.uleb128 0x3
+ 857 003d 0E       		.uleb128 0xe
+ 858 003e 3A       		.uleb128 0x3a
+ 859 003f 0B       		.uleb128 0xb
+ 860 0040 3B       		.uleb128 0x3b
+ 861 0041 05       		.uleb128 0x5
+ 862 0042 49       		.uleb128 0x49
+ 863 0043 13       		.uleb128 0x13
+ 864 0044 00       		.byte	0
+ 865 0045 00       		.byte	0
+ 866 0046 07       		.uleb128 0x7
+ 867 0047 35       		.uleb128 0x35
+ 868 0048 00       		.byte	0
+ 869 0049 49       		.uleb128 0x49
+ 870 004a 13       		.uleb128 0x13
+ 871 004b 00       		.byte	0
+ 872 004c 00       		.byte	0
+ 873 004d 08       		.uleb128 0x8
+ 874 004e 2E       		.uleb128 0x2e
+ 875 004f 01       		.byte	0x1
+ 876 0050 3F       		.uleb128 0x3f
+ 877 0051 19       		.uleb128 0x19
+ 878 0052 03       		.uleb128 0x3
+ 879 0053 0E       		.uleb128 0xe
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 24
+
+
+ 880 0054 3A       		.uleb128 0x3a
+ 881 0055 0B       		.uleb128 0xb
+ 882 0056 3B       		.uleb128 0x3b
+ 883 0057 0B       		.uleb128 0xb
+ 884 0058 27       		.uleb128 0x27
+ 885 0059 19       		.uleb128 0x19
+ 886 005a 11       		.uleb128 0x11
+ 887 005b 01       		.uleb128 0x1
+ 888 005c 12       		.uleb128 0x12
+ 889 005d 06       		.uleb128 0x6
+ 890 005e 40       		.uleb128 0x40
+ 891 005f 18       		.uleb128 0x18
+ 892 0060 9742     		.uleb128 0x2117
+ 893 0062 19       		.uleb128 0x19
+ 894 0063 01       		.uleb128 0x1
+ 895 0064 13       		.uleb128 0x13
+ 896 0065 00       		.byte	0
+ 897 0066 00       		.byte	0
+ 898 0067 09       		.uleb128 0x9
+ 899 0068 898201   		.uleb128 0x4109
+ 900 006b 00       		.byte	0
+ 901 006c 11       		.uleb128 0x11
+ 902 006d 01       		.uleb128 0x1
+ 903 006e 31       		.uleb128 0x31
+ 904 006f 13       		.uleb128 0x13
+ 905 0070 00       		.byte	0
+ 906 0071 00       		.byte	0
+ 907 0072 0A       		.uleb128 0xa
+ 908 0073 05       		.uleb128 0x5
+ 909 0074 00       		.byte	0
+ 910 0075 03       		.uleb128 0x3
+ 911 0076 0E       		.uleb128 0xe
+ 912 0077 3A       		.uleb128 0x3a
+ 913 0078 0B       		.uleb128 0xb
+ 914 0079 3B       		.uleb128 0x3b
+ 915 007a 0B       		.uleb128 0xb
+ 916 007b 49       		.uleb128 0x49
+ 917 007c 13       		.uleb128 0x13
+ 918 007d 02       		.uleb128 0x2
+ 919 007e 18       		.uleb128 0x18
+ 920 007f 00       		.byte	0
+ 921 0080 00       		.byte	0
+ 922 0081 0B       		.uleb128 0xb
+ 923 0082 34       		.uleb128 0x34
+ 924 0083 00       		.byte	0
+ 925 0084 03       		.uleb128 0x3
+ 926 0085 0E       		.uleb128 0xe
+ 927 0086 3A       		.uleb128 0x3a
+ 928 0087 0B       		.uleb128 0xb
+ 929 0088 3B       		.uleb128 0x3b
+ 930 0089 0B       		.uleb128 0xb
+ 931 008a 49       		.uleb128 0x49
+ 932 008b 13       		.uleb128 0x13
+ 933 008c 02       		.uleb128 0x2
+ 934 008d 18       		.uleb128 0x18
+ 935 008e 00       		.byte	0
+ 936 008f 00       		.byte	0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 25
+
+
+ 937 0090 0C       		.uleb128 0xc
+ 938 0091 2E       		.uleb128 0x2e
+ 939 0092 01       		.byte	0x1
+ 940 0093 3F       		.uleb128 0x3f
+ 941 0094 19       		.uleb128 0x19
+ 942 0095 03       		.uleb128 0x3
+ 943 0096 0E       		.uleb128 0xe
+ 944 0097 3A       		.uleb128 0x3a
+ 945 0098 0B       		.uleb128 0xb
+ 946 0099 3B       		.uleb128 0x3b
+ 947 009a 0B       		.uleb128 0xb
+ 948 009b 27       		.uleb128 0x27
+ 949 009c 19       		.uleb128 0x19
+ 950 009d 49       		.uleb128 0x49
+ 951 009e 13       		.uleb128 0x13
+ 952 009f 11       		.uleb128 0x11
+ 953 00a0 01       		.uleb128 0x1
+ 954 00a1 12       		.uleb128 0x12
+ 955 00a2 06       		.uleb128 0x6
+ 956 00a3 40       		.uleb128 0x40
+ 957 00a4 18       		.uleb128 0x18
+ 958 00a5 9742     		.uleb128 0x2117
+ 959 00a7 19       		.uleb128 0x19
+ 960 00a8 01       		.uleb128 0x1
+ 961 00a9 13       		.uleb128 0x13
+ 962 00aa 00       		.byte	0
+ 963 00ab 00       		.byte	0
+ 964 00ac 0D       		.uleb128 0xd
+ 965 00ad 2E       		.uleb128 0x2e
+ 966 00ae 01       		.byte	0x1
+ 967 00af 3F       		.uleb128 0x3f
+ 968 00b0 19       		.uleb128 0x19
+ 969 00b1 03       		.uleb128 0x3
+ 970 00b2 0E       		.uleb128 0xe
+ 971 00b3 3A       		.uleb128 0x3a
+ 972 00b4 0B       		.uleb128 0xb
+ 973 00b5 3B       		.uleb128 0x3b
+ 974 00b6 05       		.uleb128 0x5
+ 975 00b7 27       		.uleb128 0x27
+ 976 00b8 19       		.uleb128 0x19
+ 977 00b9 11       		.uleb128 0x11
+ 978 00ba 01       		.uleb128 0x1
+ 979 00bb 12       		.uleb128 0x12
+ 980 00bc 06       		.uleb128 0x6
+ 981 00bd 40       		.uleb128 0x40
+ 982 00be 18       		.uleb128 0x18
+ 983 00bf 9742     		.uleb128 0x2117
+ 984 00c1 19       		.uleb128 0x19
+ 985 00c2 01       		.uleb128 0x1
+ 986 00c3 13       		.uleb128 0x13
+ 987 00c4 00       		.byte	0
+ 988 00c5 00       		.byte	0
+ 989 00c6 0E       		.uleb128 0xe
+ 990 00c7 05       		.uleb128 0x5
+ 991 00c8 00       		.byte	0
+ 992 00c9 03       		.uleb128 0x3
+ 993 00ca 0E       		.uleb128 0xe
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 26
+
+
+ 994 00cb 3A       		.uleb128 0x3a
+ 995 00cc 0B       		.uleb128 0xb
+ 996 00cd 3B       		.uleb128 0x3b
+ 997 00ce 05       		.uleb128 0x5
+ 998 00cf 49       		.uleb128 0x49
+ 999 00d0 13       		.uleb128 0x13
+ 1000 00d1 02       		.uleb128 0x2
+ 1001 00d2 17       		.uleb128 0x17
+ 1002 00d3 00       		.byte	0
+ 1003 00d4 00       		.byte	0
+ 1004 00d5 0F       		.uleb128 0xf
+ 1005 00d6 2E       		.uleb128 0x2e
+ 1006 00d7 01       		.byte	0x1
+ 1007 00d8 3F       		.uleb128 0x3f
+ 1008 00d9 19       		.uleb128 0x19
+ 1009 00da 03       		.uleb128 0x3
+ 1010 00db 0E       		.uleb128 0xe
+ 1011 00dc 3A       		.uleb128 0x3a
+ 1012 00dd 0B       		.uleb128 0xb
+ 1013 00de 3B       		.uleb128 0x3b
+ 1014 00df 05       		.uleb128 0x5
+ 1015 00e0 27       		.uleb128 0x27
+ 1016 00e1 19       		.uleb128 0x19
+ 1017 00e2 49       		.uleb128 0x49
+ 1018 00e3 13       		.uleb128 0x13
+ 1019 00e4 11       		.uleb128 0x11
+ 1020 00e5 01       		.uleb128 0x1
+ 1021 00e6 12       		.uleb128 0x12
+ 1022 00e7 06       		.uleb128 0x6
+ 1023 00e8 40       		.uleb128 0x40
+ 1024 00e9 18       		.uleb128 0x18
+ 1025 00ea 9742     		.uleb128 0x2117
+ 1026 00ec 19       		.uleb128 0x19
+ 1027 00ed 01       		.uleb128 0x1
+ 1028 00ee 13       		.uleb128 0x13
+ 1029 00ef 00       		.byte	0
+ 1030 00f0 00       		.byte	0
+ 1031 00f1 10       		.uleb128 0x10
+ 1032 00f2 34       		.uleb128 0x34
+ 1033 00f3 00       		.byte	0
+ 1034 00f4 03       		.uleb128 0x3
+ 1035 00f5 0E       		.uleb128 0xe
+ 1036 00f6 3A       		.uleb128 0x3a
+ 1037 00f7 0B       		.uleb128 0xb
+ 1038 00f8 3B       		.uleb128 0x3b
+ 1039 00f9 05       		.uleb128 0x5
+ 1040 00fa 49       		.uleb128 0x49
+ 1041 00fb 13       		.uleb128 0x13
+ 1042 00fc 02       		.uleb128 0x2
+ 1043 00fd 17       		.uleb128 0x17
+ 1044 00fe 00       		.byte	0
+ 1045 00ff 00       		.byte	0
+ 1046 0100 11       		.uleb128 0x11
+ 1047 0101 2E       		.uleb128 0x2e
+ 1048 0102 00       		.byte	0
+ 1049 0103 3F       		.uleb128 0x3f
+ 1050 0104 19       		.uleb128 0x19
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 27
+
+
+ 1051 0105 03       		.uleb128 0x3
+ 1052 0106 0E       		.uleb128 0xe
+ 1053 0107 3A       		.uleb128 0x3a
+ 1054 0108 0B       		.uleb128 0xb
+ 1055 0109 3B       		.uleb128 0x3b
+ 1056 010a 05       		.uleb128 0x5
+ 1057 010b 27       		.uleb128 0x27
+ 1058 010c 19       		.uleb128 0x19
+ 1059 010d 11       		.uleb128 0x11
+ 1060 010e 01       		.uleb128 0x1
+ 1061 010f 12       		.uleb128 0x12
+ 1062 0110 06       		.uleb128 0x6
+ 1063 0111 40       		.uleb128 0x40
+ 1064 0112 18       		.uleb128 0x18
+ 1065 0113 9742     		.uleb128 0x2117
+ 1066 0115 19       		.uleb128 0x19
+ 1067 0116 00       		.byte	0
+ 1068 0117 00       		.byte	0
+ 1069 0118 12       		.uleb128 0x12
+ 1070 0119 2E       		.uleb128 0x2e
+ 1071 011a 00       		.byte	0
+ 1072 011b 3F       		.uleb128 0x3f
+ 1073 011c 19       		.uleb128 0x19
+ 1074 011d 03       		.uleb128 0x3
+ 1075 011e 0E       		.uleb128 0xe
+ 1076 011f 3A       		.uleb128 0x3a
+ 1077 0120 0B       		.uleb128 0xb
+ 1078 0121 3B       		.uleb128 0x3b
+ 1079 0122 05       		.uleb128 0x5
+ 1080 0123 27       		.uleb128 0x27
+ 1081 0124 19       		.uleb128 0x19
+ 1082 0125 49       		.uleb128 0x49
+ 1083 0126 13       		.uleb128 0x13
+ 1084 0127 11       		.uleb128 0x11
+ 1085 0128 01       		.uleb128 0x1
+ 1086 0129 12       		.uleb128 0x12
+ 1087 012a 06       		.uleb128 0x6
+ 1088 012b 40       		.uleb128 0x40
+ 1089 012c 18       		.uleb128 0x18
+ 1090 012d 9742     		.uleb128 0x2117
+ 1091 012f 19       		.uleb128 0x19
+ 1092 0130 00       		.byte	0
+ 1093 0131 00       		.byte	0
+ 1094 0132 13       		.uleb128 0x13
+ 1095 0133 898201   		.uleb128 0x4109
+ 1096 0136 01       		.byte	0x1
+ 1097 0137 11       		.uleb128 0x11
+ 1098 0138 01       		.uleb128 0x1
+ 1099 0139 31       		.uleb128 0x31
+ 1100 013a 13       		.uleb128 0x13
+ 1101 013b 01       		.uleb128 0x1
+ 1102 013c 13       		.uleb128 0x13
+ 1103 013d 00       		.byte	0
+ 1104 013e 00       		.byte	0
+ 1105 013f 14       		.uleb128 0x14
+ 1106 0140 8A8201   		.uleb128 0x410a
+ 1107 0143 00       		.byte	0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 28
+
+
+ 1108 0144 02       		.uleb128 0x2
+ 1109 0145 18       		.uleb128 0x18
+ 1110 0146 9142     		.uleb128 0x2111
+ 1111 0148 18       		.uleb128 0x18
+ 1112 0149 00       		.byte	0
+ 1113 014a 00       		.byte	0
+ 1114 014b 15       		.uleb128 0x15
+ 1115 014c 05       		.uleb128 0x5
+ 1116 014d 00       		.byte	0
+ 1117 014e 03       		.uleb128 0x3
+ 1118 014f 0E       		.uleb128 0xe
+ 1119 0150 3A       		.uleb128 0x3a
+ 1120 0151 0B       		.uleb128 0xb
+ 1121 0152 3B       		.uleb128 0x3b
+ 1122 0153 0B       		.uleb128 0xb
+ 1123 0154 49       		.uleb128 0x49
+ 1124 0155 13       		.uleb128 0x13
+ 1125 0156 02       		.uleb128 0x2
+ 1126 0157 17       		.uleb128 0x17
+ 1127 0158 00       		.byte	0
+ 1128 0159 00       		.byte	0
+ 1129 015a 16       		.uleb128 0x16
+ 1130 015b 34       		.uleb128 0x34
+ 1131 015c 00       		.byte	0
+ 1132 015d 03       		.uleb128 0x3
+ 1133 015e 0E       		.uleb128 0xe
+ 1134 015f 3A       		.uleb128 0x3a
+ 1135 0160 0B       		.uleb128 0xb
+ 1136 0161 3B       		.uleb128 0x3b
+ 1137 0162 0B       		.uleb128 0xb
+ 1138 0163 49       		.uleb128 0x49
+ 1139 0164 13       		.uleb128 0x13
+ 1140 0165 3F       		.uleb128 0x3f
+ 1141 0166 19       		.uleb128 0x19
+ 1142 0167 02       		.uleb128 0x2
+ 1143 0168 18       		.uleb128 0x18
+ 1144 0169 00       		.byte	0
+ 1145 016a 00       		.byte	0
+ 1146 016b 17       		.uleb128 0x17
+ 1147 016c 2E       		.uleb128 0x2e
+ 1148 016d 00       		.byte	0
+ 1149 016e 3F       		.uleb128 0x3f
+ 1150 016f 19       		.uleb128 0x19
+ 1151 0170 3C       		.uleb128 0x3c
+ 1152 0171 19       		.uleb128 0x19
+ 1153 0172 6E       		.uleb128 0x6e
+ 1154 0173 0E       		.uleb128 0xe
+ 1155 0174 03       		.uleb128 0x3
+ 1156 0175 0E       		.uleb128 0xe
+ 1157 0176 3A       		.uleb128 0x3a
+ 1158 0177 0B       		.uleb128 0xb
+ 1159 0178 3B       		.uleb128 0x3b
+ 1160 0179 0B       		.uleb128 0xb
+ 1161 017a 00       		.byte	0
+ 1162 017b 00       		.byte	0
+ 1163 017c 00       		.byte	0
+ 1164              		.section	.debug_loc,"",%progbits
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 29
+
+
+ 1165              	.Ldebug_loc0:
+ 1166              	.LLST0:
+ 1167 0000 00000000 		.4byte	.LVL4
+ 1168 0004 02000000 		.4byte	.LVL5
+ 1169 0008 0100     		.2byte	0x1
+ 1170 000a 50       		.byte	0x50
+ 1171 000b 02000000 		.4byte	.LVL5
+ 1172 000f 10000000 		.4byte	.LFE7
+ 1173 0013 0400     		.2byte	0x4
+ 1174 0015 F3       		.byte	0xf3
+ 1175 0016 01       		.uleb128 0x1
+ 1176 0017 50       		.byte	0x50
+ 1177 0018 9F       		.byte	0x9f
+ 1178 0019 00000000 		.4byte	0
+ 1179 001d 00000000 		.4byte	0
+ 1180              	.LLST1:
+ 1181 0021 04000000 		.4byte	.LVL6
+ 1182 0025 06000000 		.4byte	.LVL7
+ 1183 0029 0500     		.2byte	0x5
+ 1184 002b 70       		.byte	0x70
+ 1185 002c 00       		.sleb128 0
+ 1186 002d 35       		.byte	0x35
+ 1187 002e 25       		.byte	0x25
+ 1188 002f 9F       		.byte	0x9f
+ 1189 0030 00000000 		.4byte	0
+ 1190 0034 00000000 		.4byte	0
+ 1191              	.LLST2:
+ 1192 0038 00000000 		.4byte	.LVL12
+ 1193 003c 07000000 		.4byte	.LVL13-1
+ 1194 0040 0100     		.2byte	0x1
+ 1195 0042 50       		.byte	0x50
+ 1196 0043 07000000 		.4byte	.LVL13-1
+ 1197 0047 1A000000 		.4byte	.LFE2
+ 1198 004b 0100     		.2byte	0x1
+ 1199 004d 54       		.byte	0x54
+ 1200 004e 00000000 		.4byte	0
+ 1201 0052 00000000 		.4byte	0
+ 1202              		.section	.debug_aranges,"",%progbits
+ 1203 0000 7C000000 		.4byte	0x7c
+ 1204 0004 0200     		.2byte	0x2
+ 1205 0006 00000000 		.4byte	.Ldebug_info0
+ 1206 000a 04       		.byte	0x4
+ 1207 000b 00       		.byte	0
+ 1208 000c 0000     		.2byte	0
+ 1209 000e 0000     		.2byte	0
+ 1210 0010 00000000 		.4byte	.LFB4
+ 1211 0014 28000000 		.4byte	.LFE4-.LFB4
+ 1212 0018 00000000 		.4byte	.LFB5
+ 1213 001c 0C000000 		.4byte	.LFE5-.LFB5
+ 1214 0020 00000000 		.4byte	.LFB6
+ 1215 0024 0C000000 		.4byte	.LFE6-.LFB6
+ 1216 0028 00000000 		.4byte	.LFB7
+ 1217 002c 10000000 		.4byte	.LFE7-.LFB7
+ 1218 0030 00000000 		.4byte	.LFB8
+ 1219 0034 0C000000 		.4byte	.LFE8-.LFB8
+ 1220 0038 00000000 		.4byte	.LFB9
+ 1221 003c 0C000000 		.4byte	.LFE9-.LFB9
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 30
+
+
+ 1222 0040 00000000 		.4byte	.LFB10
+ 1223 0044 18000000 		.4byte	.LFE10-.LFB10
+ 1224 0048 00000000 		.4byte	.LFB11
+ 1225 004c 0C000000 		.4byte	.LFE11-.LFB11
+ 1226 0050 00000000 		.4byte	.LFB1
+ 1227 0054 1C000000 		.4byte	.LFE1-.LFB1
+ 1228 0058 00000000 		.4byte	.LFB2
+ 1229 005c 1A000000 		.4byte	.LFE2-.LFB2
+ 1230 0060 00000000 		.4byte	.LFB3
+ 1231 0064 14000000 		.4byte	.LFE3-.LFB3
+ 1232 0068 00000000 		.4byte	.LFB12
+ 1233 006c 0C000000 		.4byte	.LFE12-.LFB12
+ 1234 0070 00000000 		.4byte	.LFB13
+ 1235 0074 0C000000 		.4byte	.LFE13-.LFB13
+ 1236 0078 00000000 		.4byte	0
+ 1237 007c 00000000 		.4byte	0
+ 1238              		.section	.debug_ranges,"",%progbits
+ 1239              	.Ldebug_ranges0:
+ 1240 0000 00000000 		.4byte	.LFB4
+ 1241 0004 28000000 		.4byte	.LFE4
+ 1242 0008 00000000 		.4byte	.LFB5
+ 1243 000c 0C000000 		.4byte	.LFE5
+ 1244 0010 00000000 		.4byte	.LFB6
+ 1245 0014 0C000000 		.4byte	.LFE6
+ 1246 0018 00000000 		.4byte	.LFB7
+ 1247 001c 10000000 		.4byte	.LFE7
+ 1248 0020 00000000 		.4byte	.LFB8
+ 1249 0024 0C000000 		.4byte	.LFE8
+ 1250 0028 00000000 		.4byte	.LFB9
+ 1251 002c 0C000000 		.4byte	.LFE9
+ 1252 0030 00000000 		.4byte	.LFB10
+ 1253 0034 18000000 		.4byte	.LFE10
+ 1254 0038 00000000 		.4byte	.LFB11
+ 1255 003c 0C000000 		.4byte	.LFE11
+ 1256 0040 00000000 		.4byte	.LFB1
+ 1257 0044 1C000000 		.4byte	.LFE1
+ 1258 0048 00000000 		.4byte	.LFB2
+ 1259 004c 1A000000 		.4byte	.LFE2
+ 1260 0050 00000000 		.4byte	.LFB3
+ 1261 0054 14000000 		.4byte	.LFE3
+ 1262 0058 00000000 		.4byte	.LFB12
+ 1263 005c 0C000000 		.4byte	.LFE12
+ 1264 0060 00000000 		.4byte	.LFB13
+ 1265 0064 0C000000 		.4byte	.LFE13
+ 1266 0068 00000000 		.4byte	0
+ 1267 006c 00000000 		.4byte	0
+ 1268              		.section	.debug_line,"",%progbits
+ 1269              	.Ldebug_line0:
+ 1270 0000 40010000 		.section	.debug_str,"MS",%progbits,1
+ 1270      02004F00 
+ 1270      00000201 
+ 1270      FB0E0D00 
+ 1270      01010101 
+ 1271              	.LASF17:
+ 1272 0000 72656733 		.ascii	"reg32\000"
+ 1272      3200
+ 1273              	.LASF25:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 31
+
+
+ 1274 0006 49435043 		.ascii	"ICPCK_ISR_GetVector\000"
+ 1274      4B5F4953 
+ 1274      525F4765 
+ 1274      74566563 
+ 1274      746F7200 
+ 1275              	.LASF19:
+ 1276 001a 49435043 		.ascii	"ICPCK_ISR_Interrupt\000"
+ 1276      4B5F4953 
+ 1276      525F496E 
+ 1276      74657272 
+ 1276      75707400 
+ 1277              	.LASF6:
+ 1278 002e 73686F72 		.ascii	"short unsigned int\000"
+ 1278      7420756E 
+ 1278      7369676E 
+ 1278      65642069 
+ 1278      6E7400
+ 1279              	.LASF32:
+ 1280 0041 49435043 		.ascii	"ICPCK_ISR_SetPending\000"
+ 1280      4B5F4953 
+ 1280      525F5365 
+ 1280      7450656E 
+ 1280      64696E67 
+ 1281              	.LASF42:
+ 1282 0056 4932435F 		.ascii	"I2C_Start\000"
+ 1282      53746172 
+ 1282      7400
+ 1283              	.LASF33:
+ 1284 0060 49435043 		.ascii	"ICPCK_ISR_ClearPending\000"
+ 1284      4B5F4953 
+ 1284      525F436C 
+ 1284      65617250 
+ 1284      656E6469 
+ 1285              	.LASF26:
+ 1286 0077 49435043 		.ascii	"ICPCK_ISR_GetPriority\000"
+ 1286      4B5F4953 
+ 1286      525F4765 
+ 1286      74507269 
+ 1286      6F726974 
+ 1287              	.LASF31:
+ 1288 008d 49435043 		.ascii	"ICPCK_ISR_Stop\000"
+ 1288      4B5F4953 
+ 1288      525F5374 
+ 1288      6F7000
+ 1289              	.LASF14:
+ 1290 009c 666C6F61 		.ascii	"float\000"
+ 1290      7400
+ 1291              	.LASF4:
+ 1292 00a2 756E7369 		.ascii	"unsigned char\000"
+ 1292      676E6564 
+ 1292      20636861 
+ 1292      7200
+ 1293              	.LASF38:
+ 1294 00b0 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1294      43313120 
+ 1294      352E342E 
+ 1294      31203230 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 32
+
+
+ 1294      31363036 
+ 1295 00e3 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1295      20726576 
+ 1295      6973696F 
+ 1295      6E203233 
+ 1295      37373135 
+ 1296 0116 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1296      66756E63 
+ 1296      74696F6E 
+ 1296      2D736563 
+ 1296      74696F6E 
+ 1297              	.LASF16:
+ 1298 013e 72656738 		.ascii	"reg8\000"
+ 1298      00
+ 1299              	.LASF39:
+ 1300 0143 47656E65 		.ascii	"Generated_Source\\PSoC5\\ICPCK_ISR.c\000"
+ 1300      72617465 
+ 1300      645F536F 
+ 1300      75726365 
+ 1300      5C50536F 
+ 1301              	.LASF8:
+ 1302 0166 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1302      20756E73 
+ 1302      69676E65 
+ 1302      6420696E 
+ 1302      7400
+ 1303              	.LASF36:
+ 1304 0178 4650536D 		.ascii	"FPSmPos\000"
+ 1304      506F7300 
+ 1305              	.LASF12:
+ 1306 0180 75696E74 		.ascii	"uint8\000"
+ 1306      3800
+ 1307              	.LASF37:
+ 1308 0186 6D506F73 		.ascii	"mPos\000"
+ 1308      00
+ 1309              	.LASF24:
+ 1310 018b 7072696F 		.ascii	"priority\000"
+ 1310      72697479 
+ 1310      00
+ 1311              	.LASF15:
+ 1312 0194 646F7562 		.ascii	"double\000"
+ 1312      6C6500
+ 1313              	.LASF40:
+ 1314 019b 453A5C53 		.ascii	"E:\\SP21\\ECE405\\BioLock\\BioLock.cydsn\000"
+ 1314      5032315C 
+ 1314      45434534 
+ 1314      30355C42 
+ 1314      696F4C6F 
+ 1315              	.LASF13:
+ 1316 01c0 75696E74 		.ascii	"uint32\000"
+ 1316      333200
+ 1317              	.LASF27:
+ 1318 01c7 49435043 		.ascii	"ICPCK_ISR_Enable\000"
+ 1318      4B5F4953 
+ 1318      525F456E 
+ 1318      61626C65 
+ 1318      00
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 33
+
+
+ 1319              	.LASF30:
+ 1320 01d8 49435043 		.ascii	"ICPCK_ISR_StartEx\000"
+ 1320      4B5F4953 
+ 1320      525F5374 
+ 1320      61727445 
+ 1320      7800
+ 1321              	.LASF0:
+ 1322 01ea 756E7369 		.ascii	"unsigned int\000"
+ 1322      676E6564 
+ 1322      20696E74 
+ 1322      00
+ 1323              	.LASF23:
+ 1324 01f7 61646472 		.ascii	"address\000"
+ 1324      65737300 
+ 1325              	.LASF9:
+ 1326 01ff 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1326      206C6F6E 
+ 1326      6720756E 
+ 1326      7369676E 
+ 1326      65642069 
+ 1327              	.LASF41:
+ 1328 0216 49435043 		.ascii	"ICPCK_ISR_GetState\000"
+ 1328      4B5F4953 
+ 1328      525F4765 
+ 1328      74537461 
+ 1328      746500
+ 1329              	.LASF18:
+ 1330 0229 63796973 		.ascii	"cyisraddress\000"
+ 1330      72616464 
+ 1330      72657373 
+ 1330      00
+ 1331              	.LASF22:
+ 1332 0236 49435043 		.ascii	"ICPCK_ISR_SetPriority\000"
+ 1332      4B5F4953 
+ 1332      525F5365 
+ 1332      74507269 
+ 1332      6F726974 
+ 1333              	.LASF20:
+ 1334 024c 49435043 		.ascii	"ICPCK_ISR_SetVector\000"
+ 1334      4B5F4953 
+ 1334      525F5365 
+ 1334      74566563 
+ 1334      746F7200 
+ 1335              	.LASF10:
+ 1336 0260 73697A65 		.ascii	"sizetype\000"
+ 1336      74797065 
+ 1336      00
+ 1337              	.LASF29:
+ 1338 0269 49435043 		.ascii	"ICPCK_ISR_Start\000"
+ 1338      4B5F4953 
+ 1338      525F5374 
+ 1338      61727400 
+ 1339              	.LASF1:
+ 1340 0279 6C6F6E67 		.ascii	"long long int\000"
+ 1340      206C6F6E 
+ 1340      6720696E 
+ 1340      7400
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cctBJds3.s 			page 34
+
+
+ 1341              	.LASF11:
+ 1342 0287 63686172 		.ascii	"char\000"
+ 1342      00
+ 1343              	.LASF21:
+ 1344 028c 72616D56 		.ascii	"ramVectorTable\000"
+ 1344      6563746F 
+ 1344      72546162 
+ 1344      6C6500
+ 1345              	.LASF35:
+ 1346 029b 46505349 		.ascii	"FPSID\000"
+ 1346      4400
+ 1347              	.LASF5:
+ 1348 02a1 73686F72 		.ascii	"short int\000"
+ 1348      7420696E 
+ 1348      7400
+ 1349              	.LASF28:
+ 1350 02ab 49435043 		.ascii	"ICPCK_ISR_Disable\000"
+ 1350      4B5F4953 
+ 1350      525F4469 
+ 1350      7361626C 
+ 1350      6500
+ 1351              	.LASF7:
+ 1352 02bd 6C6F6E67 		.ascii	"long int\000"
+ 1352      20696E74 
+ 1352      00
+ 1353              	.LASF2:
+ 1354 02c6 6C6F6E67 		.ascii	"long double\000"
+ 1354      20646F75 
+ 1354      626C6500 
+ 1355              	.LASF3:
+ 1356 02d2 7369676E 		.ascii	"signed char\000"
+ 1356      65642063 
+ 1356      68617200 
+ 1357              	.LASF34:
+ 1358 02de 62757474 		.ascii	"buttonID\000"
+ 1358      6F6E4944 
+ 1358      00
+ 1359              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

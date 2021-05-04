@@ -1,0 +1,2716 @@
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"CycleISR.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.CycleISR_Interrupt,"ax",%progbits
+  20              		.align	2
+  21              		.global	CycleISR_Interrupt
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	CycleISR_Interrupt, %function
+  25              	CycleISR_Interrupt:
+  26              	.LFB4:
+  27              		.file 1 "Generated_Source\\PSoC5\\CycleISR.c"
+   1:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/CycleISR.c **** * File Name: CycleISR.c  
+   3:Generated_Source\PSoC5/CycleISR.c **** * Version 1.71
+   4:Generated_Source\PSoC5/CycleISR.c **** *
+   5:Generated_Source\PSoC5/CycleISR.c **** *  Description:
+   6:Generated_Source\PSoC5/CycleISR.c **** *   API for controlling the state of an interrupt.
+   7:Generated_Source\PSoC5/CycleISR.c **** *
+   8:Generated_Source\PSoC5/CycleISR.c **** *
+   9:Generated_Source\PSoC5/CycleISR.c **** *  Note:
+  10:Generated_Source\PSoC5/CycleISR.c **** *
+  11:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+  12:Generated_Source\PSoC5/CycleISR.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  13:Generated_Source\PSoC5/CycleISR.c **** * You may use this file only in accordance with the license, terms, conditions, 
+  14:Generated_Source\PSoC5/CycleISR.c **** * disclaimers, and limitations in the end user license agreement accompanying 
+  15:Generated_Source\PSoC5/CycleISR.c **** * the software package with which this file was provided.
+  16:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+  17:Generated_Source\PSoC5/CycleISR.c **** 
+  18:Generated_Source\PSoC5/CycleISR.c **** 
+  19:Generated_Source\PSoC5/CycleISR.c **** #include <cydevice_trm.h>
+  20:Generated_Source\PSoC5/CycleISR.c **** #include <CyLib.h>
+  21:Generated_Source\PSoC5/CycleISR.c **** #include <CycleISR.h>
+  22:Generated_Source\PSoC5/CycleISR.c **** #include "cyapicallbacks.h"
+  23:Generated_Source\PSoC5/CycleISR.c **** 
+  24:Generated_Source\PSoC5/CycleISR.c **** #if !defined(CycleISR__REMOVED) /* Check for removal by optimization */
+  25:Generated_Source\PSoC5/CycleISR.c **** 
+  26:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+  27:Generated_Source\PSoC5/CycleISR.c **** *  Place your includes, defines and code here 
+  28:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************/
+  29:Generated_Source\PSoC5/CycleISR.c **** /* `#START CycleISR_intc` */
+  30:Generated_Source\PSoC5/CycleISR.c ****     volatile uint8 FPSID;
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 2
+
+
+  31:Generated_Source\PSoC5/CycleISR.c ****     volatile uint8 FPSmPos;
+  32:Generated_Source\PSoC5/CycleISR.c ****     volatile unsigned int mPos;
+  33:Generated_Source\PSoC5/CycleISR.c ****     volatile char mFlag;
+  34:Generated_Source\PSoC5/CycleISR.c ****     uint8 addre = 0x00;
+  35:Generated_Source\PSoC5/CycleISR.c ****     uint8 readPos;
+  36:Generated_Source\PSoC5/CycleISR.c ****     volatile uint8 buttonID;
+  37:Generated_Source\PSoC5/CycleISR.c ****     
+  38:Generated_Source\PSoC5/CycleISR.c ****     #include "stdio.h"
+  39:Generated_Source\PSoC5/CycleISR.c ****     #include "UART.h"
+  40:Generated_Source\PSoC5/CycleISR.c ****     #include "I2C.h"
+  41:Generated_Source\PSoC5/CycleISR.c ****     #include "LCD_I2C_FUNCS.h"
+  42:Generated_Source\PSoC5/CycleISR.c **** 
+  43:Generated_Source\PSoC5/CycleISR.c ****     
+  44:Generated_Source\PSoC5/CycleISR.c ****    
+  45:Generated_Source\PSoC5/CycleISR.c **** /* `#END` */
+  46:Generated_Source\PSoC5/CycleISR.c **** 
+  47:Generated_Source\PSoC5/CycleISR.c **** #ifndef CYINT_IRQ_BASE
+  48:Generated_Source\PSoC5/CycleISR.c **** #define CYINT_IRQ_BASE      16
+  49:Generated_Source\PSoC5/CycleISR.c **** #endif /* CYINT_IRQ_BASE */
+  50:Generated_Source\PSoC5/CycleISR.c **** #ifndef CYINT_VECT_TABLE
+  51:Generated_Source\PSoC5/CycleISR.c **** #define CYINT_VECT_TABLE    ((cyisraddress **) CYREG_NVIC_VECT_OFFSET)
+  52:Generated_Source\PSoC5/CycleISR.c **** #endif /* CYINT_VECT_TABLE */
+  53:Generated_Source\PSoC5/CycleISR.c **** 
+  54:Generated_Source\PSoC5/CycleISR.c **** /* Declared in startup, used to set unused interrupts to. */
+  55:Generated_Source\PSoC5/CycleISR.c **** CY_ISR_PROTO(IntDefaultHandler);
+  56:Generated_Source\PSoC5/CycleISR.c **** 
+  57:Generated_Source\PSoC5/CycleISR.c **** 
+  58:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+  59:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_Start
+  60:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+  61:Generated_Source\PSoC5/CycleISR.c **** *
+  62:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+  63:Generated_Source\PSoC5/CycleISR.c **** *  Set up the interrupt and enable it. This function disables the interrupt, 
+  64:Generated_Source\PSoC5/CycleISR.c **** *  sets the default interrupt vector, sets the priority from the value in the
+  65:Generated_Source\PSoC5/CycleISR.c **** *  Design Wide Resources Interrupt Editor, then enables the interrupt to the 
+  66:Generated_Source\PSoC5/CycleISR.c **** *  interrupt controller.
+  67:Generated_Source\PSoC5/CycleISR.c **** *
+  68:Generated_Source\PSoC5/CycleISR.c **** * Parameters:  
+  69:Generated_Source\PSoC5/CycleISR.c **** *   None
+  70:Generated_Source\PSoC5/CycleISR.c **** *
+  71:Generated_Source\PSoC5/CycleISR.c **** * Return:
+  72:Generated_Source\PSoC5/CycleISR.c **** *   None
+  73:Generated_Source\PSoC5/CycleISR.c **** *
+  74:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+  75:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_Start(void)
+  76:Generated_Source\PSoC5/CycleISR.c **** {
+  77:Generated_Source\PSoC5/CycleISR.c ****     /* For all we know the interrupt is active. */
+  78:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_Disable();
+  79:Generated_Source\PSoC5/CycleISR.c **** 
+  80:Generated_Source\PSoC5/CycleISR.c ****     /* Set the ISR to point to the CycleISR Interrupt. */
+  81:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_SetVector(&CycleISR_Interrupt);
+  82:Generated_Source\PSoC5/CycleISR.c **** 
+  83:Generated_Source\PSoC5/CycleISR.c ****     /* Set the priority. */
+  84:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_SetPriority((uint8)CycleISR_INTC_PRIOR_NUMBER);
+  85:Generated_Source\PSoC5/CycleISR.c **** 
+  86:Generated_Source\PSoC5/CycleISR.c ****     /* Enable it. */
+  87:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_Enable();
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 3
+
+
+  88:Generated_Source\PSoC5/CycleISR.c **** }
+  89:Generated_Source\PSoC5/CycleISR.c **** 
+  90:Generated_Source\PSoC5/CycleISR.c **** 
+  91:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+  92:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_StartEx
+  93:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+  94:Generated_Source\PSoC5/CycleISR.c **** *
+  95:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+  96:Generated_Source\PSoC5/CycleISR.c **** *  Sets up the interrupt and enables it. This function disables the interrupt,
+  97:Generated_Source\PSoC5/CycleISR.c **** *  sets the interrupt vector based on the address passed in, sets the priority 
+  98:Generated_Source\PSoC5/CycleISR.c **** *  from the value in the Design Wide Resources Interrupt Editor, then enables 
+  99:Generated_Source\PSoC5/CycleISR.c **** *  the interrupt to the interrupt controller.
+ 100:Generated_Source\PSoC5/CycleISR.c **** *  
+ 101:Generated_Source\PSoC5/CycleISR.c **** *  When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+ 102:Generated_Source\PSoC5/CycleISR.c **** *  used to provide consistent definition across compilers:
+ 103:Generated_Source\PSoC5/CycleISR.c **** *  
+ 104:Generated_Source\PSoC5/CycleISR.c **** *  Function definition example:
+ 105:Generated_Source\PSoC5/CycleISR.c **** *   CY_ISR(MyISR)
+ 106:Generated_Source\PSoC5/CycleISR.c **** *   {
+ 107:Generated_Source\PSoC5/CycleISR.c **** *   }
+ 108:Generated_Source\PSoC5/CycleISR.c **** *   Function prototype example:
+ 109:Generated_Source\PSoC5/CycleISR.c **** *   CY_ISR_PROTO(MyISR);
+ 110:Generated_Source\PSoC5/CycleISR.c **** *
+ 111:Generated_Source\PSoC5/CycleISR.c **** * Parameters:  
+ 112:Generated_Source\PSoC5/CycleISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 113:Generated_Source\PSoC5/CycleISR.c **** *
+ 114:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 115:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 116:Generated_Source\PSoC5/CycleISR.c **** *
+ 117:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 118:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_StartEx(cyisraddress address)
+ 119:Generated_Source\PSoC5/CycleISR.c **** {
+ 120:Generated_Source\PSoC5/CycleISR.c ****     /* For all we know the interrupt is active. */
+ 121:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_Disable();
+ 122:Generated_Source\PSoC5/CycleISR.c **** 
+ 123:Generated_Source\PSoC5/CycleISR.c ****     /* Set the ISR to point to the CycleISR Interrupt. */
+ 124:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_SetVector(address);
+ 125:Generated_Source\PSoC5/CycleISR.c **** 
+ 126:Generated_Source\PSoC5/CycleISR.c ****     /* Set the priority. */
+ 127:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_SetPriority((uint8)CycleISR_INTC_PRIOR_NUMBER);
+ 128:Generated_Source\PSoC5/CycleISR.c **** 
+ 129:Generated_Source\PSoC5/CycleISR.c ****     /* Enable it. */
+ 130:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_Enable();
+ 131:Generated_Source\PSoC5/CycleISR.c **** }
+ 132:Generated_Source\PSoC5/CycleISR.c **** 
+ 133:Generated_Source\PSoC5/CycleISR.c **** 
+ 134:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 135:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_Stop
+ 136:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 137:Generated_Source\PSoC5/CycleISR.c **** *
+ 138:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 139:Generated_Source\PSoC5/CycleISR.c **** *   Disables and removes the interrupt.
+ 140:Generated_Source\PSoC5/CycleISR.c **** *
+ 141:Generated_Source\PSoC5/CycleISR.c **** * Parameters:  
+ 142:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 143:Generated_Source\PSoC5/CycleISR.c **** *
+ 144:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 4
+
+
+ 145:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 146:Generated_Source\PSoC5/CycleISR.c **** *
+ 147:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 148:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_Stop(void)
+ 149:Generated_Source\PSoC5/CycleISR.c **** {
+ 150:Generated_Source\PSoC5/CycleISR.c ****     /* Disable this interrupt. */
+ 151:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_Disable();
+ 152:Generated_Source\PSoC5/CycleISR.c **** 
+ 153:Generated_Source\PSoC5/CycleISR.c ****     /* Set the ISR to point to the passive one. */
+ 154:Generated_Source\PSoC5/CycleISR.c ****     CycleISR_SetVector(&IntDefaultHandler);
+ 155:Generated_Source\PSoC5/CycleISR.c **** }
+ 156:Generated_Source\PSoC5/CycleISR.c **** 
+ 157:Generated_Source\PSoC5/CycleISR.c **** 
+ 158:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 159:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_Interrupt
+ 160:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 161:Generated_Source\PSoC5/CycleISR.c **** *
+ 162:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 163:Generated_Source\PSoC5/CycleISR.c **** *   The default Interrupt Service Routine for CycleISR.
+ 164:Generated_Source\PSoC5/CycleISR.c **** *
+ 165:Generated_Source\PSoC5/CycleISR.c **** *   Add custom code between the coments to keep the next version of this file
+ 166:Generated_Source\PSoC5/CycleISR.c **** *   from over writting your code.
+ 167:Generated_Source\PSoC5/CycleISR.c **** *
+ 168:Generated_Source\PSoC5/CycleISR.c **** * Parameters:  
+ 169:Generated_Source\PSoC5/CycleISR.c **** *
+ 170:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 171:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 172:Generated_Source\PSoC5/CycleISR.c **** *
+ 173:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 174:Generated_Source\PSoC5/CycleISR.c **** CY_ISR(CycleISR_Interrupt)
+ 175:Generated_Source\PSoC5/CycleISR.c **** {
+  28              		.loc 1 175 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 16
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 70B5     		push	{r4, r5, r6, lr}
+  33              		.cfi_def_cfa_offset 16
+  34              		.cfi_offset 4, -16
+  35              		.cfi_offset 5, -12
+  36              		.cfi_offset 6, -8
+  37              		.cfi_offset 14, -4
+  38 0002 84B0     		sub	sp, sp, #16
+  39              		.cfi_def_cfa_offset 32
+ 176:Generated_Source\PSoC5/CycleISR.c ****     #ifdef CycleISR_INTERRUPT_INTERRUPT_CALLBACK
+ 177:Generated_Source\PSoC5/CycleISR.c ****         CycleISR_Interrupt_InterruptCallback();
+ 178:Generated_Source\PSoC5/CycleISR.c ****     #endif /* CycleISR_INTERRUPT_INTERRUPT_CALLBACK */ 
+ 179:Generated_Source\PSoC5/CycleISR.c **** 
+ 180:Generated_Source\PSoC5/CycleISR.c ****     /*  Place your Interrupt code here. */
+ 181:Generated_Source\PSoC5/CycleISR.c ****     /* `#START CycleISR_Interrupt` */
+ 182:Generated_Source\PSoC5/CycleISR.c ****     char a[2];
+ 183:Generated_Source\PSoC5/CycleISR.c ****     char arr[1];
+ 184:Generated_Source\PSoC5/CycleISR.c ****     char addr[1];
+ 185:Generated_Source\PSoC5/CycleISR.c ****     char mpos[1];
+ 186:Generated_Source\PSoC5/CycleISR.c ****     char cpos[1];
+ 187:Generated_Source\PSoC5/CycleISR.c ****     I2C_Start();
+  40              		.loc 1 187 0
+  41 0004 FFF7FEFF 		bl	I2C_Start
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 5
+
+
+  42              	.LVL0:
+ 188:Generated_Source\PSoC5/CycleISR.c ****         // LOOPING THRU EEPROM UNTIL VALID mPos IS FOUND //
+ 189:Generated_Source\PSoC5/CycleISR.c ****         if(addre < 10)
+  43              		.loc 1 189 0
+  44 0008 314B     		ldr	r3, .L7
+  45 000a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  46 000c 092B     		cmp	r3, #9
+  47 000e 58D8     		bhi	.L2
+ 190:Generated_Source\PSoC5/CycleISR.c ****         {
+ 191:Generated_Source\PSoC5/CycleISR.c ****             
+ 192:Generated_Source\PSoC5/CycleISR.c ****             I2C_MasterWriteBuf(0b01010000, &addre, 1, I2C_MODE_COMPLETE_XFER);
+  48              		.loc 1 192 0
+  49 0010 0023     		movs	r3, #0
+  50 0012 0122     		movs	r2, #1
+  51 0014 2E49     		ldr	r1, .L7
+  52 0016 5020     		movs	r0, #80
+  53 0018 FFF7FEFF 		bl	I2C_MasterWriteBuf
+  54              	.LVL1:
+  55              	.L3:
+ 193:Generated_Source\PSoC5/CycleISR.c ****             while (!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+  56              		.loc 1 193 0 discriminator 1
+  57 001c FFF7FEFF 		bl	I2C_MasterStatus
+  58              	.LVL2:
+  59 0020 10F0020F 		tst	r0, #2
+  60 0024 FAD0     		beq	.L3
+ 194:Generated_Source\PSoC5/CycleISR.c ****             I2C_MasterClearStatus();
+  61              		.loc 1 194 0
+  62 0026 FFF7FEFF 		bl	I2C_MasterClearStatus
+  63              	.LVL3:
+ 195:Generated_Source\PSoC5/CycleISR.c ****             CyDelay(5);
+  64              		.loc 1 195 0
+  65 002a 0520     		movs	r0, #5
+  66 002c FFF7FEFF 		bl	CyDelay
+  67              	.LVL4:
+ 196:Generated_Source\PSoC5/CycleISR.c **** 
+ 197:Generated_Source\PSoC5/CycleISR.c ****             I2C_MasterReadBuf(0b01010000, &readPos, 1, I2C_MODE_COMPLETE_XFER);
+  68              		.loc 1 197 0
+  69 0030 0023     		movs	r3, #0
+  70 0032 0122     		movs	r2, #1
+  71 0034 2749     		ldr	r1, .L7+4
+  72 0036 5020     		movs	r0, #80
+  73 0038 FFF7FEFF 		bl	I2C_MasterReadBuf
+  74              	.LVL5:
+  75              	.L4:
+ 198:Generated_Source\PSoC5/CycleISR.c ****             while (!(I2C_MasterStatus() & I2C_MSTAT_RD_CMPLT));
+  76              		.loc 1 198 0 discriminator 1
+  77 003c FFF7FEFF 		bl	I2C_MasterStatus
+  78              	.LVL6:
+  79 0040 10F0010F 		tst	r0, #1
+  80 0044 FAD0     		beq	.L4
+ 199:Generated_Source\PSoC5/CycleISR.c ****             I2C_MasterClearStatus();
+  81              		.loc 1 199 0
+  82 0046 FFF7FEFF 		bl	I2C_MasterClearStatus
+  83              	.LVL7:
+ 200:Generated_Source\PSoC5/CycleISR.c ****             
+ 201:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_clear();
+  84              		.loc 1 201 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 6
+
+
+  85 004a FFF7FEFF 		bl	LCD_I2C_clear
+  86              	.LVL8:
+ 202:Generated_Source\PSoC5/CycleISR.c ****             
+ 203:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_setCursor(0,0);
+  87              		.loc 1 203 0
+  88 004e 0021     		movs	r1, #0
+  89 0050 0846     		mov	r0, r1
+  90 0052 FFF7FEFF 		bl	LCD_I2C_setCursor
+  91              	.LVL9:
+ 204:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print("ID:");
+  92              		.loc 1 204 0
+  93 0056 2048     		ldr	r0, .L7+8
+  94 0058 FFF7FEFF 		bl	LCD_I2C_print
+  95              	.LVL10:
+ 205:Generated_Source\PSoC5/CycleISR.c ****             sprintf(addr, "%d", addre);
+  96              		.loc 1 205 0
+  97 005c 1C4C     		ldr	r4, .L7
+  98 005e 1F4D     		ldr	r5, .L7+12
+  99 0060 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 100 0062 2946     		mov	r1, r5
+ 101 0064 03A8     		add	r0, sp, #12
+ 102 0066 FFF7FEFF 		bl	sprintf
+ 103              	.LVL11:
+ 206:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print(addr);
+ 104              		.loc 1 206 0
+ 105 006a 03A8     		add	r0, sp, #12
+ 106 006c FFF7FEFF 		bl	LCD_I2C_print
+ 107              	.LVL12:
+ 207:Generated_Source\PSoC5/CycleISR.c ****             
+ 208:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_setCursor(6,0);
+ 108              		.loc 1 208 0
+ 109 0070 0021     		movs	r1, #0
+ 110 0072 0620     		movs	r0, #6
+ 111 0074 FFF7FEFF 		bl	LCD_I2C_setCursor
+ 112              	.LVL13:
+ 209:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print("rPos:");
+ 113              		.loc 1 209 0
+ 114 0078 1948     		ldr	r0, .L7+16
+ 115 007a FFF7FEFF 		bl	LCD_I2C_print
+ 116              	.LVL14:
+ 210:Generated_Source\PSoC5/CycleISR.c ****             sprintf(mpos, "%d", readPos);
+ 117              		.loc 1 210 0
+ 118 007e 154E     		ldr	r6, .L7+4
+ 119 0080 3278     		ldrb	r2, [r6]	@ zero_extendqisi2
+ 120 0082 2946     		mov	r1, r5
+ 121 0084 02A8     		add	r0, sp, #8
+ 122 0086 FFF7FEFF 		bl	sprintf
+ 123              	.LVL15:
+ 211:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print(mpos);
+ 124              		.loc 1 211 0
+ 125 008a 02A8     		add	r0, sp, #8
+ 126 008c FFF7FEFF 		bl	LCD_I2C_print
+ 127              	.LVL16:
+ 212:Generated_Source\PSoC5/CycleISR.c ****             
+ 213:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_setCursor(0,1);
+ 128              		.loc 1 213 0
+ 129 0090 0121     		movs	r1, #1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 7
+
+
+ 130 0092 0020     		movs	r0, #0
+ 131 0094 FFF7FEFF 		bl	LCD_I2C_setCursor
+ 132              	.LVL17:
+ 214:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print("cPos:");
+ 133              		.loc 1 214 0
+ 134 0098 1248     		ldr	r0, .L7+20
+ 135 009a FFF7FEFF 		bl	LCD_I2C_print
+ 136              	.LVL18:
+ 215:Generated_Source\PSoC5/CycleISR.c ****             sprintf(cpos, "%d", mPos);
+ 137              		.loc 1 215 0
+ 138 009e 124B     		ldr	r3, .L7+24
+ 139 00a0 1A68     		ldr	r2, [r3]
+ 140 00a2 2946     		mov	r1, r5
+ 141 00a4 01A8     		add	r0, sp, #4
+ 142 00a6 FFF7FEFF 		bl	sprintf
+ 143              	.LVL19:
+ 216:Generated_Source\PSoC5/CycleISR.c ****             LCD_I2C_print(cpos);
+ 144              		.loc 1 216 0
+ 145 00aa 01A8     		add	r0, sp, #4
+ 146 00ac FFF7FEFF 		bl	LCD_I2C_print
+ 147              	.LVL20:
+ 217:Generated_Source\PSoC5/CycleISR.c ****             
+ 218:Generated_Source\PSoC5/CycleISR.c ****             FPSID = addre;
+ 148              		.loc 1 218 0
+ 149 00b0 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 150 00b2 0E4A     		ldr	r2, .L7+28
+ 151 00b4 1370     		strb	r3, [r2]
+ 219:Generated_Source\PSoC5/CycleISR.c ****             FPSmPos = readPos;
+ 152              		.loc 1 219 0
+ 153 00b6 3178     		ldrb	r1, [r6]	@ zero_extendqisi2
+ 154 00b8 0D4A     		ldr	r2, .L7+32
+ 155 00ba 1170     		strb	r1, [r2]
+ 220:Generated_Source\PSoC5/CycleISR.c ****             addre++;
+ 156              		.loc 1 220 0
+ 157 00bc 0133     		adds	r3, r3, #1
+ 158 00be 2370     		strb	r3, [r4]
+ 159 00c0 04E0     		b	.L1
+ 160              	.L2:
+ 221:Generated_Source\PSoC5/CycleISR.c ****         }
+ 222:Generated_Source\PSoC5/CycleISR.c ****         else
+ 223:Generated_Source\PSoC5/CycleISR.c ****         {
+ 224:Generated_Source\PSoC5/CycleISR.c ****             addre = 0;
+ 161              		.loc 1 224 0
+ 162 00c2 0022     		movs	r2, #0
+ 163 00c4 024B     		ldr	r3, .L7
+ 164 00c6 1A70     		strb	r2, [r3]
+ 225:Generated_Source\PSoC5/CycleISR.c ****             I2C_Stop();
+ 165              		.loc 1 225 0
+ 166 00c8 FFF7FEFF 		bl	I2C_Stop
+ 167              	.LVL21:
+ 168              	.L1:
+ 226:Generated_Source\PSoC5/CycleISR.c ****         }
+ 227:Generated_Source\PSoC5/CycleISR.c ****         
+ 228:Generated_Source\PSoC5/CycleISR.c ****         
+ 229:Generated_Source\PSoC5/CycleISR.c ****     /*
+ 230:Generated_Source\PSoC5/CycleISR.c ****         Read until valid id is found, when found, read data
+ 231:Generated_Source\PSoC5/CycleISR.c ****         Reads and Displays, does not set motor position or unlock yet.
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 8
+
+
+ 232:Generated_Source\PSoC5/CycleISR.c ****     
+ 233:Generated_Source\PSoC5/CycleISR.c ****         ID:
+ 234:Generated_Source\PSoC5/CycleISR.c ****         Motor Position:
+ 235:Generated_Source\PSoC5/CycleISR.c ****     
+ 236:Generated_Source\PSoC5/CycleISR.c ****     
+ 237:Generated_Source\PSoC5/CycleISR.c ****     */
+ 238:Generated_Source\PSoC5/CycleISR.c ****     
+ 239:Generated_Source\PSoC5/CycleISR.c ****     /* `#END` */
+ 240:Generated_Source\PSoC5/CycleISR.c **** }
+ 169              		.loc 1 240 0
+ 170 00cc 04B0     		add	sp, sp, #16
+ 171              		.cfi_def_cfa_offset 16
+ 172              		@ sp needed
+ 173 00ce 70BD     		pop	{r4, r5, r6, pc}
+ 174              	.L8:
+ 175              		.align	2
+ 176              	.L7:
+ 177 00d0 00000000 		.word	.LANCHOR0
+ 178 00d4 00000000 		.word	readPos
+ 179 00d8 00000000 		.word	.LC0
+ 180 00dc 04000000 		.word	.LC1
+ 181 00e0 08000000 		.word	.LC2
+ 182 00e4 10000000 		.word	.LC3
+ 183 00e8 00000000 		.word	mPos
+ 184 00ec 00000000 		.word	FPSID
+ 185 00f0 00000000 		.word	FPSmPos
+ 186              		.cfi_endproc
+ 187              	.LFE4:
+ 188              		.size	CycleISR_Interrupt, .-CycleISR_Interrupt
+ 189              		.section	.text.CycleISR_SetVector,"ax",%progbits
+ 190              		.align	2
+ 191              		.global	CycleISR_SetVector
+ 192              		.thumb
+ 193              		.thumb_func
+ 194              		.type	CycleISR_SetVector, %function
+ 195              	CycleISR_SetVector:
+ 196              	.LFB5:
+ 241:Generated_Source\PSoC5/CycleISR.c **** 
+ 242:Generated_Source\PSoC5/CycleISR.c **** 
+ 243:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 244:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_SetVector
+ 245:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 246:Generated_Source\PSoC5/CycleISR.c **** *
+ 247:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 248:Generated_Source\PSoC5/CycleISR.c **** *   Change the ISR vector for the Interrupt. Note calling CycleISR_Start
+ 249:Generated_Source\PSoC5/CycleISR.c **** *   will override any effect this method would have had. To set the vector 
+ 250:Generated_Source\PSoC5/CycleISR.c **** *   before the component has been started use CycleISR_StartEx instead.
+ 251:Generated_Source\PSoC5/CycleISR.c **** * 
+ 252:Generated_Source\PSoC5/CycleISR.c **** *   When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+ 253:Generated_Source\PSoC5/CycleISR.c **** *   used to provide consistent definition across compilers:
+ 254:Generated_Source\PSoC5/CycleISR.c **** *
+ 255:Generated_Source\PSoC5/CycleISR.c **** *   Function definition example:
+ 256:Generated_Source\PSoC5/CycleISR.c **** *   CY_ISR(MyISR)
+ 257:Generated_Source\PSoC5/CycleISR.c **** *   {
+ 258:Generated_Source\PSoC5/CycleISR.c **** *   }
+ 259:Generated_Source\PSoC5/CycleISR.c **** *
+ 260:Generated_Source\PSoC5/CycleISR.c **** *   Function prototype example:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 9
+
+
+ 261:Generated_Source\PSoC5/CycleISR.c **** *     CY_ISR_PROTO(MyISR);
+ 262:Generated_Source\PSoC5/CycleISR.c **** *
+ 263:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 264:Generated_Source\PSoC5/CycleISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 265:Generated_Source\PSoC5/CycleISR.c **** *
+ 266:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 267:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 268:Generated_Source\PSoC5/CycleISR.c **** *
+ 269:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 270:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_SetVector(cyisraddress address)
+ 271:Generated_Source\PSoC5/CycleISR.c **** {
+ 197              		.loc 1 271 0
+ 198              		.cfi_startproc
+ 199              		@ args = 0, pretend = 0, frame = 0
+ 200              		@ frame_needed = 0, uses_anonymous_args = 0
+ 201              		@ link register save eliminated.
+ 202              	.LVL22:
+ 272:Generated_Source\PSoC5/CycleISR.c ****     cyisraddress * ramVectorTable;
+ 273:Generated_Source\PSoC5/CycleISR.c **** 
+ 274:Generated_Source\PSoC5/CycleISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+ 203              		.loc 1 274 0
+ 204 0000 014B     		ldr	r3, .L10
+ 205 0002 1B68     		ldr	r3, [r3]
+ 206              	.LVL23:
+ 275:Generated_Source\PSoC5/CycleISR.c **** 
+ 276:Generated_Source\PSoC5/CycleISR.c ****     ramVectorTable[CYINT_IRQ_BASE + (uint32)CycleISR__INTC_NUMBER] = address;
+ 207              		.loc 1 276 0
+ 208 0004 9864     		str	r0, [r3, #72]
+ 209 0006 7047     		bx	lr
+ 210              	.L11:
+ 211              		.align	2
+ 212              	.L10:
+ 213 0008 08ED00E0 		.word	-536810232
+ 214              		.cfi_endproc
+ 215              	.LFE5:
+ 216              		.size	CycleISR_SetVector, .-CycleISR_SetVector
+ 217              		.section	.text.CycleISR_GetVector,"ax",%progbits
+ 218              		.align	2
+ 219              		.global	CycleISR_GetVector
+ 220              		.thumb
+ 221              		.thumb_func
+ 222              		.type	CycleISR_GetVector, %function
+ 223              	CycleISR_GetVector:
+ 224              	.LFB6:
+ 277:Generated_Source\PSoC5/CycleISR.c **** }
+ 278:Generated_Source\PSoC5/CycleISR.c **** 
+ 279:Generated_Source\PSoC5/CycleISR.c **** 
+ 280:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 281:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_GetVector
+ 282:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 283:Generated_Source\PSoC5/CycleISR.c **** *
+ 284:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 285:Generated_Source\PSoC5/CycleISR.c **** *   Gets the "address" of the current ISR vector for the Interrupt.
+ 286:Generated_Source\PSoC5/CycleISR.c **** *
+ 287:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 288:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 289:Generated_Source\PSoC5/CycleISR.c **** *
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 10
+
+
+ 290:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 291:Generated_Source\PSoC5/CycleISR.c **** *   Address of the ISR in the interrupt vector table.
+ 292:Generated_Source\PSoC5/CycleISR.c **** *
+ 293:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 294:Generated_Source\PSoC5/CycleISR.c **** cyisraddress CycleISR_GetVector(void)
+ 295:Generated_Source\PSoC5/CycleISR.c **** {
+ 225              		.loc 1 295 0
+ 226              		.cfi_startproc
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+ 229              		@ link register save eliminated.
+ 296:Generated_Source\PSoC5/CycleISR.c ****     cyisraddress * ramVectorTable;
+ 297:Generated_Source\PSoC5/CycleISR.c **** 
+ 298:Generated_Source\PSoC5/CycleISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+ 230              		.loc 1 298 0
+ 231 0000 014B     		ldr	r3, .L13
+ 232 0002 1B68     		ldr	r3, [r3]
+ 233              	.LVL24:
+ 299:Generated_Source\PSoC5/CycleISR.c **** 
+ 300:Generated_Source\PSoC5/CycleISR.c ****     return ramVectorTable[CYINT_IRQ_BASE + (uint32)CycleISR__INTC_NUMBER];
+ 301:Generated_Source\PSoC5/CycleISR.c **** }
+ 234              		.loc 1 301 0
+ 235 0004 986C     		ldr	r0, [r3, #72]
+ 236 0006 7047     		bx	lr
+ 237              	.L14:
+ 238              		.align	2
+ 239              	.L13:
+ 240 0008 08ED00E0 		.word	-536810232
+ 241              		.cfi_endproc
+ 242              	.LFE6:
+ 243              		.size	CycleISR_GetVector, .-CycleISR_GetVector
+ 244              		.section	.text.CycleISR_SetPriority,"ax",%progbits
+ 245              		.align	2
+ 246              		.global	CycleISR_SetPriority
+ 247              		.thumb
+ 248              		.thumb_func
+ 249              		.type	CycleISR_SetPriority, %function
+ 250              	CycleISR_SetPriority:
+ 251              	.LFB7:
+ 302:Generated_Source\PSoC5/CycleISR.c **** 
+ 303:Generated_Source\PSoC5/CycleISR.c **** 
+ 304:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 305:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_SetPriority
+ 306:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 307:Generated_Source\PSoC5/CycleISR.c **** *
+ 308:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 309:Generated_Source\PSoC5/CycleISR.c **** *   Sets the Priority of the Interrupt. 
+ 310:Generated_Source\PSoC5/CycleISR.c **** *
+ 311:Generated_Source\PSoC5/CycleISR.c **** *   Note calling CycleISR_Start or CycleISR_StartEx will 
+ 312:Generated_Source\PSoC5/CycleISR.c **** *   override any effect this API would have had. This API should only be called
+ 313:Generated_Source\PSoC5/CycleISR.c **** *   after CycleISR_Start or CycleISR_StartEx has been called. 
+ 314:Generated_Source\PSoC5/CycleISR.c **** *   To set the initial priority for the component, use the Design-Wide Resources
+ 315:Generated_Source\PSoC5/CycleISR.c **** *   Interrupt Editor.
+ 316:Generated_Source\PSoC5/CycleISR.c **** *
+ 317:Generated_Source\PSoC5/CycleISR.c **** *   Note This API has no effect on Non-maskable interrupt NMI).
+ 318:Generated_Source\PSoC5/CycleISR.c **** *
+ 319:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 11
+
+
+ 320:Generated_Source\PSoC5/CycleISR.c **** *   priority: Priority of the interrupt, 0 being the highest priority
+ 321:Generated_Source\PSoC5/CycleISR.c **** *             PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 322:Generated_Source\PSoC5/CycleISR.c **** *             PSoC 4: Priority is from 0 to 3.
+ 323:Generated_Source\PSoC5/CycleISR.c **** *
+ 324:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 325:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 326:Generated_Source\PSoC5/CycleISR.c **** *
+ 327:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 328:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_SetPriority(uint8 priority)
+ 329:Generated_Source\PSoC5/CycleISR.c **** {
+ 252              		.loc 1 329 0
+ 253              		.cfi_startproc
+ 254              		@ args = 0, pretend = 0, frame = 0
+ 255              		@ frame_needed = 0, uses_anonymous_args = 0
+ 256              		@ link register save eliminated.
+ 257              	.LVL25:
+ 330:Generated_Source\PSoC5/CycleISR.c ****     *CycleISR_INTC_PRIOR = priority << 5;
+ 258              		.loc 1 330 0
+ 259 0000 4001     		lsls	r0, r0, #5
+ 260              	.LVL26:
+ 261 0002 C0B2     		uxtb	r0, r0
+ 262 0004 014B     		ldr	r3, .L16
+ 263 0006 1870     		strb	r0, [r3]
+ 264 0008 7047     		bx	lr
+ 265              	.L17:
+ 266 000a 00BF     		.align	2
+ 267              	.L16:
+ 268 000c 02E400E0 		.word	-536812542
+ 269              		.cfi_endproc
+ 270              	.LFE7:
+ 271              		.size	CycleISR_SetPriority, .-CycleISR_SetPriority
+ 272              		.section	.text.CycleISR_GetPriority,"ax",%progbits
+ 273              		.align	2
+ 274              		.global	CycleISR_GetPriority
+ 275              		.thumb
+ 276              		.thumb_func
+ 277              		.type	CycleISR_GetPriority, %function
+ 278              	CycleISR_GetPriority:
+ 279              	.LFB8:
+ 331:Generated_Source\PSoC5/CycleISR.c **** }
+ 332:Generated_Source\PSoC5/CycleISR.c **** 
+ 333:Generated_Source\PSoC5/CycleISR.c **** 
+ 334:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 335:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_GetPriority
+ 336:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 337:Generated_Source\PSoC5/CycleISR.c **** *
+ 338:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 339:Generated_Source\PSoC5/CycleISR.c **** *   Gets the Priority of the Interrupt.
+ 340:Generated_Source\PSoC5/CycleISR.c **** *
+ 341:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 342:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 343:Generated_Source\PSoC5/CycleISR.c **** *
+ 344:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 345:Generated_Source\PSoC5/CycleISR.c **** *   Priority of the interrupt, 0 being the highest priority
+ 346:Generated_Source\PSoC5/CycleISR.c **** *    PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 347:Generated_Source\PSoC5/CycleISR.c **** *    PSoC 4: Priority is from 0 to 3.
+ 348:Generated_Source\PSoC5/CycleISR.c **** *
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 12
+
+
+ 349:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 350:Generated_Source\PSoC5/CycleISR.c **** uint8 CycleISR_GetPriority(void)
+ 351:Generated_Source\PSoC5/CycleISR.c **** {
+ 280              		.loc 1 351 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284              		@ link register save eliminated.
+ 352:Generated_Source\PSoC5/CycleISR.c ****     uint8 priority;
+ 353:Generated_Source\PSoC5/CycleISR.c **** 
+ 354:Generated_Source\PSoC5/CycleISR.c **** 
+ 355:Generated_Source\PSoC5/CycleISR.c ****     priority = *CycleISR_INTC_PRIOR >> 5;
+ 285              		.loc 1 355 0
+ 286 0000 014B     		ldr	r3, .L19
+ 287 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 288              	.LVL27:
+ 356:Generated_Source\PSoC5/CycleISR.c **** 
+ 357:Generated_Source\PSoC5/CycleISR.c ****     return priority;
+ 358:Generated_Source\PSoC5/CycleISR.c **** }
+ 289              		.loc 1 358 0
+ 290 0004 4009     		lsrs	r0, r0, #5
+ 291              	.LVL28:
+ 292 0006 7047     		bx	lr
+ 293              	.L20:
+ 294              		.align	2
+ 295              	.L19:
+ 296 0008 02E400E0 		.word	-536812542
+ 297              		.cfi_endproc
+ 298              	.LFE8:
+ 299              		.size	CycleISR_GetPriority, .-CycleISR_GetPriority
+ 300              		.section	.text.CycleISR_Enable,"ax",%progbits
+ 301              		.align	2
+ 302              		.global	CycleISR_Enable
+ 303              		.thumb
+ 304              		.thumb_func
+ 305              		.type	CycleISR_Enable, %function
+ 306              	CycleISR_Enable:
+ 307              	.LFB9:
+ 359:Generated_Source\PSoC5/CycleISR.c **** 
+ 360:Generated_Source\PSoC5/CycleISR.c **** 
+ 361:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 362:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_Enable
+ 363:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 364:Generated_Source\PSoC5/CycleISR.c **** *
+ 365:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 366:Generated_Source\PSoC5/CycleISR.c **** *   Enables the interrupt to the interrupt controller. Do not call this function
+ 367:Generated_Source\PSoC5/CycleISR.c **** *   unless ISR_Start() has been called or the functionality of the ISR_Start() 
+ 368:Generated_Source\PSoC5/CycleISR.c **** *   function, which sets the vector and the priority, has been called.
+ 369:Generated_Source\PSoC5/CycleISR.c **** *
+ 370:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 371:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 372:Generated_Source\PSoC5/CycleISR.c **** *
+ 373:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 374:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 375:Generated_Source\PSoC5/CycleISR.c **** *
+ 376:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 377:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_Enable(void)
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 13
+
+
+ 378:Generated_Source\PSoC5/CycleISR.c **** {
+ 308              		.loc 1 378 0
+ 309              		.cfi_startproc
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312              		@ link register save eliminated.
+ 379:Generated_Source\PSoC5/CycleISR.c ****     /* Enable the general interrupt. */
+ 380:Generated_Source\PSoC5/CycleISR.c ****     *CycleISR_INTC_SET_EN = CycleISR__INTC_MASK;
+ 313              		.loc 1 380 0
+ 314 0000 0422     		movs	r2, #4
+ 315 0002 014B     		ldr	r3, .L22
+ 316 0004 1A60     		str	r2, [r3]
+ 317 0006 7047     		bx	lr
+ 318              	.L23:
+ 319              		.align	2
+ 320              	.L22:
+ 321 0008 00E100E0 		.word	-536813312
+ 322              		.cfi_endproc
+ 323              	.LFE9:
+ 324              		.size	CycleISR_Enable, .-CycleISR_Enable
+ 325              		.section	.text.CycleISR_GetState,"ax",%progbits
+ 326              		.align	2
+ 327              		.global	CycleISR_GetState
+ 328              		.thumb
+ 329              		.thumb_func
+ 330              		.type	CycleISR_GetState, %function
+ 331              	CycleISR_GetState:
+ 332              	.LFB10:
+ 381:Generated_Source\PSoC5/CycleISR.c **** }
+ 382:Generated_Source\PSoC5/CycleISR.c **** 
+ 383:Generated_Source\PSoC5/CycleISR.c **** 
+ 384:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 385:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_GetState
+ 386:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 387:Generated_Source\PSoC5/CycleISR.c **** *
+ 388:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 389:Generated_Source\PSoC5/CycleISR.c **** *   Gets the state (enabled, disabled) of the Interrupt.
+ 390:Generated_Source\PSoC5/CycleISR.c **** *
+ 391:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 392:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 393:Generated_Source\PSoC5/CycleISR.c **** *
+ 394:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 395:Generated_Source\PSoC5/CycleISR.c **** *   1 if enabled, 0 if disabled.
+ 396:Generated_Source\PSoC5/CycleISR.c **** *
+ 397:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 398:Generated_Source\PSoC5/CycleISR.c **** uint8 CycleISR_GetState(void)
+ 399:Generated_Source\PSoC5/CycleISR.c **** {
+ 333              		.loc 1 399 0
+ 334              		.cfi_startproc
+ 335              		@ args = 0, pretend = 0, frame = 0
+ 336              		@ frame_needed = 0, uses_anonymous_args = 0
+ 337              		@ link register save eliminated.
+ 400:Generated_Source\PSoC5/CycleISR.c ****     /* Get the state of the general interrupt. */
+ 401:Generated_Source\PSoC5/CycleISR.c ****     return ((*CycleISR_INTC_SET_EN & (uint32)CycleISR__INTC_MASK) != 0u) ? 1u:0u;
+ 338              		.loc 1 401 0
+ 339 0000 044B     		ldr	r3, .L27
+ 340 0002 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 14
+
+
+ 341 0004 13F0040F 		tst	r3, #4
+ 342 0008 01D0     		beq	.L26
+ 343 000a 0120     		movs	r0, #1
+ 344 000c 7047     		bx	lr
+ 345              	.L26:
+ 346 000e 0020     		movs	r0, #0
+ 402:Generated_Source\PSoC5/CycleISR.c **** }
+ 347              		.loc 1 402 0
+ 348 0010 7047     		bx	lr
+ 349              	.L28:
+ 350 0012 00BF     		.align	2
+ 351              	.L27:
+ 352 0014 00E100E0 		.word	-536813312
+ 353              		.cfi_endproc
+ 354              	.LFE10:
+ 355              		.size	CycleISR_GetState, .-CycleISR_GetState
+ 356              		.section	.text.CycleISR_Disable,"ax",%progbits
+ 357              		.align	2
+ 358              		.global	CycleISR_Disable
+ 359              		.thumb
+ 360              		.thumb_func
+ 361              		.type	CycleISR_Disable, %function
+ 362              	CycleISR_Disable:
+ 363              	.LFB11:
+ 403:Generated_Source\PSoC5/CycleISR.c **** 
+ 404:Generated_Source\PSoC5/CycleISR.c **** 
+ 405:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 406:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_Disable
+ 407:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 408:Generated_Source\PSoC5/CycleISR.c **** *
+ 409:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 410:Generated_Source\PSoC5/CycleISR.c **** *   Disables the Interrupt in the interrupt controller.
+ 411:Generated_Source\PSoC5/CycleISR.c **** *
+ 412:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 413:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 414:Generated_Source\PSoC5/CycleISR.c **** *
+ 415:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 416:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 417:Generated_Source\PSoC5/CycleISR.c **** *
+ 418:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 419:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_Disable(void)
+ 420:Generated_Source\PSoC5/CycleISR.c **** {
+ 364              		.loc 1 420 0
+ 365              		.cfi_startproc
+ 366              		@ args = 0, pretend = 0, frame = 0
+ 367              		@ frame_needed = 0, uses_anonymous_args = 0
+ 368              		@ link register save eliminated.
+ 421:Generated_Source\PSoC5/CycleISR.c ****     /* Disable the general interrupt. */
+ 422:Generated_Source\PSoC5/CycleISR.c ****     *CycleISR_INTC_CLR_EN = CycleISR__INTC_MASK;
+ 369              		.loc 1 422 0
+ 370 0000 0422     		movs	r2, #4
+ 371 0002 014B     		ldr	r3, .L30
+ 372 0004 1A60     		str	r2, [r3]
+ 373 0006 7047     		bx	lr
+ 374              	.L31:
+ 375              		.align	2
+ 376              	.L30:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 15
+
+
+ 377 0008 80E100E0 		.word	-536813184
+ 378              		.cfi_endproc
+ 379              	.LFE11:
+ 380              		.size	CycleISR_Disable, .-CycleISR_Disable
+ 381              		.section	.text.CycleISR_Start,"ax",%progbits
+ 382              		.align	2
+ 383              		.global	CycleISR_Start
+ 384              		.thumb
+ 385              		.thumb_func
+ 386              		.type	CycleISR_Start, %function
+ 387              	CycleISR_Start:
+ 388              	.LFB1:
+  76:Generated_Source\PSoC5/CycleISR.c ****     /* For all we know the interrupt is active. */
+ 389              		.loc 1 76 0
+ 390              		.cfi_startproc
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393 0000 08B5     		push	{r3, lr}
+ 394              		.cfi_def_cfa_offset 8
+ 395              		.cfi_offset 3, -8
+ 396              		.cfi_offset 14, -4
+  78:Generated_Source\PSoC5/CycleISR.c **** 
+ 397              		.loc 1 78 0
+ 398 0002 FFF7FEFF 		bl	CycleISR_Disable
+ 399              	.LVL29:
+  81:Generated_Source\PSoC5/CycleISR.c **** 
+ 400              		.loc 1 81 0
+ 401 0006 0448     		ldr	r0, .L34
+ 402 0008 FFF7FEFF 		bl	CycleISR_SetVector
+ 403              	.LVL30:
+  84:Generated_Source\PSoC5/CycleISR.c **** 
+ 404              		.loc 1 84 0
+ 405 000c 0720     		movs	r0, #7
+ 406 000e FFF7FEFF 		bl	CycleISR_SetPriority
+ 407              	.LVL31:
+  87:Generated_Source\PSoC5/CycleISR.c **** }
+ 408              		.loc 1 87 0
+ 409 0012 FFF7FEFF 		bl	CycleISR_Enable
+ 410              	.LVL32:
+ 411 0016 08BD     		pop	{r3, pc}
+ 412              	.L35:
+ 413              		.align	2
+ 414              	.L34:
+ 415 0018 00000000 		.word	CycleISR_Interrupt
+ 416              		.cfi_endproc
+ 417              	.LFE1:
+ 418              		.size	CycleISR_Start, .-CycleISR_Start
+ 419              		.section	.text.CycleISR_StartEx,"ax",%progbits
+ 420              		.align	2
+ 421              		.global	CycleISR_StartEx
+ 422              		.thumb
+ 423              		.thumb_func
+ 424              		.type	CycleISR_StartEx, %function
+ 425              	CycleISR_StartEx:
+ 426              	.LFB2:
+ 119:Generated_Source\PSoC5/CycleISR.c ****     /* For all we know the interrupt is active. */
+ 427              		.loc 1 119 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 16
+
+
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 0
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431              	.LVL33:
+ 432 0000 10B5     		push	{r4, lr}
+ 433              		.cfi_def_cfa_offset 8
+ 434              		.cfi_offset 4, -8
+ 435              		.cfi_offset 14, -4
+ 436 0002 0446     		mov	r4, r0
+ 121:Generated_Source\PSoC5/CycleISR.c **** 
+ 437              		.loc 1 121 0
+ 438 0004 FFF7FEFF 		bl	CycleISR_Disable
+ 439              	.LVL34:
+ 124:Generated_Source\PSoC5/CycleISR.c **** 
+ 440              		.loc 1 124 0
+ 441 0008 2046     		mov	r0, r4
+ 442 000a FFF7FEFF 		bl	CycleISR_SetVector
+ 443              	.LVL35:
+ 127:Generated_Source\PSoC5/CycleISR.c **** 
+ 444              		.loc 1 127 0
+ 445 000e 0720     		movs	r0, #7
+ 446 0010 FFF7FEFF 		bl	CycleISR_SetPriority
+ 447              	.LVL36:
+ 130:Generated_Source\PSoC5/CycleISR.c **** }
+ 448              		.loc 1 130 0
+ 449 0014 FFF7FEFF 		bl	CycleISR_Enable
+ 450              	.LVL37:
+ 451 0018 10BD     		pop	{r4, pc}
+ 452              		.cfi_endproc
+ 453              	.LFE2:
+ 454              		.size	CycleISR_StartEx, .-CycleISR_StartEx
+ 455 001a 00BF     		.section	.text.CycleISR_Stop,"ax",%progbits
+ 456              		.align	2
+ 457              		.global	CycleISR_Stop
+ 458              		.thumb
+ 459              		.thumb_func
+ 460              		.type	CycleISR_Stop, %function
+ 461              	CycleISR_Stop:
+ 462              	.LFB3:
+ 149:Generated_Source\PSoC5/CycleISR.c ****     /* Disable this interrupt. */
+ 463              		.loc 1 149 0
+ 464              		.cfi_startproc
+ 465              		@ args = 0, pretend = 0, frame = 0
+ 466              		@ frame_needed = 0, uses_anonymous_args = 0
+ 467 0000 08B5     		push	{r3, lr}
+ 468              		.cfi_def_cfa_offset 8
+ 469              		.cfi_offset 3, -8
+ 470              		.cfi_offset 14, -4
+ 151:Generated_Source\PSoC5/CycleISR.c **** 
+ 471              		.loc 1 151 0
+ 472 0002 FFF7FEFF 		bl	CycleISR_Disable
+ 473              	.LVL38:
+ 154:Generated_Source\PSoC5/CycleISR.c **** }
+ 474              		.loc 1 154 0
+ 475 0006 0248     		ldr	r0, .L40
+ 476 0008 FFF7FEFF 		bl	CycleISR_SetVector
+ 477              	.LVL39:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 17
+
+
+ 478 000c 08BD     		pop	{r3, pc}
+ 479              	.L41:
+ 480 000e 00BF     		.align	2
+ 481              	.L40:
+ 482 0010 00000000 		.word	IntDefaultHandler
+ 483              		.cfi_endproc
+ 484              	.LFE3:
+ 485              		.size	CycleISR_Stop, .-CycleISR_Stop
+ 486              		.section	.text.CycleISR_SetPending,"ax",%progbits
+ 487              		.align	2
+ 488              		.global	CycleISR_SetPending
+ 489              		.thumb
+ 490              		.thumb_func
+ 491              		.type	CycleISR_SetPending, %function
+ 492              	CycleISR_SetPending:
+ 493              	.LFB12:
+ 423:Generated_Source\PSoC5/CycleISR.c **** }
+ 424:Generated_Source\PSoC5/CycleISR.c **** 
+ 425:Generated_Source\PSoC5/CycleISR.c **** 
+ 426:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 427:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_SetPending
+ 428:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 429:Generated_Source\PSoC5/CycleISR.c **** *
+ 430:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 431:Generated_Source\PSoC5/CycleISR.c **** *   Causes the Interrupt to enter the pending state, a software method of
+ 432:Generated_Source\PSoC5/CycleISR.c **** *   generating the interrupt.
+ 433:Generated_Source\PSoC5/CycleISR.c **** *
+ 434:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 435:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 436:Generated_Source\PSoC5/CycleISR.c **** *
+ 437:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 438:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 439:Generated_Source\PSoC5/CycleISR.c **** *
+ 440:Generated_Source\PSoC5/CycleISR.c **** * Side Effects:
+ 441:Generated_Source\PSoC5/CycleISR.c **** *   If interrupts are enabled and the interrupt is set up properly, the ISR is
+ 442:Generated_Source\PSoC5/CycleISR.c **** *   entered (depending on the priority of this interrupt and other pending 
+ 443:Generated_Source\PSoC5/CycleISR.c **** *   interrupts).
+ 444:Generated_Source\PSoC5/CycleISR.c **** *
+ 445:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 446:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_SetPending(void)
+ 447:Generated_Source\PSoC5/CycleISR.c **** {
+ 494              		.loc 1 447 0
+ 495              		.cfi_startproc
+ 496              		@ args = 0, pretend = 0, frame = 0
+ 497              		@ frame_needed = 0, uses_anonymous_args = 0
+ 498              		@ link register save eliminated.
+ 448:Generated_Source\PSoC5/CycleISR.c ****     *CycleISR_INTC_SET_PD = CycleISR__INTC_MASK;
+ 499              		.loc 1 448 0
+ 500 0000 0422     		movs	r2, #4
+ 501 0002 014B     		ldr	r3, .L43
+ 502 0004 1A60     		str	r2, [r3]
+ 503 0006 7047     		bx	lr
+ 504              	.L44:
+ 505              		.align	2
+ 506              	.L43:
+ 507 0008 00E200E0 		.word	-536813056
+ 508              		.cfi_endproc
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 18
+
+
+ 509              	.LFE12:
+ 510              		.size	CycleISR_SetPending, .-CycleISR_SetPending
+ 511              		.section	.text.CycleISR_ClearPending,"ax",%progbits
+ 512              		.align	2
+ 513              		.global	CycleISR_ClearPending
+ 514              		.thumb
+ 515              		.thumb_func
+ 516              		.type	CycleISR_ClearPending, %function
+ 517              	CycleISR_ClearPending:
+ 518              	.LFB13:
+ 449:Generated_Source\PSoC5/CycleISR.c **** }
+ 450:Generated_Source\PSoC5/CycleISR.c **** 
+ 451:Generated_Source\PSoC5/CycleISR.c **** 
+ 452:Generated_Source\PSoC5/CycleISR.c **** /*******************************************************************************
+ 453:Generated_Source\PSoC5/CycleISR.c **** * Function Name: CycleISR_ClearPending
+ 454:Generated_Source\PSoC5/CycleISR.c **** ********************************************************************************
+ 455:Generated_Source\PSoC5/CycleISR.c **** *
+ 456:Generated_Source\PSoC5/CycleISR.c **** * Summary:
+ 457:Generated_Source\PSoC5/CycleISR.c **** *   Clears a pending interrupt in the interrupt controller.
+ 458:Generated_Source\PSoC5/CycleISR.c **** *
+ 459:Generated_Source\PSoC5/CycleISR.c **** *   Note Some interrupt sources are clear-on-read and require the block 
+ 460:Generated_Source\PSoC5/CycleISR.c **** *   interrupt/status register to be read/cleared with the appropriate block API 
+ 461:Generated_Source\PSoC5/CycleISR.c **** *   (GPIO, UART, and so on). Otherwise the ISR will continue to remain in 
+ 462:Generated_Source\PSoC5/CycleISR.c **** *   pending state even though the interrupt itself is cleared using this API.
+ 463:Generated_Source\PSoC5/CycleISR.c **** *
+ 464:Generated_Source\PSoC5/CycleISR.c **** * Parameters:
+ 465:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 466:Generated_Source\PSoC5/CycleISR.c **** *
+ 467:Generated_Source\PSoC5/CycleISR.c **** * Return:
+ 468:Generated_Source\PSoC5/CycleISR.c **** *   None
+ 469:Generated_Source\PSoC5/CycleISR.c **** *
+ 470:Generated_Source\PSoC5/CycleISR.c **** *******************************************************************************/
+ 471:Generated_Source\PSoC5/CycleISR.c **** void CycleISR_ClearPending(void)
+ 472:Generated_Source\PSoC5/CycleISR.c **** {
+ 519              		.loc 1 472 0
+ 520              		.cfi_startproc
+ 521              		@ args = 0, pretend = 0, frame = 0
+ 522              		@ frame_needed = 0, uses_anonymous_args = 0
+ 523              		@ link register save eliminated.
+ 473:Generated_Source\PSoC5/CycleISR.c ****     *CycleISR_INTC_CLR_PD = CycleISR__INTC_MASK;
+ 524              		.loc 1 473 0
+ 525 0000 0422     		movs	r2, #4
+ 526 0002 014B     		ldr	r3, .L46
+ 527 0004 1A60     		str	r2, [r3]
+ 528 0006 7047     		bx	lr
+ 529              	.L47:
+ 530              		.align	2
+ 531              	.L46:
+ 532 0008 80E200E0 		.word	-536812928
+ 533              		.cfi_endproc
+ 534              	.LFE13:
+ 535              		.size	CycleISR_ClearPending, .-CycleISR_ClearPending
+ 536              		.comm	buttonID,1,1
+ 537              		.comm	readPos,1,1
+ 538              		.global	addre
+ 539              		.comm	mFlag,1,1
+ 540              		.comm	mPos,4,4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 19
+
+
+ 541              		.comm	FPSmPos,1,1
+ 542              		.comm	FPSID,1,1
+ 543              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 544              		.align	2
+ 545              	.LC0:
+ 546 0000 49443A00 		.ascii	"ID:\000"
+ 547              	.LC1:
+ 548 0004 256400   		.ascii	"%d\000"
+ 549 0007 00       		.space	1
+ 550              	.LC2:
+ 551 0008 72506F73 		.ascii	"rPos:\000"
+ 551      3A00
+ 552 000e 0000     		.space	2
+ 553              	.LC3:
+ 554 0010 63506F73 		.ascii	"cPos:\000"
+ 554      3A00
+ 555              		.bss
+ 556              		.set	.LANCHOR0,. + 0
+ 557              		.type	addre, %object
+ 558              		.size	addre, 1
+ 559              	addre:
+ 560 0000 00       		.space	1
+ 561              		.text
+ 562              	.Letext0:
+ 563              		.file 2 "Generated_Source\\PSoC5/cytypes.h"
+ 564              		.file 3 "Generated_Source\\PSoC5\\I2C.h"
+ 565              		.file 4 "Generated_Source\\PSoC5/CyLib.h"
+ 566              		.file 5 "Generated_Source\\PSoC5\\LCD_I2C_FUNCS.h"
+ 567              		.file 6 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 568              		.section	.debug_info,"",%progbits
+ 569              	.Ldebug_info0:
+ 570 0000 E7050000 		.4byte	0x5e7
+ 571 0004 0400     		.2byte	0x4
+ 572 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 573 000a 04       		.byte	0x4
+ 574 000b 01       		.uleb128 0x1
+ 575 000c F2000000 		.4byte	.LASF55
+ 576 0010 0C       		.byte	0xc
+ 577 0011 4C000000 		.4byte	.LASF56
+ 578 0015 F1010000 		.4byte	.LASF57
+ 579 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 580 001d 00000000 		.4byte	0
+ 581 0021 00000000 		.4byte	.Ldebug_line0
+ 582 0025 02       		.uleb128 0x2
+ 583 0026 04       		.byte	0x4
+ 584 0027 05       		.byte	0x5
+ 585 0028 696E7400 		.ascii	"int\000"
+ 586 002c 03       		.uleb128 0x3
+ 587 002d 04       		.byte	0x4
+ 588 002e 07       		.byte	0x7
+ 589 002f 3E020000 		.4byte	.LASF0
+ 590 0033 03       		.uleb128 0x3
+ 591 0034 08       		.byte	0x8
+ 592 0035 05       		.byte	0x5
+ 593 0036 DA020000 		.4byte	.LASF1
+ 594 003a 03       		.uleb128 0x3
+ 595 003b 08       		.byte	0x8
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 20
+
+
+ 596 003c 04       		.byte	0x4
+ 597 003d 46030000 		.4byte	.LASF2
+ 598 0041 03       		.uleb128 0x3
+ 599 0042 01       		.byte	0x1
+ 600 0043 06       		.byte	0x6
+ 601 0044 5B030000 		.4byte	.LASF3
+ 602 0048 03       		.uleb128 0x3
+ 603 0049 01       		.byte	0x1
+ 604 004a 08       		.byte	0x8
+ 605 004b E4000000 		.4byte	.LASF4
+ 606 004f 03       		.uleb128 0x3
+ 607 0050 02       		.byte	0x2
+ 608 0051 05       		.byte	0x5
+ 609 0052 E7010000 		.4byte	.LASF5
+ 610 0056 03       		.uleb128 0x3
+ 611 0057 02       		.byte	0x2
+ 612 0058 07       		.byte	0x7
+ 613 0059 39000000 		.4byte	.LASF6
+ 614 005d 03       		.uleb128 0x3
+ 615 005e 04       		.byte	0x4
+ 616 005f 05       		.byte	0x5
+ 617 0060 38030000 		.4byte	.LASF7
+ 618 0064 03       		.uleb128 0x3
+ 619 0065 04       		.byte	0x4
+ 620 0066 07       		.byte	0x7
+ 621 0067 8D010000 		.4byte	.LASF8
+ 622 006b 03       		.uleb128 0x3
+ 623 006c 08       		.byte	0x8
+ 624 006d 07       		.byte	0x7
+ 625 006e 6F020000 		.4byte	.LASF9
+ 626 0072 03       		.uleb128 0x3
+ 627 0073 04       		.byte	0x4
+ 628 0074 07       		.byte	0x7
+ 629 0075 C0020000 		.4byte	.LASF10
+ 630 0079 03       		.uleb128 0x3
+ 631 007a 01       		.byte	0x1
+ 632 007b 08       		.byte	0x8
+ 633 007c E8020000 		.4byte	.LASF11
+ 634 0080 04       		.uleb128 0x4
+ 635 0081 04       		.byte	0x4
+ 636 0082 86000000 		.4byte	0x86
+ 637 0086 05       		.uleb128 0x5
+ 638 0087 06       		.uleb128 0x6
+ 639 0088 23030000 		.4byte	.LASF12
+ 640 008c 02       		.byte	0x2
+ 641 008d E701     		.2byte	0x1e7
+ 642 008f 48000000 		.4byte	0x48
+ 643 0093 06       		.uleb128 0x6
+ 644 0094 26020000 		.4byte	.LASF13
+ 645 0098 02       		.byte	0x2
+ 646 0099 E901     		.2byte	0x1e9
+ 647 009b 64000000 		.4byte	0x64
+ 648 009f 03       		.uleb128 0x3
+ 649 00a0 04       		.byte	0x4
+ 650 00a1 04       		.byte	0x4
+ 651 00a2 A9000000 		.4byte	.LASF14
+ 652 00a6 03       		.uleb128 0x3
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 21
+
+
+ 653 00a7 08       		.byte	0x8
+ 654 00a8 04       		.byte	0x4
+ 655 00a9 CD010000 		.4byte	.LASF15
+ 656 00ad 06       		.uleb128 0x6
+ 657 00ae 80010000 		.4byte	.LASF16
+ 658 00b2 02       		.byte	0x2
+ 659 00b3 9102     		.2byte	0x291
+ 660 00b5 B9000000 		.4byte	0xb9
+ 661 00b9 07       		.uleb128 0x7
+ 662 00ba 87000000 		.4byte	0x87
+ 663 00be 06       		.uleb128 0x6
+ 664 00bf 00000000 		.4byte	.LASF17
+ 665 00c3 02       		.byte	0x2
+ 666 00c4 9302     		.2byte	0x293
+ 667 00c6 CA000000 		.4byte	0xca
+ 668 00ca 07       		.uleb128 0x7
+ 669 00cb 93000000 		.4byte	0x93
+ 670 00cf 06       		.uleb128 0x6
+ 671 00d0 9E020000 		.4byte	.LASF18
+ 672 00d4 02       		.byte	0x2
+ 673 00d5 A302     		.2byte	0x2a3
+ 674 00d7 80000000 		.4byte	0x80
+ 675 00db 08       		.uleb128 0x8
+ 676 00dc 86020000 		.4byte	.LASF22
+ 677 00e0 01       		.byte	0x1
+ 678 00e1 AE       		.byte	0xae
+ 679 00e2 00000000 		.4byte	.LFB4
+ 680 00e6 F4000000 		.4byte	.LFE4-.LFB4
+ 681 00ea 01       		.uleb128 0x1
+ 682 00eb 9C       		.byte	0x9c
+ 683 00ec E6020000 		.4byte	0x2e6
+ 684 00f0 09       		.uleb128 0x9
+ 685 00f1 6100     		.ascii	"a\000"
+ 686 00f3 01       		.byte	0x1
+ 687 00f4 B6       		.byte	0xb6
+ 688 00f5 E6020000 		.4byte	0x2e6
+ 689 00f9 09       		.uleb128 0x9
+ 690 00fa 61727200 		.ascii	"arr\000"
+ 691 00fe 01       		.byte	0x1
+ 692 00ff B7       		.byte	0xb7
+ 693 0100 F6020000 		.4byte	0x2f6
+ 694 0104 0A       		.uleb128 0xa
+ 695 0105 A7010000 		.4byte	.LASF19
+ 696 0109 01       		.byte	0x1
+ 697 010a B8       		.byte	0xb8
+ 698 010b F6020000 		.4byte	0x2f6
+ 699 010f 02       		.uleb128 0x2
+ 700 0110 91       		.byte	0x91
+ 701 0111 6C       		.sleb128 -20
+ 702 0112 0A       		.uleb128 0xa
+ 703 0113 41030000 		.4byte	.LASF20
+ 704 0117 01       		.byte	0x1
+ 705 0118 B9       		.byte	0xb9
+ 706 0119 F6020000 		.4byte	0x2f6
+ 707 011d 02       		.uleb128 0x2
+ 708 011e 91       		.byte	0x91
+ 709 011f 68       		.sleb128 -24
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 22
+
+
+ 710 0120 0A       		.uleb128 0xa
+ 711 0121 99020000 		.4byte	.LASF21
+ 712 0125 01       		.byte	0x1
+ 713 0126 BA       		.byte	0xba
+ 714 0127 F6020000 		.4byte	0x2f6
+ 715 012b 02       		.uleb128 0x2
+ 716 012c 91       		.byte	0x91
+ 717 012d 64       		.sleb128 -28
+ 718 012e 0B       		.uleb128 0xb
+ 719 012f 08000000 		.4byte	.LVL0
+ 720 0133 71050000 		.4byte	0x571
+ 721 0137 0C       		.uleb128 0xc
+ 722 0138 1C000000 		.4byte	.LVL1
+ 723 013c 7C050000 		.4byte	0x57c
+ 724 0140 5E010000 		.4byte	0x15e
+ 725 0144 0D       		.uleb128 0xd
+ 726 0145 01       		.uleb128 0x1
+ 727 0146 50       		.byte	0x50
+ 728 0147 02       		.uleb128 0x2
+ 729 0148 08       		.byte	0x8
+ 730 0149 50       		.byte	0x50
+ 731 014a 0D       		.uleb128 0xd
+ 732 014b 01       		.uleb128 0x1
+ 733 014c 51       		.byte	0x51
+ 734 014d 05       		.uleb128 0x5
+ 735 014e 03       		.byte	0x3
+ 736 014f 00000000 		.4byte	.LANCHOR0
+ 737 0153 0D       		.uleb128 0xd
+ 738 0154 01       		.uleb128 0x1
+ 739 0155 52       		.byte	0x52
+ 740 0156 01       		.uleb128 0x1
+ 741 0157 31       		.byte	0x31
+ 742 0158 0D       		.uleb128 0xd
+ 743 0159 01       		.uleb128 0x1
+ 744 015a 53       		.byte	0x53
+ 745 015b 01       		.uleb128 0x1
+ 746 015c 30       		.byte	0x30
+ 747 015d 00       		.byte	0
+ 748 015e 0B       		.uleb128 0xb
+ 749 015f 20000000 		.4byte	.LVL2
+ 750 0163 87050000 		.4byte	0x587
+ 751 0167 0B       		.uleb128 0xb
+ 752 0168 2A000000 		.4byte	.LVL3
+ 753 016c 92050000 		.4byte	0x592
+ 754 0170 0C       		.uleb128 0xc
+ 755 0171 30000000 		.4byte	.LVL4
+ 756 0175 9D050000 		.4byte	0x59d
+ 757 0179 83010000 		.4byte	0x183
+ 758 017d 0D       		.uleb128 0xd
+ 759 017e 01       		.uleb128 0x1
+ 760 017f 50       		.byte	0x50
+ 761 0180 01       		.uleb128 0x1
+ 762 0181 35       		.byte	0x35
+ 763 0182 00       		.byte	0
+ 764 0183 0C       		.uleb128 0xc
+ 765 0184 3C000000 		.4byte	.LVL5
+ 766 0188 A8050000 		.4byte	0x5a8
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 23
+
+
+ 767 018c AA010000 		.4byte	0x1aa
+ 768 0190 0D       		.uleb128 0xd
+ 769 0191 01       		.uleb128 0x1
+ 770 0192 50       		.byte	0x50
+ 771 0193 02       		.uleb128 0x2
+ 772 0194 08       		.byte	0x8
+ 773 0195 50       		.byte	0x50
+ 774 0196 0D       		.uleb128 0xd
+ 775 0197 01       		.uleb128 0x1
+ 776 0198 51       		.byte	0x51
+ 777 0199 05       		.uleb128 0x5
+ 778 019a 03       		.byte	0x3
+ 779 019b 00000000 		.4byte	readPos
+ 780 019f 0D       		.uleb128 0xd
+ 781 01a0 01       		.uleb128 0x1
+ 782 01a1 52       		.byte	0x52
+ 783 01a2 01       		.uleb128 0x1
+ 784 01a3 31       		.byte	0x31
+ 785 01a4 0D       		.uleb128 0xd
+ 786 01a5 01       		.uleb128 0x1
+ 787 01a6 53       		.byte	0x53
+ 788 01a7 01       		.uleb128 0x1
+ 789 01a8 30       		.byte	0x30
+ 790 01a9 00       		.byte	0
+ 791 01aa 0B       		.uleb128 0xb
+ 792 01ab 40000000 		.4byte	.LVL6
+ 793 01af 87050000 		.4byte	0x587
+ 794 01b3 0B       		.uleb128 0xb
+ 795 01b4 4A000000 		.4byte	.LVL7
+ 796 01b8 92050000 		.4byte	0x592
+ 797 01bc 0B       		.uleb128 0xb
+ 798 01bd 4E000000 		.4byte	.LVL8
+ 799 01c1 B3050000 		.4byte	0x5b3
+ 800 01c5 0C       		.uleb128 0xc
+ 801 01c6 56000000 		.4byte	.LVL9
+ 802 01ca BE050000 		.4byte	0x5be
+ 803 01ce DD010000 		.4byte	0x1dd
+ 804 01d2 0D       		.uleb128 0xd
+ 805 01d3 01       		.uleb128 0x1
+ 806 01d4 50       		.byte	0x50
+ 807 01d5 01       		.uleb128 0x1
+ 808 01d6 30       		.byte	0x30
+ 809 01d7 0D       		.uleb128 0xd
+ 810 01d8 01       		.uleb128 0x1
+ 811 01d9 51       		.byte	0x51
+ 812 01da 01       		.uleb128 0x1
+ 813 01db 30       		.byte	0x30
+ 814 01dc 00       		.byte	0
+ 815 01dd 0C       		.uleb128 0xc
+ 816 01de 5C000000 		.4byte	.LVL10
+ 817 01e2 C9050000 		.4byte	0x5c9
+ 818 01e6 F4010000 		.4byte	0x1f4
+ 819 01ea 0D       		.uleb128 0xd
+ 820 01eb 01       		.uleb128 0x1
+ 821 01ec 50       		.byte	0x50
+ 822 01ed 05       		.uleb128 0x5
+ 823 01ee 03       		.byte	0x3
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 24
+
+
+ 824 01ef 00000000 		.4byte	.LC0
+ 825 01f3 00       		.byte	0
+ 826 01f4 0C       		.uleb128 0xc
+ 827 01f5 6A000000 		.4byte	.LVL11
+ 828 01f9 D4050000 		.4byte	0x5d4
+ 829 01fd 0E020000 		.4byte	0x20e
+ 830 0201 0D       		.uleb128 0xd
+ 831 0202 01       		.uleb128 0x1
+ 832 0203 50       		.byte	0x50
+ 833 0204 02       		.uleb128 0x2
+ 834 0205 91       		.byte	0x91
+ 835 0206 6C       		.sleb128 -20
+ 836 0207 0D       		.uleb128 0xd
+ 837 0208 01       		.uleb128 0x1
+ 838 0209 51       		.byte	0x51
+ 839 020a 02       		.uleb128 0x2
+ 840 020b 75       		.byte	0x75
+ 841 020c 00       		.sleb128 0
+ 842 020d 00       		.byte	0
+ 843 020e 0C       		.uleb128 0xc
+ 844 020f 70000000 		.4byte	.LVL12
+ 845 0213 C9050000 		.4byte	0x5c9
+ 846 0217 22020000 		.4byte	0x222
+ 847 021b 0D       		.uleb128 0xd
+ 848 021c 01       		.uleb128 0x1
+ 849 021d 50       		.byte	0x50
+ 850 021e 02       		.uleb128 0x2
+ 851 021f 91       		.byte	0x91
+ 852 0220 6C       		.sleb128 -20
+ 853 0221 00       		.byte	0
+ 854 0222 0C       		.uleb128 0xc
+ 855 0223 78000000 		.4byte	.LVL13
+ 856 0227 BE050000 		.4byte	0x5be
+ 857 022b 3A020000 		.4byte	0x23a
+ 858 022f 0D       		.uleb128 0xd
+ 859 0230 01       		.uleb128 0x1
+ 860 0231 50       		.byte	0x50
+ 861 0232 01       		.uleb128 0x1
+ 862 0233 36       		.byte	0x36
+ 863 0234 0D       		.uleb128 0xd
+ 864 0235 01       		.uleb128 0x1
+ 865 0236 51       		.byte	0x51
+ 866 0237 01       		.uleb128 0x1
+ 867 0238 30       		.byte	0x30
+ 868 0239 00       		.byte	0
+ 869 023a 0C       		.uleb128 0xc
+ 870 023b 7E000000 		.4byte	.LVL14
+ 871 023f C9050000 		.4byte	0x5c9
+ 872 0243 51020000 		.4byte	0x251
+ 873 0247 0D       		.uleb128 0xd
+ 874 0248 01       		.uleb128 0x1
+ 875 0249 50       		.byte	0x50
+ 876 024a 05       		.uleb128 0x5
+ 877 024b 03       		.byte	0x3
+ 878 024c 08000000 		.4byte	.LC2
+ 879 0250 00       		.byte	0
+ 880 0251 0C       		.uleb128 0xc
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 25
+
+
+ 881 0252 8A000000 		.4byte	.LVL15
+ 882 0256 D4050000 		.4byte	0x5d4
+ 883 025a 6B020000 		.4byte	0x26b
+ 884 025e 0D       		.uleb128 0xd
+ 885 025f 01       		.uleb128 0x1
+ 886 0260 50       		.byte	0x50
+ 887 0261 02       		.uleb128 0x2
+ 888 0262 91       		.byte	0x91
+ 889 0263 68       		.sleb128 -24
+ 890 0264 0D       		.uleb128 0xd
+ 891 0265 01       		.uleb128 0x1
+ 892 0266 51       		.byte	0x51
+ 893 0267 02       		.uleb128 0x2
+ 894 0268 75       		.byte	0x75
+ 895 0269 00       		.sleb128 0
+ 896 026a 00       		.byte	0
+ 897 026b 0C       		.uleb128 0xc
+ 898 026c 90000000 		.4byte	.LVL16
+ 899 0270 C9050000 		.4byte	0x5c9
+ 900 0274 7F020000 		.4byte	0x27f
+ 901 0278 0D       		.uleb128 0xd
+ 902 0279 01       		.uleb128 0x1
+ 903 027a 50       		.byte	0x50
+ 904 027b 02       		.uleb128 0x2
+ 905 027c 91       		.byte	0x91
+ 906 027d 68       		.sleb128 -24
+ 907 027e 00       		.byte	0
+ 908 027f 0C       		.uleb128 0xc
+ 909 0280 98000000 		.4byte	.LVL17
+ 910 0284 BE050000 		.4byte	0x5be
+ 911 0288 97020000 		.4byte	0x297
+ 912 028c 0D       		.uleb128 0xd
+ 913 028d 01       		.uleb128 0x1
+ 914 028e 50       		.byte	0x50
+ 915 028f 01       		.uleb128 0x1
+ 916 0290 30       		.byte	0x30
+ 917 0291 0D       		.uleb128 0xd
+ 918 0292 01       		.uleb128 0x1
+ 919 0293 51       		.byte	0x51
+ 920 0294 01       		.uleb128 0x1
+ 921 0295 31       		.byte	0x31
+ 922 0296 00       		.byte	0
+ 923 0297 0C       		.uleb128 0xc
+ 924 0298 9E000000 		.4byte	.LVL18
+ 925 029c C9050000 		.4byte	0x5c9
+ 926 02a0 AE020000 		.4byte	0x2ae
+ 927 02a4 0D       		.uleb128 0xd
+ 928 02a5 01       		.uleb128 0x1
+ 929 02a6 50       		.byte	0x50
+ 930 02a7 05       		.uleb128 0x5
+ 931 02a8 03       		.byte	0x3
+ 932 02a9 10000000 		.4byte	.LC3
+ 933 02ad 00       		.byte	0
+ 934 02ae 0C       		.uleb128 0xc
+ 935 02af AA000000 		.4byte	.LVL19
+ 936 02b3 D4050000 		.4byte	0x5d4
+ 937 02b7 C8020000 		.4byte	0x2c8
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 26
+
+
+ 938 02bb 0D       		.uleb128 0xd
+ 939 02bc 01       		.uleb128 0x1
+ 940 02bd 50       		.byte	0x50
+ 941 02be 02       		.uleb128 0x2
+ 942 02bf 91       		.byte	0x91
+ 943 02c0 64       		.sleb128 -28
+ 944 02c1 0D       		.uleb128 0xd
+ 945 02c2 01       		.uleb128 0x1
+ 946 02c3 51       		.byte	0x51
+ 947 02c4 02       		.uleb128 0x2
+ 948 02c5 75       		.byte	0x75
+ 949 02c6 00       		.sleb128 0
+ 950 02c7 00       		.byte	0
+ 951 02c8 0C       		.uleb128 0xc
+ 952 02c9 B0000000 		.4byte	.LVL20
+ 953 02cd C9050000 		.4byte	0x5c9
+ 954 02d1 DC020000 		.4byte	0x2dc
+ 955 02d5 0D       		.uleb128 0xd
+ 956 02d6 01       		.uleb128 0x1
+ 957 02d7 50       		.byte	0x50
+ 958 02d8 02       		.uleb128 0x2
+ 959 02d9 91       		.byte	0x91
+ 960 02da 64       		.sleb128 -28
+ 961 02db 00       		.byte	0
+ 962 02dc 0B       		.uleb128 0xb
+ 963 02dd CC000000 		.4byte	.LVL21
+ 964 02e1 DF050000 		.4byte	0x5df
+ 965 02e5 00       		.byte	0
+ 966 02e6 0E       		.uleb128 0xe
+ 967 02e7 79000000 		.4byte	0x79
+ 968 02eb F6020000 		.4byte	0x2f6
+ 969 02ef 0F       		.uleb128 0xf
+ 970 02f0 72000000 		.4byte	0x72
+ 971 02f4 01       		.byte	0x1
+ 972 02f5 00       		.byte	0
+ 973 02f6 0E       		.uleb128 0xe
+ 974 02f7 79000000 		.4byte	0x79
+ 975 02fb 06030000 		.4byte	0x306
+ 976 02ff 0F       		.uleb128 0xf
+ 977 0300 72000000 		.4byte	0x72
+ 978 0304 00       		.byte	0
+ 979 0305 00       		.byte	0
+ 980 0306 10       		.uleb128 0x10
+ 981 0307 06000000 		.4byte	.LASF23
+ 982 030b 01       		.byte	0x1
+ 983 030c 0E01     		.2byte	0x10e
+ 984 030e 00000000 		.4byte	.LFB5
+ 985 0312 0C000000 		.4byte	.LFE5-.LFB5
+ 986 0316 01       		.uleb128 0x1
+ 987 0317 9C       		.byte	0x9c
+ 988 0318 39030000 		.4byte	0x339
+ 989 031c 11       		.uleb128 0x11
+ 990 031d 85010000 		.4byte	.LASF26
+ 991 0321 01       		.byte	0x1
+ 992 0322 0E01     		.2byte	0x10e
+ 993 0324 CF000000 		.4byte	0xcf
+ 994 0328 01       		.uleb128 0x1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 27
+
+
+ 995 0329 50       		.byte	0x50
+ 996 032a 12       		.uleb128 0x12
+ 997 032b 29030000 		.4byte	.LASF24
+ 998 032f 01       		.byte	0x1
+ 999 0330 1001     		.2byte	0x110
+ 1000 0332 39030000 		.4byte	0x339
+ 1001 0336 01       		.uleb128 0x1
+ 1002 0337 53       		.byte	0x53
+ 1003 0338 00       		.byte	0
+ 1004 0339 04       		.uleb128 0x4
+ 1005 033a 04       		.byte	0x4
+ 1006 033b CF000000 		.4byte	0xcf
+ 1007 033f 13       		.uleb128 0x13
+ 1008 0340 D4010000 		.4byte	.LASF28
+ 1009 0344 01       		.byte	0x1
+ 1010 0345 2601     		.2byte	0x126
+ 1011 0347 CF000000 		.4byte	0xcf
+ 1012 034b 00000000 		.4byte	.LFB6
+ 1013 034f 0C000000 		.4byte	.LFE6-.LFB6
+ 1014 0353 01       		.uleb128 0x1
+ 1015 0354 9C       		.byte	0x9c
+ 1016 0355 68030000 		.4byte	0x368
+ 1017 0359 12       		.uleb128 0x12
+ 1018 035a 29030000 		.4byte	.LASF24
+ 1019 035e 01       		.byte	0x1
+ 1020 035f 2801     		.2byte	0x128
+ 1021 0361 39030000 		.4byte	0x339
+ 1022 0365 01       		.uleb128 0x1
+ 1023 0366 53       		.byte	0x53
+ 1024 0367 00       		.byte	0
+ 1025 0368 10       		.uleb128 0x10
+ 1026 0369 AF000000 		.4byte	.LASF25
+ 1027 036d 01       		.byte	0x1
+ 1028 036e 4801     		.2byte	0x148
+ 1029 0370 00000000 		.4byte	.LFB7
+ 1030 0374 10000000 		.4byte	.LFE7-.LFB7
+ 1031 0378 01       		.uleb128 0x1
+ 1032 0379 9C       		.byte	0x9c
+ 1033 037a 8F030000 		.4byte	0x38f
+ 1034 037e 14       		.uleb128 0x14
+ 1035 037f B2010000 		.4byte	.LASF27
+ 1036 0383 01       		.byte	0x1
+ 1037 0384 4801     		.2byte	0x148
+ 1038 0386 87000000 		.4byte	0x87
+ 1039 038a 00000000 		.4byte	.LLST0
+ 1040 038e 00       		.byte	0
+ 1041 038f 13       		.uleb128 0x13
+ 1042 0390 AB020000 		.4byte	.LASF29
+ 1043 0394 01       		.byte	0x1
+ 1044 0395 5E01     		.2byte	0x15e
+ 1045 0397 87000000 		.4byte	0x87
+ 1046 039b 00000000 		.4byte	.LFB8
+ 1047 039f 0C000000 		.4byte	.LFE8-.LFB8
+ 1048 03a3 01       		.uleb128 0x1
+ 1049 03a4 9C       		.byte	0x9c
+ 1050 03a5 BA030000 		.4byte	0x3ba
+ 1051 03a9 15       		.uleb128 0x15
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 28
+
+
+ 1052 03aa B2010000 		.4byte	.LASF27
+ 1053 03ae 01       		.byte	0x1
+ 1054 03af 6001     		.2byte	0x160
+ 1055 03b1 87000000 		.4byte	0x87
+ 1056 03b5 21000000 		.4byte	.LLST1
+ 1057 03b9 00       		.byte	0
+ 1058 03ba 16       		.uleb128 0x16
+ 1059 03bb 16020000 		.4byte	.LASF30
+ 1060 03bf 01       		.byte	0x1
+ 1061 03c0 7901     		.2byte	0x179
+ 1062 03c2 00000000 		.4byte	.LFB9
+ 1063 03c6 0C000000 		.4byte	.LFE9-.LFB9
+ 1064 03ca 01       		.uleb128 0x1
+ 1065 03cb 9C       		.byte	0x9c
+ 1066 03cc 17       		.uleb128 0x17
+ 1067 03cd BB010000 		.4byte	.LASF58
+ 1068 03d1 01       		.byte	0x1
+ 1069 03d2 8E01     		.2byte	0x18e
+ 1070 03d4 87000000 		.4byte	0x87
+ 1071 03d8 00000000 		.4byte	.LFB10
+ 1072 03dc 18000000 		.4byte	.LFE10-.LFB10
+ 1073 03e0 01       		.uleb128 0x1
+ 1074 03e1 9C       		.byte	0x9c
+ 1075 03e2 16       		.uleb128 0x16
+ 1076 03e3 C9020000 		.4byte	.LASF31
+ 1077 03e7 01       		.byte	0x1
+ 1078 03e8 A301     		.2byte	0x1a3
+ 1079 03ea 00000000 		.4byte	.LFB11
+ 1080 03ee 0C000000 		.4byte	.LFE11-.LFB11
+ 1081 03f2 01       		.uleb128 0x1
+ 1082 03f3 9C       		.byte	0x9c
+ 1083 03f4 08       		.uleb128 0x8
+ 1084 03f5 67030000 		.4byte	.LASF32
+ 1085 03f9 01       		.byte	0x1
+ 1086 03fa 4B       		.byte	0x4b
+ 1087 03fb 00000000 		.4byte	.LFB1
+ 1088 03ff 1C000000 		.4byte	.LFE1-.LFB1
+ 1089 0403 01       		.uleb128 0x1
+ 1090 0404 9C       		.byte	0x9c
+ 1091 0405 46040000 		.4byte	0x446
+ 1092 0409 0B       		.uleb128 0xb
+ 1093 040a 06000000 		.4byte	.LVL29
+ 1094 040e E2030000 		.4byte	0x3e2
+ 1095 0412 0C       		.uleb128 0xc
+ 1096 0413 0C000000 		.4byte	.LVL30
+ 1097 0417 06030000 		.4byte	0x306
+ 1098 041b 29040000 		.4byte	0x429
+ 1099 041f 0D       		.uleb128 0xd
+ 1100 0420 01       		.uleb128 0x1
+ 1101 0421 50       		.byte	0x50
+ 1102 0422 05       		.uleb128 0x5
+ 1103 0423 03       		.byte	0x3
+ 1104 0424 00000000 		.4byte	CycleISR_Interrupt
+ 1105 0428 00       		.byte	0
+ 1106 0429 0C       		.uleb128 0xc
+ 1107 042a 12000000 		.4byte	.LVL31
+ 1108 042e 68030000 		.4byte	0x368
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 29
+
+
+ 1109 0432 3C040000 		.4byte	0x43c
+ 1110 0436 0D       		.uleb128 0xd
+ 1111 0437 01       		.uleb128 0x1
+ 1112 0438 50       		.byte	0x50
+ 1113 0439 01       		.uleb128 0x1
+ 1114 043a 37       		.byte	0x37
+ 1115 043b 00       		.byte	0
+ 1116 043c 0B       		.uleb128 0xb
+ 1117 043d 16000000 		.4byte	.LVL32
+ 1118 0441 BA030000 		.4byte	0x3ba
+ 1119 0445 00       		.byte	0
+ 1120 0446 08       		.uleb128 0x8
+ 1121 0447 2D020000 		.4byte	.LASF33
+ 1122 044b 01       		.byte	0x1
+ 1123 044c 76       		.byte	0x76
+ 1124 044d 00000000 		.4byte	.LFB2
+ 1125 0451 1A000000 		.4byte	.LFE2-.LFB2
+ 1126 0455 01       		.uleb128 0x1
+ 1127 0456 9C       		.byte	0x9c
+ 1128 0457 A4040000 		.4byte	0x4a4
+ 1129 045b 18       		.uleb128 0x18
+ 1130 045c 85010000 		.4byte	.LASF26
+ 1131 0460 01       		.byte	0x1
+ 1132 0461 76       		.byte	0x76
+ 1133 0462 CF000000 		.4byte	0xcf
+ 1134 0466 38000000 		.4byte	.LLST2
+ 1135 046a 0B       		.uleb128 0xb
+ 1136 046b 08000000 		.4byte	.LVL34
+ 1137 046f E2030000 		.4byte	0x3e2
+ 1138 0473 0C       		.uleb128 0xc
+ 1139 0474 0E000000 		.4byte	.LVL35
+ 1140 0478 06030000 		.4byte	0x306
+ 1141 047c 87040000 		.4byte	0x487
+ 1142 0480 0D       		.uleb128 0xd
+ 1143 0481 01       		.uleb128 0x1
+ 1144 0482 50       		.byte	0x50
+ 1145 0483 02       		.uleb128 0x2
+ 1146 0484 74       		.byte	0x74
+ 1147 0485 00       		.sleb128 0
+ 1148 0486 00       		.byte	0
+ 1149 0487 0C       		.uleb128 0xc
+ 1150 0488 14000000 		.4byte	.LVL36
+ 1151 048c 68030000 		.4byte	0x368
+ 1152 0490 9A040000 		.4byte	0x49a
+ 1153 0494 0D       		.uleb128 0xd
+ 1154 0495 01       		.uleb128 0x1
+ 1155 0496 50       		.byte	0x50
+ 1156 0497 01       		.uleb128 0x1
+ 1157 0498 37       		.byte	0x37
+ 1158 0499 00       		.byte	0
+ 1159 049a 0B       		.uleb128 0xb
+ 1160 049b 18000000 		.4byte	.LVL37
+ 1161 049f BA030000 		.4byte	0x3ba
+ 1162 04a3 00       		.byte	0
+ 1163 04a4 08       		.uleb128 0x8
+ 1164 04a5 19000000 		.4byte	.LASF34
+ 1165 04a9 01       		.byte	0x1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 30
+
+
+ 1166 04aa 94       		.byte	0x94
+ 1167 04ab 00000000 		.4byte	.LFB3
+ 1168 04af 14000000 		.4byte	.LFE3-.LFB3
+ 1169 04b3 01       		.uleb128 0x1
+ 1170 04b4 9C       		.byte	0x9c
+ 1171 04b5 CC040000 		.4byte	0x4cc
+ 1172 04b9 0B       		.uleb128 0xb
+ 1173 04ba 06000000 		.4byte	.LVL38
+ 1174 04be E2030000 		.4byte	0x3e2
+ 1175 04c2 0B       		.uleb128 0xb
+ 1176 04c3 0C000000 		.4byte	.LVL39
+ 1177 04c7 06030000 		.4byte	0x306
+ 1178 04cb 00       		.byte	0
+ 1179 04cc 16       		.uleb128 0x16
+ 1180 04cd 0A030000 		.4byte	.LASF35
+ 1181 04d1 01       		.byte	0x1
+ 1182 04d2 BE01     		.2byte	0x1be
+ 1183 04d4 00000000 		.4byte	.LFB12
+ 1184 04d8 0C000000 		.4byte	.LFE12-.LFB12
+ 1185 04dc 01       		.uleb128 0x1
+ 1186 04dd 9C       		.byte	0x9c
+ 1187 04de 16       		.uleb128 0x16
+ 1188 04df 59020000 		.4byte	.LASF36
+ 1189 04e3 01       		.byte	0x1
+ 1190 04e4 D701     		.2byte	0x1d7
+ 1191 04e6 00000000 		.4byte	.LFB13
+ 1192 04ea 0C000000 		.4byte	.LFE13-.LFB13
+ 1193 04ee 01       		.uleb128 0x1
+ 1194 04ef 9C       		.byte	0x9c
+ 1195 04f0 19       		.uleb128 0x19
+ 1196 04f1 04030000 		.4byte	.LASF37
+ 1197 04f5 01       		.byte	0x1
+ 1198 04f6 1E       		.byte	0x1e
+ 1199 04f7 B9000000 		.4byte	0xb9
+ 1200 04fb 05       		.uleb128 0x5
+ 1201 04fc 03       		.byte	0x3
+ 1202 04fd 00000000 		.4byte	FPSID
+ 1203 0501 19       		.uleb128 0x19
+ 1204 0502 9F010000 		.4byte	.LASF38
+ 1205 0506 01       		.byte	0x1
+ 1206 0507 1F       		.byte	0x1f
+ 1207 0508 B9000000 		.4byte	0xb9
+ 1208 050c 05       		.uleb128 0x5
+ 1209 050d 03       		.byte	0x3
+ 1210 050e 00000000 		.4byte	FPSmPos
+ 1211 0512 19       		.uleb128 0x19
+ 1212 0513 1E030000 		.4byte	.LASF39
+ 1213 0517 01       		.byte	0x1
+ 1214 0518 20       		.byte	0x20
+ 1215 0519 23050000 		.4byte	0x523
+ 1216 051d 05       		.uleb128 0x5
+ 1217 051e 03       		.byte	0x3
+ 1218 051f 00000000 		.4byte	mPos
+ 1219 0523 07       		.uleb128 0x7
+ 1220 0524 2C000000 		.4byte	0x2c
+ 1221 0528 19       		.uleb128 0x19
+ 1222 0529 FE020000 		.4byte	.LASF40
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 31
+
+
+ 1223 052d 01       		.byte	0x1
+ 1224 052e 21       		.byte	0x21
+ 1225 052f 39050000 		.4byte	0x539
+ 1226 0533 05       		.uleb128 0x5
+ 1227 0534 03       		.byte	0x3
+ 1228 0535 00000000 		.4byte	mFlag
+ 1229 0539 07       		.uleb128 0x7
+ 1230 053a 79000000 		.4byte	0x79
+ 1231 053e 19       		.uleb128 0x19
+ 1232 053f AC010000 		.4byte	.LASF41
+ 1233 0543 01       		.byte	0x1
+ 1234 0544 22       		.byte	0x22
+ 1235 0545 87000000 		.4byte	0x87
+ 1236 0549 05       		.uleb128 0x5
+ 1237 054a 03       		.byte	0x3
+ 1238 054b 00000000 		.4byte	addre
+ 1239 054f 19       		.uleb128 0x19
+ 1240 0550 97000000 		.4byte	.LASF42
+ 1241 0554 01       		.byte	0x1
+ 1242 0555 23       		.byte	0x23
+ 1243 0556 87000000 		.4byte	0x87
+ 1244 055a 05       		.uleb128 0x5
+ 1245 055b 03       		.byte	0x3
+ 1246 055c 00000000 		.4byte	readPos
+ 1247 0560 19       		.uleb128 0x19
+ 1248 0561 86030000 		.4byte	.LASF43
+ 1249 0565 01       		.byte	0x1
+ 1250 0566 24       		.byte	0x24
+ 1251 0567 B9000000 		.4byte	0xb9
+ 1252 056b 05       		.uleb128 0x5
+ 1253 056c 03       		.byte	0x3
+ 1254 056d 00000000 		.4byte	buttonID
+ 1255 0571 1A       		.uleb128 0x1a
+ 1256 0572 9F000000 		.4byte	.LASF44
+ 1257 0576 9F000000 		.4byte	.LASF44
+ 1258 057a 03       		.byte	0x3
+ 1259 057b 93       		.byte	0x93
+ 1260 057c 1A       		.uleb128 0x1a
+ 1261 057d 84000000 		.4byte	.LASF45
+ 1262 0581 84000000 		.4byte	.LASF45
+ 1263 0585 03       		.byte	0x3
+ 1264 0586 A7       		.byte	0xa7
+ 1265 0587 1A       		.uleb128 0x1a
+ 1266 0588 ED020000 		.4byte	.LASF46
+ 1267 058c ED020000 		.4byte	.LASF46
+ 1268 0590 03       		.byte	0x3
+ 1269 0591 A3       		.byte	0xa3
+ 1270 0592 1A       		.uleb128 0x1a
+ 1271 0593 6E000000 		.4byte	.LASF47
+ 1272 0597 6E000000 		.4byte	.LASF47
+ 1273 059b 03       		.byte	0x3
+ 1274 059c A4       		.byte	0xa4
+ 1275 059d 1A       		.uleb128 0x1a
+ 1276 059e 7E030000 		.4byte	.LASF48
+ 1277 05a2 7E030000 		.4byte	.LASF48
+ 1278 05a6 04       		.byte	0x4
+ 1279 05a7 76       		.byte	0x76
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 32
+
+
+ 1280 05a8 1A       		.uleb128 0x1a
+ 1281 05a9 D2000000 		.4byte	.LASF49
+ 1282 05ad D2000000 		.4byte	.LASF49
+ 1283 05b1 03       		.byte	0x3
+ 1284 05b2 A9       		.byte	0xa9
+ 1285 05b3 1A       		.uleb128 0x1a
+ 1286 05b4 4B020000 		.4byte	.LASF50
+ 1287 05b8 4B020000 		.4byte	.LASF50
+ 1288 05bc 05       		.byte	0x5
+ 1289 05bd 3C       		.byte	0x3c
+ 1290 05be 1A       		.uleb128 0x1a
+ 1291 05bf 27000000 		.4byte	.LASF51
+ 1292 05c3 27000000 		.4byte	.LASF51
+ 1293 05c7 05       		.byte	0x5
+ 1294 05c8 70       		.byte	0x70
+ 1295 05c9 1A       		.uleb128 0x1a
+ 1296 05ca C4000000 		.4byte	.LASF52
+ 1297 05ce C4000000 		.4byte	.LASF52
+ 1298 05d2 05       		.byte	0x5
+ 1299 05d3 74       		.byte	0x74
+ 1300 05d4 1A       		.uleb128 0x1a
+ 1301 05d5 76030000 		.4byte	.LASF53
+ 1302 05d9 76030000 		.4byte	.LASF53
+ 1303 05dd 06       		.byte	0x6
+ 1304 05de E7       		.byte	0xe7
+ 1305 05df 1A       		.uleb128 0x1a
+ 1306 05e0 52030000 		.4byte	.LASF54
+ 1307 05e4 52030000 		.4byte	.LASF54
+ 1308 05e8 03       		.byte	0x3
+ 1309 05e9 94       		.byte	0x94
+ 1310 05ea 00       		.byte	0
+ 1311              		.section	.debug_abbrev,"",%progbits
+ 1312              	.Ldebug_abbrev0:
+ 1313 0000 01       		.uleb128 0x1
+ 1314 0001 11       		.uleb128 0x11
+ 1315 0002 01       		.byte	0x1
+ 1316 0003 25       		.uleb128 0x25
+ 1317 0004 0E       		.uleb128 0xe
+ 1318 0005 13       		.uleb128 0x13
+ 1319 0006 0B       		.uleb128 0xb
+ 1320 0007 03       		.uleb128 0x3
+ 1321 0008 0E       		.uleb128 0xe
+ 1322 0009 1B       		.uleb128 0x1b
+ 1323 000a 0E       		.uleb128 0xe
+ 1324 000b 55       		.uleb128 0x55
+ 1325 000c 17       		.uleb128 0x17
+ 1326 000d 11       		.uleb128 0x11
+ 1327 000e 01       		.uleb128 0x1
+ 1328 000f 10       		.uleb128 0x10
+ 1329 0010 17       		.uleb128 0x17
+ 1330 0011 00       		.byte	0
+ 1331 0012 00       		.byte	0
+ 1332 0013 02       		.uleb128 0x2
+ 1333 0014 24       		.uleb128 0x24
+ 1334 0015 00       		.byte	0
+ 1335 0016 0B       		.uleb128 0xb
+ 1336 0017 0B       		.uleb128 0xb
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 33
+
+
+ 1337 0018 3E       		.uleb128 0x3e
+ 1338 0019 0B       		.uleb128 0xb
+ 1339 001a 03       		.uleb128 0x3
+ 1340 001b 08       		.uleb128 0x8
+ 1341 001c 00       		.byte	0
+ 1342 001d 00       		.byte	0
+ 1343 001e 03       		.uleb128 0x3
+ 1344 001f 24       		.uleb128 0x24
+ 1345 0020 00       		.byte	0
+ 1346 0021 0B       		.uleb128 0xb
+ 1347 0022 0B       		.uleb128 0xb
+ 1348 0023 3E       		.uleb128 0x3e
+ 1349 0024 0B       		.uleb128 0xb
+ 1350 0025 03       		.uleb128 0x3
+ 1351 0026 0E       		.uleb128 0xe
+ 1352 0027 00       		.byte	0
+ 1353 0028 00       		.byte	0
+ 1354 0029 04       		.uleb128 0x4
+ 1355 002a 0F       		.uleb128 0xf
+ 1356 002b 00       		.byte	0
+ 1357 002c 0B       		.uleb128 0xb
+ 1358 002d 0B       		.uleb128 0xb
+ 1359 002e 49       		.uleb128 0x49
+ 1360 002f 13       		.uleb128 0x13
+ 1361 0030 00       		.byte	0
+ 1362 0031 00       		.byte	0
+ 1363 0032 05       		.uleb128 0x5
+ 1364 0033 15       		.uleb128 0x15
+ 1365 0034 00       		.byte	0
+ 1366 0035 27       		.uleb128 0x27
+ 1367 0036 19       		.uleb128 0x19
+ 1368 0037 00       		.byte	0
+ 1369 0038 00       		.byte	0
+ 1370 0039 06       		.uleb128 0x6
+ 1371 003a 16       		.uleb128 0x16
+ 1372 003b 00       		.byte	0
+ 1373 003c 03       		.uleb128 0x3
+ 1374 003d 0E       		.uleb128 0xe
+ 1375 003e 3A       		.uleb128 0x3a
+ 1376 003f 0B       		.uleb128 0xb
+ 1377 0040 3B       		.uleb128 0x3b
+ 1378 0041 05       		.uleb128 0x5
+ 1379 0042 49       		.uleb128 0x49
+ 1380 0043 13       		.uleb128 0x13
+ 1381 0044 00       		.byte	0
+ 1382 0045 00       		.byte	0
+ 1383 0046 07       		.uleb128 0x7
+ 1384 0047 35       		.uleb128 0x35
+ 1385 0048 00       		.byte	0
+ 1386 0049 49       		.uleb128 0x49
+ 1387 004a 13       		.uleb128 0x13
+ 1388 004b 00       		.byte	0
+ 1389 004c 00       		.byte	0
+ 1390 004d 08       		.uleb128 0x8
+ 1391 004e 2E       		.uleb128 0x2e
+ 1392 004f 01       		.byte	0x1
+ 1393 0050 3F       		.uleb128 0x3f
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 34
+
+
+ 1394 0051 19       		.uleb128 0x19
+ 1395 0052 03       		.uleb128 0x3
+ 1396 0053 0E       		.uleb128 0xe
+ 1397 0054 3A       		.uleb128 0x3a
+ 1398 0055 0B       		.uleb128 0xb
+ 1399 0056 3B       		.uleb128 0x3b
+ 1400 0057 0B       		.uleb128 0xb
+ 1401 0058 27       		.uleb128 0x27
+ 1402 0059 19       		.uleb128 0x19
+ 1403 005a 11       		.uleb128 0x11
+ 1404 005b 01       		.uleb128 0x1
+ 1405 005c 12       		.uleb128 0x12
+ 1406 005d 06       		.uleb128 0x6
+ 1407 005e 40       		.uleb128 0x40
+ 1408 005f 18       		.uleb128 0x18
+ 1409 0060 9742     		.uleb128 0x2117
+ 1410 0062 19       		.uleb128 0x19
+ 1411 0063 01       		.uleb128 0x1
+ 1412 0064 13       		.uleb128 0x13
+ 1413 0065 00       		.byte	0
+ 1414 0066 00       		.byte	0
+ 1415 0067 09       		.uleb128 0x9
+ 1416 0068 34       		.uleb128 0x34
+ 1417 0069 00       		.byte	0
+ 1418 006a 03       		.uleb128 0x3
+ 1419 006b 08       		.uleb128 0x8
+ 1420 006c 3A       		.uleb128 0x3a
+ 1421 006d 0B       		.uleb128 0xb
+ 1422 006e 3B       		.uleb128 0x3b
+ 1423 006f 0B       		.uleb128 0xb
+ 1424 0070 49       		.uleb128 0x49
+ 1425 0071 13       		.uleb128 0x13
+ 1426 0072 00       		.byte	0
+ 1427 0073 00       		.byte	0
+ 1428 0074 0A       		.uleb128 0xa
+ 1429 0075 34       		.uleb128 0x34
+ 1430 0076 00       		.byte	0
+ 1431 0077 03       		.uleb128 0x3
+ 1432 0078 0E       		.uleb128 0xe
+ 1433 0079 3A       		.uleb128 0x3a
+ 1434 007a 0B       		.uleb128 0xb
+ 1435 007b 3B       		.uleb128 0x3b
+ 1436 007c 0B       		.uleb128 0xb
+ 1437 007d 49       		.uleb128 0x49
+ 1438 007e 13       		.uleb128 0x13
+ 1439 007f 02       		.uleb128 0x2
+ 1440 0080 18       		.uleb128 0x18
+ 1441 0081 00       		.byte	0
+ 1442 0082 00       		.byte	0
+ 1443 0083 0B       		.uleb128 0xb
+ 1444 0084 898201   		.uleb128 0x4109
+ 1445 0087 00       		.byte	0
+ 1446 0088 11       		.uleb128 0x11
+ 1447 0089 01       		.uleb128 0x1
+ 1448 008a 31       		.uleb128 0x31
+ 1449 008b 13       		.uleb128 0x13
+ 1450 008c 00       		.byte	0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 35
+
+
+ 1451 008d 00       		.byte	0
+ 1452 008e 0C       		.uleb128 0xc
+ 1453 008f 898201   		.uleb128 0x4109
+ 1454 0092 01       		.byte	0x1
+ 1455 0093 11       		.uleb128 0x11
+ 1456 0094 01       		.uleb128 0x1
+ 1457 0095 31       		.uleb128 0x31
+ 1458 0096 13       		.uleb128 0x13
+ 1459 0097 01       		.uleb128 0x1
+ 1460 0098 13       		.uleb128 0x13
+ 1461 0099 00       		.byte	0
+ 1462 009a 00       		.byte	0
+ 1463 009b 0D       		.uleb128 0xd
+ 1464 009c 8A8201   		.uleb128 0x410a
+ 1465 009f 00       		.byte	0
+ 1466 00a0 02       		.uleb128 0x2
+ 1467 00a1 18       		.uleb128 0x18
+ 1468 00a2 9142     		.uleb128 0x2111
+ 1469 00a4 18       		.uleb128 0x18
+ 1470 00a5 00       		.byte	0
+ 1471 00a6 00       		.byte	0
+ 1472 00a7 0E       		.uleb128 0xe
+ 1473 00a8 01       		.uleb128 0x1
+ 1474 00a9 01       		.byte	0x1
+ 1475 00aa 49       		.uleb128 0x49
+ 1476 00ab 13       		.uleb128 0x13
+ 1477 00ac 01       		.uleb128 0x1
+ 1478 00ad 13       		.uleb128 0x13
+ 1479 00ae 00       		.byte	0
+ 1480 00af 00       		.byte	0
+ 1481 00b0 0F       		.uleb128 0xf
+ 1482 00b1 21       		.uleb128 0x21
+ 1483 00b2 00       		.byte	0
+ 1484 00b3 49       		.uleb128 0x49
+ 1485 00b4 13       		.uleb128 0x13
+ 1486 00b5 2F       		.uleb128 0x2f
+ 1487 00b6 0B       		.uleb128 0xb
+ 1488 00b7 00       		.byte	0
+ 1489 00b8 00       		.byte	0
+ 1490 00b9 10       		.uleb128 0x10
+ 1491 00ba 2E       		.uleb128 0x2e
+ 1492 00bb 01       		.byte	0x1
+ 1493 00bc 3F       		.uleb128 0x3f
+ 1494 00bd 19       		.uleb128 0x19
+ 1495 00be 03       		.uleb128 0x3
+ 1496 00bf 0E       		.uleb128 0xe
+ 1497 00c0 3A       		.uleb128 0x3a
+ 1498 00c1 0B       		.uleb128 0xb
+ 1499 00c2 3B       		.uleb128 0x3b
+ 1500 00c3 05       		.uleb128 0x5
+ 1501 00c4 27       		.uleb128 0x27
+ 1502 00c5 19       		.uleb128 0x19
+ 1503 00c6 11       		.uleb128 0x11
+ 1504 00c7 01       		.uleb128 0x1
+ 1505 00c8 12       		.uleb128 0x12
+ 1506 00c9 06       		.uleb128 0x6
+ 1507 00ca 40       		.uleb128 0x40
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 36
+
+
+ 1508 00cb 18       		.uleb128 0x18
+ 1509 00cc 9742     		.uleb128 0x2117
+ 1510 00ce 19       		.uleb128 0x19
+ 1511 00cf 01       		.uleb128 0x1
+ 1512 00d0 13       		.uleb128 0x13
+ 1513 00d1 00       		.byte	0
+ 1514 00d2 00       		.byte	0
+ 1515 00d3 11       		.uleb128 0x11
+ 1516 00d4 05       		.uleb128 0x5
+ 1517 00d5 00       		.byte	0
+ 1518 00d6 03       		.uleb128 0x3
+ 1519 00d7 0E       		.uleb128 0xe
+ 1520 00d8 3A       		.uleb128 0x3a
+ 1521 00d9 0B       		.uleb128 0xb
+ 1522 00da 3B       		.uleb128 0x3b
+ 1523 00db 05       		.uleb128 0x5
+ 1524 00dc 49       		.uleb128 0x49
+ 1525 00dd 13       		.uleb128 0x13
+ 1526 00de 02       		.uleb128 0x2
+ 1527 00df 18       		.uleb128 0x18
+ 1528 00e0 00       		.byte	0
+ 1529 00e1 00       		.byte	0
+ 1530 00e2 12       		.uleb128 0x12
+ 1531 00e3 34       		.uleb128 0x34
+ 1532 00e4 00       		.byte	0
+ 1533 00e5 03       		.uleb128 0x3
+ 1534 00e6 0E       		.uleb128 0xe
+ 1535 00e7 3A       		.uleb128 0x3a
+ 1536 00e8 0B       		.uleb128 0xb
+ 1537 00e9 3B       		.uleb128 0x3b
+ 1538 00ea 05       		.uleb128 0x5
+ 1539 00eb 49       		.uleb128 0x49
+ 1540 00ec 13       		.uleb128 0x13
+ 1541 00ed 02       		.uleb128 0x2
+ 1542 00ee 18       		.uleb128 0x18
+ 1543 00ef 00       		.byte	0
+ 1544 00f0 00       		.byte	0
+ 1545 00f1 13       		.uleb128 0x13
+ 1546 00f2 2E       		.uleb128 0x2e
+ 1547 00f3 01       		.byte	0x1
+ 1548 00f4 3F       		.uleb128 0x3f
+ 1549 00f5 19       		.uleb128 0x19
+ 1550 00f6 03       		.uleb128 0x3
+ 1551 00f7 0E       		.uleb128 0xe
+ 1552 00f8 3A       		.uleb128 0x3a
+ 1553 00f9 0B       		.uleb128 0xb
+ 1554 00fa 3B       		.uleb128 0x3b
+ 1555 00fb 05       		.uleb128 0x5
+ 1556 00fc 27       		.uleb128 0x27
+ 1557 00fd 19       		.uleb128 0x19
+ 1558 00fe 49       		.uleb128 0x49
+ 1559 00ff 13       		.uleb128 0x13
+ 1560 0100 11       		.uleb128 0x11
+ 1561 0101 01       		.uleb128 0x1
+ 1562 0102 12       		.uleb128 0x12
+ 1563 0103 06       		.uleb128 0x6
+ 1564 0104 40       		.uleb128 0x40
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 37
+
+
+ 1565 0105 18       		.uleb128 0x18
+ 1566 0106 9742     		.uleb128 0x2117
+ 1567 0108 19       		.uleb128 0x19
+ 1568 0109 01       		.uleb128 0x1
+ 1569 010a 13       		.uleb128 0x13
+ 1570 010b 00       		.byte	0
+ 1571 010c 00       		.byte	0
+ 1572 010d 14       		.uleb128 0x14
+ 1573 010e 05       		.uleb128 0x5
+ 1574 010f 00       		.byte	0
+ 1575 0110 03       		.uleb128 0x3
+ 1576 0111 0E       		.uleb128 0xe
+ 1577 0112 3A       		.uleb128 0x3a
+ 1578 0113 0B       		.uleb128 0xb
+ 1579 0114 3B       		.uleb128 0x3b
+ 1580 0115 05       		.uleb128 0x5
+ 1581 0116 49       		.uleb128 0x49
+ 1582 0117 13       		.uleb128 0x13
+ 1583 0118 02       		.uleb128 0x2
+ 1584 0119 17       		.uleb128 0x17
+ 1585 011a 00       		.byte	0
+ 1586 011b 00       		.byte	0
+ 1587 011c 15       		.uleb128 0x15
+ 1588 011d 34       		.uleb128 0x34
+ 1589 011e 00       		.byte	0
+ 1590 011f 03       		.uleb128 0x3
+ 1591 0120 0E       		.uleb128 0xe
+ 1592 0121 3A       		.uleb128 0x3a
+ 1593 0122 0B       		.uleb128 0xb
+ 1594 0123 3B       		.uleb128 0x3b
+ 1595 0124 05       		.uleb128 0x5
+ 1596 0125 49       		.uleb128 0x49
+ 1597 0126 13       		.uleb128 0x13
+ 1598 0127 02       		.uleb128 0x2
+ 1599 0128 17       		.uleb128 0x17
+ 1600 0129 00       		.byte	0
+ 1601 012a 00       		.byte	0
+ 1602 012b 16       		.uleb128 0x16
+ 1603 012c 2E       		.uleb128 0x2e
+ 1604 012d 00       		.byte	0
+ 1605 012e 3F       		.uleb128 0x3f
+ 1606 012f 19       		.uleb128 0x19
+ 1607 0130 03       		.uleb128 0x3
+ 1608 0131 0E       		.uleb128 0xe
+ 1609 0132 3A       		.uleb128 0x3a
+ 1610 0133 0B       		.uleb128 0xb
+ 1611 0134 3B       		.uleb128 0x3b
+ 1612 0135 05       		.uleb128 0x5
+ 1613 0136 27       		.uleb128 0x27
+ 1614 0137 19       		.uleb128 0x19
+ 1615 0138 11       		.uleb128 0x11
+ 1616 0139 01       		.uleb128 0x1
+ 1617 013a 12       		.uleb128 0x12
+ 1618 013b 06       		.uleb128 0x6
+ 1619 013c 40       		.uleb128 0x40
+ 1620 013d 18       		.uleb128 0x18
+ 1621 013e 9742     		.uleb128 0x2117
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 38
+
+
+ 1622 0140 19       		.uleb128 0x19
+ 1623 0141 00       		.byte	0
+ 1624 0142 00       		.byte	0
+ 1625 0143 17       		.uleb128 0x17
+ 1626 0144 2E       		.uleb128 0x2e
+ 1627 0145 00       		.byte	0
+ 1628 0146 3F       		.uleb128 0x3f
+ 1629 0147 19       		.uleb128 0x19
+ 1630 0148 03       		.uleb128 0x3
+ 1631 0149 0E       		.uleb128 0xe
+ 1632 014a 3A       		.uleb128 0x3a
+ 1633 014b 0B       		.uleb128 0xb
+ 1634 014c 3B       		.uleb128 0x3b
+ 1635 014d 05       		.uleb128 0x5
+ 1636 014e 27       		.uleb128 0x27
+ 1637 014f 19       		.uleb128 0x19
+ 1638 0150 49       		.uleb128 0x49
+ 1639 0151 13       		.uleb128 0x13
+ 1640 0152 11       		.uleb128 0x11
+ 1641 0153 01       		.uleb128 0x1
+ 1642 0154 12       		.uleb128 0x12
+ 1643 0155 06       		.uleb128 0x6
+ 1644 0156 40       		.uleb128 0x40
+ 1645 0157 18       		.uleb128 0x18
+ 1646 0158 9742     		.uleb128 0x2117
+ 1647 015a 19       		.uleb128 0x19
+ 1648 015b 00       		.byte	0
+ 1649 015c 00       		.byte	0
+ 1650 015d 18       		.uleb128 0x18
+ 1651 015e 05       		.uleb128 0x5
+ 1652 015f 00       		.byte	0
+ 1653 0160 03       		.uleb128 0x3
+ 1654 0161 0E       		.uleb128 0xe
+ 1655 0162 3A       		.uleb128 0x3a
+ 1656 0163 0B       		.uleb128 0xb
+ 1657 0164 3B       		.uleb128 0x3b
+ 1658 0165 0B       		.uleb128 0xb
+ 1659 0166 49       		.uleb128 0x49
+ 1660 0167 13       		.uleb128 0x13
+ 1661 0168 02       		.uleb128 0x2
+ 1662 0169 17       		.uleb128 0x17
+ 1663 016a 00       		.byte	0
+ 1664 016b 00       		.byte	0
+ 1665 016c 19       		.uleb128 0x19
+ 1666 016d 34       		.uleb128 0x34
+ 1667 016e 00       		.byte	0
+ 1668 016f 03       		.uleb128 0x3
+ 1669 0170 0E       		.uleb128 0xe
+ 1670 0171 3A       		.uleb128 0x3a
+ 1671 0172 0B       		.uleb128 0xb
+ 1672 0173 3B       		.uleb128 0x3b
+ 1673 0174 0B       		.uleb128 0xb
+ 1674 0175 49       		.uleb128 0x49
+ 1675 0176 13       		.uleb128 0x13
+ 1676 0177 3F       		.uleb128 0x3f
+ 1677 0178 19       		.uleb128 0x19
+ 1678 0179 02       		.uleb128 0x2
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 39
+
+
+ 1679 017a 18       		.uleb128 0x18
+ 1680 017b 00       		.byte	0
+ 1681 017c 00       		.byte	0
+ 1682 017d 1A       		.uleb128 0x1a
+ 1683 017e 2E       		.uleb128 0x2e
+ 1684 017f 00       		.byte	0
+ 1685 0180 3F       		.uleb128 0x3f
+ 1686 0181 19       		.uleb128 0x19
+ 1687 0182 3C       		.uleb128 0x3c
+ 1688 0183 19       		.uleb128 0x19
+ 1689 0184 6E       		.uleb128 0x6e
+ 1690 0185 0E       		.uleb128 0xe
+ 1691 0186 03       		.uleb128 0x3
+ 1692 0187 0E       		.uleb128 0xe
+ 1693 0188 3A       		.uleb128 0x3a
+ 1694 0189 0B       		.uleb128 0xb
+ 1695 018a 3B       		.uleb128 0x3b
+ 1696 018b 0B       		.uleb128 0xb
+ 1697 018c 00       		.byte	0
+ 1698 018d 00       		.byte	0
+ 1699 018e 00       		.byte	0
+ 1700              		.section	.debug_loc,"",%progbits
+ 1701              	.Ldebug_loc0:
+ 1702              	.LLST0:
+ 1703 0000 00000000 		.4byte	.LVL25
+ 1704 0004 02000000 		.4byte	.LVL26
+ 1705 0008 0100     		.2byte	0x1
+ 1706 000a 50       		.byte	0x50
+ 1707 000b 02000000 		.4byte	.LVL26
+ 1708 000f 10000000 		.4byte	.LFE7
+ 1709 0013 0400     		.2byte	0x4
+ 1710 0015 F3       		.byte	0xf3
+ 1711 0016 01       		.uleb128 0x1
+ 1712 0017 50       		.byte	0x50
+ 1713 0018 9F       		.byte	0x9f
+ 1714 0019 00000000 		.4byte	0
+ 1715 001d 00000000 		.4byte	0
+ 1716              	.LLST1:
+ 1717 0021 04000000 		.4byte	.LVL27
+ 1718 0025 06000000 		.4byte	.LVL28
+ 1719 0029 0500     		.2byte	0x5
+ 1720 002b 70       		.byte	0x70
+ 1721 002c 00       		.sleb128 0
+ 1722 002d 35       		.byte	0x35
+ 1723 002e 25       		.byte	0x25
+ 1724 002f 9F       		.byte	0x9f
+ 1725 0030 00000000 		.4byte	0
+ 1726 0034 00000000 		.4byte	0
+ 1727              	.LLST2:
+ 1728 0038 00000000 		.4byte	.LVL33
+ 1729 003c 07000000 		.4byte	.LVL34-1
+ 1730 0040 0100     		.2byte	0x1
+ 1731 0042 50       		.byte	0x50
+ 1732 0043 07000000 		.4byte	.LVL34-1
+ 1733 0047 1A000000 		.4byte	.LFE2
+ 1734 004b 0100     		.2byte	0x1
+ 1735 004d 54       		.byte	0x54
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 40
+
+
+ 1736 004e 00000000 		.4byte	0
+ 1737 0052 00000000 		.4byte	0
+ 1738              		.section	.debug_aranges,"",%progbits
+ 1739 0000 7C000000 		.4byte	0x7c
+ 1740 0004 0200     		.2byte	0x2
+ 1741 0006 00000000 		.4byte	.Ldebug_info0
+ 1742 000a 04       		.byte	0x4
+ 1743 000b 00       		.byte	0
+ 1744 000c 0000     		.2byte	0
+ 1745 000e 0000     		.2byte	0
+ 1746 0010 00000000 		.4byte	.LFB4
+ 1747 0014 F4000000 		.4byte	.LFE4-.LFB4
+ 1748 0018 00000000 		.4byte	.LFB5
+ 1749 001c 0C000000 		.4byte	.LFE5-.LFB5
+ 1750 0020 00000000 		.4byte	.LFB6
+ 1751 0024 0C000000 		.4byte	.LFE6-.LFB6
+ 1752 0028 00000000 		.4byte	.LFB7
+ 1753 002c 10000000 		.4byte	.LFE7-.LFB7
+ 1754 0030 00000000 		.4byte	.LFB8
+ 1755 0034 0C000000 		.4byte	.LFE8-.LFB8
+ 1756 0038 00000000 		.4byte	.LFB9
+ 1757 003c 0C000000 		.4byte	.LFE9-.LFB9
+ 1758 0040 00000000 		.4byte	.LFB10
+ 1759 0044 18000000 		.4byte	.LFE10-.LFB10
+ 1760 0048 00000000 		.4byte	.LFB11
+ 1761 004c 0C000000 		.4byte	.LFE11-.LFB11
+ 1762 0050 00000000 		.4byte	.LFB1
+ 1763 0054 1C000000 		.4byte	.LFE1-.LFB1
+ 1764 0058 00000000 		.4byte	.LFB2
+ 1765 005c 1A000000 		.4byte	.LFE2-.LFB2
+ 1766 0060 00000000 		.4byte	.LFB3
+ 1767 0064 14000000 		.4byte	.LFE3-.LFB3
+ 1768 0068 00000000 		.4byte	.LFB12
+ 1769 006c 0C000000 		.4byte	.LFE12-.LFB12
+ 1770 0070 00000000 		.4byte	.LFB13
+ 1771 0074 0C000000 		.4byte	.LFE13-.LFB13
+ 1772 0078 00000000 		.4byte	0
+ 1773 007c 00000000 		.4byte	0
+ 1774              		.section	.debug_ranges,"",%progbits
+ 1775              	.Ldebug_ranges0:
+ 1776 0000 00000000 		.4byte	.LFB4
+ 1777 0004 F4000000 		.4byte	.LFE4
+ 1778 0008 00000000 		.4byte	.LFB5
+ 1779 000c 0C000000 		.4byte	.LFE5
+ 1780 0010 00000000 		.4byte	.LFB6
+ 1781 0014 0C000000 		.4byte	.LFE6
+ 1782 0018 00000000 		.4byte	.LFB7
+ 1783 001c 10000000 		.4byte	.LFE7
+ 1784 0020 00000000 		.4byte	.LFB8
+ 1785 0024 0C000000 		.4byte	.LFE8
+ 1786 0028 00000000 		.4byte	.LFB9
+ 1787 002c 0C000000 		.4byte	.LFE9
+ 1788 0030 00000000 		.4byte	.LFB10
+ 1789 0034 18000000 		.4byte	.LFE10
+ 1790 0038 00000000 		.4byte	.LFB11
+ 1791 003c 0C000000 		.4byte	.LFE11
+ 1792 0040 00000000 		.4byte	.LFB1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 41
+
+
+ 1793 0044 1C000000 		.4byte	.LFE1
+ 1794 0048 00000000 		.4byte	.LFB2
+ 1795 004c 1A000000 		.4byte	.LFE2
+ 1796 0050 00000000 		.4byte	.LFB3
+ 1797 0054 14000000 		.4byte	.LFE3
+ 1798 0058 00000000 		.4byte	.LFB12
+ 1799 005c 0C000000 		.4byte	.LFE12
+ 1800 0060 00000000 		.4byte	.LFB13
+ 1801 0064 0C000000 		.4byte	.LFE13
+ 1802 0068 00000000 		.4byte	0
+ 1803 006c 00000000 		.4byte	0
+ 1804              		.section	.debug_line,"",%progbits
+ 1805              	.Ldebug_line0:
+ 1806 0000 F4010000 		.section	.debug_str,"MS",%progbits,1
+ 1806      0200DF00 
+ 1806      00000201 
+ 1806      FB0E0D00 
+ 1806      01010101 
+ 1807              	.LASF17:
+ 1808 0000 72656733 		.ascii	"reg32\000"
+ 1808      3200
+ 1809              	.LASF23:
+ 1810 0006 4379636C 		.ascii	"CycleISR_SetVector\000"
+ 1810      65495352 
+ 1810      5F536574 
+ 1810      56656374 
+ 1810      6F7200
+ 1811              	.LASF34:
+ 1812 0019 4379636C 		.ascii	"CycleISR_Stop\000"
+ 1812      65495352 
+ 1812      5F53746F 
+ 1812      7000
+ 1813              	.LASF51:
+ 1814 0027 4C43445F 		.ascii	"LCD_I2C_setCursor\000"
+ 1814      4932435F 
+ 1814      73657443 
+ 1814      7572736F 
+ 1814      7200
+ 1815              	.LASF6:
+ 1816 0039 73686F72 		.ascii	"short unsigned int\000"
+ 1816      7420756E 
+ 1816      7369676E 
+ 1816      65642069 
+ 1816      6E7400
+ 1817              	.LASF56:
+ 1818 004c 47656E65 		.ascii	"Generated_Source\\PSoC5\\CycleISR.c\000"
+ 1818      72617465 
+ 1818      645F536F 
+ 1818      75726365 
+ 1818      5C50536F 
+ 1819              	.LASF47:
+ 1820 006e 4932435F 		.ascii	"I2C_MasterClearStatus\000"
+ 1820      4D617374 
+ 1820      6572436C 
+ 1820      65617253 
+ 1820      74617475 
+ 1821              	.LASF45:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 42
+
+
+ 1822 0084 4932435F 		.ascii	"I2C_MasterWriteBuf\000"
+ 1822      4D617374 
+ 1822      65725772 
+ 1822      69746542 
+ 1822      756600
+ 1823              	.LASF42:
+ 1824 0097 72656164 		.ascii	"readPos\000"
+ 1824      506F7300 
+ 1825              	.LASF44:
+ 1826 009f 4932435F 		.ascii	"I2C_Start\000"
+ 1826      53746172 
+ 1826      7400
+ 1827              	.LASF14:
+ 1828 00a9 666C6F61 		.ascii	"float\000"
+ 1828      7400
+ 1829              	.LASF25:
+ 1830 00af 4379636C 		.ascii	"CycleISR_SetPriority\000"
+ 1830      65495352 
+ 1830      5F536574 
+ 1830      5072696F 
+ 1830      72697479 
+ 1831              	.LASF52:
+ 1832 00c4 4C43445F 		.ascii	"LCD_I2C_print\000"
+ 1832      4932435F 
+ 1832      7072696E 
+ 1832      7400
+ 1833              	.LASF49:
+ 1834 00d2 4932435F 		.ascii	"I2C_MasterReadBuf\000"
+ 1834      4D617374 
+ 1834      65725265 
+ 1834      61644275 
+ 1834      6600
+ 1835              	.LASF4:
+ 1836 00e4 756E7369 		.ascii	"unsigned char\000"
+ 1836      676E6564 
+ 1836      20636861 
+ 1836      7200
+ 1837              	.LASF55:
+ 1838 00f2 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1838      43313120 
+ 1838      352E342E 
+ 1838      31203230 
+ 1838      31363036 
+ 1839 0125 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1839      20726576 
+ 1839      6973696F 
+ 1839      6E203233 
+ 1839      37373135 
+ 1840 0158 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1840      66756E63 
+ 1840      74696F6E 
+ 1840      2D736563 
+ 1840      74696F6E 
+ 1841              	.LASF16:
+ 1842 0180 72656738 		.ascii	"reg8\000"
+ 1842      00
+ 1843              	.LASF26:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 43
+
+
+ 1844 0185 61646472 		.ascii	"address\000"
+ 1844      65737300 
+ 1845              	.LASF8:
+ 1846 018d 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1846      20756E73 
+ 1846      69676E65 
+ 1846      6420696E 
+ 1846      7400
+ 1847              	.LASF38:
+ 1848 019f 4650536D 		.ascii	"FPSmPos\000"
+ 1848      506F7300 
+ 1849              	.LASF19:
+ 1850 01a7 61646472 		.ascii	"addr\000"
+ 1850      00
+ 1851              	.LASF41:
+ 1852 01ac 61646472 		.ascii	"addre\000"
+ 1852      6500
+ 1853              	.LASF27:
+ 1854 01b2 7072696F 		.ascii	"priority\000"
+ 1854      72697479 
+ 1854      00
+ 1855              	.LASF58:
+ 1856 01bb 4379636C 		.ascii	"CycleISR_GetState\000"
+ 1856      65495352 
+ 1856      5F476574 
+ 1856      53746174 
+ 1856      6500
+ 1857              	.LASF15:
+ 1858 01cd 646F7562 		.ascii	"double\000"
+ 1858      6C6500
+ 1859              	.LASF28:
+ 1860 01d4 4379636C 		.ascii	"CycleISR_GetVector\000"
+ 1860      65495352 
+ 1860      5F476574 
+ 1860      56656374 
+ 1860      6F7200
+ 1861              	.LASF5:
+ 1862 01e7 73686F72 		.ascii	"short int\000"
+ 1862      7420696E 
+ 1862      7400
+ 1863              	.LASF57:
+ 1864 01f1 453A5C53 		.ascii	"E:\\SP21\\ECE405\\BioLock\\BioLock.cydsn\000"
+ 1864      5032315C 
+ 1864      45434534 
+ 1864      30355C42 
+ 1864      696F4C6F 
+ 1865              	.LASF30:
+ 1866 0216 4379636C 		.ascii	"CycleISR_Enable\000"
+ 1866      65495352 
+ 1866      5F456E61 
+ 1866      626C6500 
+ 1867              	.LASF13:
+ 1868 0226 75696E74 		.ascii	"uint32\000"
+ 1868      333200
+ 1869              	.LASF33:
+ 1870 022d 4379636C 		.ascii	"CycleISR_StartEx\000"
+ 1870      65495352 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 44
+
+
+ 1870      5F537461 
+ 1870      72744578 
+ 1870      00
+ 1871              	.LASF0:
+ 1872 023e 756E7369 		.ascii	"unsigned int\000"
+ 1872      676E6564 
+ 1872      20696E74 
+ 1872      00
+ 1873              	.LASF50:
+ 1874 024b 4C43445F 		.ascii	"LCD_I2C_clear\000"
+ 1874      4932435F 
+ 1874      636C6561 
+ 1874      7200
+ 1875              	.LASF36:
+ 1876 0259 4379636C 		.ascii	"CycleISR_ClearPending\000"
+ 1876      65495352 
+ 1876      5F436C65 
+ 1876      61725065 
+ 1876      6E64696E 
+ 1877              	.LASF9:
+ 1878 026f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1878      206C6F6E 
+ 1878      6720756E 
+ 1878      7369676E 
+ 1878      65642069 
+ 1879              	.LASF22:
+ 1880 0286 4379636C 		.ascii	"CycleISR_Interrupt\000"
+ 1880      65495352 
+ 1880      5F496E74 
+ 1880      65727275 
+ 1880      707400
+ 1881              	.LASF21:
+ 1882 0299 63706F73 		.ascii	"cpos\000"
+ 1882      00
+ 1883              	.LASF18:
+ 1884 029e 63796973 		.ascii	"cyisraddress\000"
+ 1884      72616464 
+ 1884      72657373 
+ 1884      00
+ 1885              	.LASF29:
+ 1886 02ab 4379636C 		.ascii	"CycleISR_GetPriority\000"
+ 1886      65495352 
+ 1886      5F476574 
+ 1886      5072696F 
+ 1886      72697479 
+ 1887              	.LASF10:
+ 1888 02c0 73697A65 		.ascii	"sizetype\000"
+ 1888      74797065 
+ 1888      00
+ 1889              	.LASF31:
+ 1890 02c9 4379636C 		.ascii	"CycleISR_Disable\000"
+ 1890      65495352 
+ 1890      5F446973 
+ 1890      61626C65 
+ 1890      00
+ 1891              	.LASF1:
+ 1892 02da 6C6F6E67 		.ascii	"long long int\000"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 45
+
+
+ 1892      206C6F6E 
+ 1892      6720696E 
+ 1892      7400
+ 1893              	.LASF11:
+ 1894 02e8 63686172 		.ascii	"char\000"
+ 1894      00
+ 1895              	.LASF46:
+ 1896 02ed 4932435F 		.ascii	"I2C_MasterStatus\000"
+ 1896      4D617374 
+ 1896      65725374 
+ 1896      61747573 
+ 1896      00
+ 1897              	.LASF40:
+ 1898 02fe 6D466C61 		.ascii	"mFlag\000"
+ 1898      6700
+ 1899              	.LASF37:
+ 1900 0304 46505349 		.ascii	"FPSID\000"
+ 1900      4400
+ 1901              	.LASF35:
+ 1902 030a 4379636C 		.ascii	"CycleISR_SetPending\000"
+ 1902      65495352 
+ 1902      5F536574 
+ 1902      50656E64 
+ 1902      696E6700 
+ 1903              	.LASF39:
+ 1904 031e 6D506F73 		.ascii	"mPos\000"
+ 1904      00
+ 1905              	.LASF12:
+ 1906 0323 75696E74 		.ascii	"uint8\000"
+ 1906      3800
+ 1907              	.LASF24:
+ 1908 0329 72616D56 		.ascii	"ramVectorTable\000"
+ 1908      6563746F 
+ 1908      72546162 
+ 1908      6C6500
+ 1909              	.LASF7:
+ 1910 0338 6C6F6E67 		.ascii	"long int\000"
+ 1910      20696E74 
+ 1910      00
+ 1911              	.LASF20:
+ 1912 0341 6D706F73 		.ascii	"mpos\000"
+ 1912      00
+ 1913              	.LASF2:
+ 1914 0346 6C6F6E67 		.ascii	"long double\000"
+ 1914      20646F75 
+ 1914      626C6500 
+ 1915              	.LASF54:
+ 1916 0352 4932435F 		.ascii	"I2C_Stop\000"
+ 1916      53746F70 
+ 1916      00
+ 1917              	.LASF3:
+ 1918 035b 7369676E 		.ascii	"signed char\000"
+ 1918      65642063 
+ 1918      68617200 
+ 1919              	.LASF32:
+ 1920 0367 4379636C 		.ascii	"CycleISR_Start\000"
+ 1920      65495352 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\cc2Dah4a.s 			page 46
+
+
+ 1920      5F537461 
+ 1920      727400
+ 1921              	.LASF53:
+ 1922 0376 73707269 		.ascii	"sprintf\000"
+ 1922      6E746600 
+ 1923              	.LASF48:
+ 1924 037e 43794465 		.ascii	"CyDelay\000"
+ 1924      6C617900 
+ 1925              	.LASF43:
+ 1926 0386 62757474 		.ascii	"buttonID\000"
+ 1926      6F6E4944 
+ 1926      00
+ 1927              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

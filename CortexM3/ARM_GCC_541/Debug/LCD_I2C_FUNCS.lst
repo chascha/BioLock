@@ -1,0 +1,3849 @@
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"LCD_I2C_FUNCS.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.LCD_I2C_expanderWrite,"ax",%progbits
+  20              		.align	2
+  21              		.global	LCD_I2C_expanderWrite
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	LCD_I2C_expanderWrite, %function
+  25              	LCD_I2C_expanderWrite:
+  26              	.LFB83:
+  27              		.file 1 "Generated_Source\\PSoC5\\LCD_I2C_FUNCS.c"
+   1:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** /****************************************************************************
+   2:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * This file is part of the PCF8574AT Custom Component for PSoC Devices.
+   3:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** *
+   4:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * Copyright (C) 2017 Carlos Diaz <carlos.santiago.diaz@gmail.com>
+   5:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** *
+   6:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * Based on the port of: Šarūnas Straigis
+   7:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * http://www.element14.com/community/people/sarunaszx/blog
+   8:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** *
+   9:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * Permission to use, copy, modify, and/or distribute this software for any
+  10:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * purpose with or without fee is hereby granted, provided that the above
+  11:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * copyright notice and this permission notice appear in all copies.
+  12:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** *
+  13:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  14:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  15:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  16:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  17:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  18:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  19:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  20:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** ****************************************************************************/
+  21:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     
+  22:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include <cytypes.h>
+  23:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include <cyfitter.h>
+  24:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  25:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include "project.h"
+  26:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  27:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include <stdint.h>
+  28:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include <string.h>
+  29:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  30:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include "LCD_I2C_REGS.h"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 2
+
+
+  31:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include "LCD_I2C_LL_I2C.h"
+  32:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** #include "LCD_I2C_FUNCS.h"
+  33:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  34:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** struct LCD_I2C_Config LCD_I2C_config;
+  35:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  36:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** /*
+  37:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_addr;
+  38:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_displayfunction;
+  39:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_displaycontrol;
+  40:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_displaymode;
+  41:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_cols;
+  42:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_rows;
+  43:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_charsize;
+  44:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** uint8_t LCD_I2C_backlightval;
+  45:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** */
+  46:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  47:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // When the display powers up, it is configured as follows:
+  48:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //
+  49:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // 1. Display clear
+  50:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // 2. Function set: 
+  51:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    DL = 1; 8-bit interface data 
+  52:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    N = 0; 1-line display 
+  53:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    F = 0; 5x8 dot character font 
+  54:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // 3. Display on/off control: 
+  55:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    D = 0; Display off 
+  56:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    C = 0; Cursor off 
+  57:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    B = 0; Blinking off 
+  58:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // 4. Entry mode set: 
+  59:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    I/D = 1; Increment by 1
+  60:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** //    S = 0; No shift 
+  61:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_start(void)
+  62:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+  63:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.addr = 39;
+  64:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.cols = 16;
+  65:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.rows = 2;
+  66:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.charsize = 0;
+  67:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.backlightval = LCD_BACKLIGHT;
+  68:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
+  69:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  70:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	if (LCD_I2C_config.rows > 1) {
+  71:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_config.displayfunction |= LCD_2LINE;
+  72:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+  73:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  74:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// for some 1 line displays you can select a 10 pixel high font
+  75:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	if ((LCD_I2C_config.charsize != 0) && (LCD_I2C_config.rows == 1)) {
+  76:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_config.displayfunction |= LCD_5x10DOTS;
+  77:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+  78:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  79:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
+  80:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// according to datasheet, we need at least 40ms after power rises above 2.7V
+  81:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50
+  82:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(50);
+  83:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     
+  84:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_begin();
+  85:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+  86:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  87:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_begin(void)
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 3
+
+
+  88:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+  89:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// Now we pull both RS and R/W low to begin commands
+  90:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     // reset expanderand turn backlight off (Bit 8 =1)
+  91:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(LCD_I2C_config.backlightval);
+  92:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(1000);
+  93:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  94:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	//put the LCD into 4 bit mode
+  95:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// this is according to the hitachi HD44780 datasheet
+  96:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// figure 24, pg 46
+  97:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+  98:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// we start in 8bit mode, try to set 4 bit mode
+  99:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(0x03 << 4);
+ 100:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(4500); // wait min 4.1ms
+ 101:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 102:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// second try
+ 103:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(0x03 << 4);
+ 104:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(4500); // wait min 4.1ms
+ 105:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 106:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// third go!
+ 107:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(0x03 << 4); 
+ 108:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(150);
+ 109:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 110:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// finally, set to 4-bit interface
+ 111:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(0x02 << 4); 
+ 112:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 113:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// set # lines, font size, etc.
+ 114:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_FUNCTIONSET | LCD_I2C_config.displayfunction);  
+ 115:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 116:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// turn the display on with no cursor or blinking default
+ 117:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+ 118:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_display();
+ 119:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 120:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// clear it off
+ 121:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_clear();
+ 122:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 123:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// Initialize to default text direction (for roman languages)
+ 124:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
+ 125:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 126:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// set the entry mode
+ 127:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 128:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 129:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_home();
+ 130:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 131:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 132:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** /********** high level commands, for the user! */
+ 133:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_clear(void)
+ 134:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 135:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
+ 136:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(2);  // this command takes a long time!
+ 137:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 138:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 139:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_home(void)
+ 140:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 141:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_command(LCD_RETURNHOME);  // set cursor position to zero
+ 142:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(2);  // this command takes a long time!
+ 143:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 144:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 4
+
+
+ 145:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_setCursor(uint8_t col, uint8_t row)
+ 146:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 147:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	const uint8_t row_offsets[4] = { 0x00, 0x40, 0x14, 0x54 };
+ 148:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	if (row > LCD_I2C_config.rows) {
+ 149:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		row = LCD_I2C_config.rows - 1;    // we count rows starting w/0
+ 150:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+ 151:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_SETDDRAMADDR | (col + row_offsets[row]));
+ 152:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 153:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 154:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // Turn the display on/off (quickly)
+ 155:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_noDisplay(void)
+ 156:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 157:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_DISPLAYON;
+ 158:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 159:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 160:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 161:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_display(void)
+ 162:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 163:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaycontrol |= LCD_DISPLAYON;
+ 164:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 165:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 166:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 167:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // Turns the underline cursor on/off
+ 168:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_noCursor(void)
+ 169:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 170:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_CURSORON;
+ 171:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 172:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 173:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 174:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_cursor(void)
+ 175:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 176:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol |= LCD_CURSORON;
+ 177:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 178:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 179:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 180:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // Turn on and off the blinking cursor
+ 181:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_noBlink(void)
+ 182:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 183:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_BLINKON;
+ 184:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 185:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 186:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 187:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_blink(void)
+ 188:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 189:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaycontrol |= LCD_BLINKON;
+ 190:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 191:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 192:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 193:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // These commands scroll the display without changing the RAM
+ 194:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_scrollDisplayLeft(void)
+ 195:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 196:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
+ 197:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 198:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 199:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_scrollDisplayRight(void)
+ 200:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 201:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 5
+
+
+ 202:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 203:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 204:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // This is for text that flows Left to Right
+ 205:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_leftToRight(void)
+ 206:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 207:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaymode |= LCD_ENTRYLEFT;
+ 208:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 209:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 210:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 211:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // This is for text that flows Right to Left
+ 212:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_rightToLeft(void)
+ 213:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 214:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaymode &= ~LCD_ENTRYLEFT;
+ 215:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 216:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 217:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 218:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // This will 'right justify' text from the cursor
+ 219:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_autoscroll(void)
+ 220:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 221:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaymode |= LCD_ENTRYSHIFTINCREMENT;
+ 222:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 223:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 224:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 225:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // This will 'left justify' text from the cursor
+ 226:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_noAutoscroll(void)
+ 227:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 228:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
+ 229:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 230:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 231:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 232:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // Allows us to fill the first 8 CGRAM locations
+ 233:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // with custom characters
+ 234:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_createChar(uint8_t location, uint8_t charmap[])
+ 235:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 236:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     location &= 0x7; // we only have 8 locations 0-7
+ 237:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_SETCGRAMADDR | (location << 3));
+ 238:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	for (uint32_t i = 0; i < 8; i++) {
+ 239:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_write(charmap[i]);
+ 240:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+ 241:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 242:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 243:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // Turn the (optional) backlight off/on
+ 244:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_noBacklight(void)
+ 245:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 246:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.backlightval = LCD_NOBACKLIGHT;
+ 247:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(0);
+ 248:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 249:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 250:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_backlight(void)
+ 251:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 252:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.backlightval = LCD_BACKLIGHT;
+ 253:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(0);
+ 254:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 255:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 256:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_expanderWrite(uint8_t data)
+ 257:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+  28              		.loc 1 257 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 6
+
+
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              	.LVL0:
+  33 0000 08B5     		push	{r3, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+ 258:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_writeByte(LCD_I2C_config.addr, data | LCD_I2C_config.backlightval);
+  37              		.loc 1 258 0
+  38 0002 034B     		ldr	r3, .L3
+  39 0004 D979     		ldrb	r1, [r3, #7]	@ zero_extendqisi2
+  40 0006 0143     		orrs	r1, r1, r0
+  41 0008 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+  42              	.LVL1:
+  43 000a FFF7FEFF 		bl	LCD_I2C_writeByte
+  44              	.LVL2:
+  45 000e 08BD     		pop	{r3, pc}
+  46              	.L4:
+  47              		.align	2
+  48              	.L3:
+  49 0010 00000000 		.word	LCD_I2C_config
+  50              		.cfi_endproc
+  51              	.LFE83:
+  52              		.size	LCD_I2C_expanderWrite, .-LCD_I2C_expanderWrite
+  53              		.section	.text.LCD_I2C_noBacklight,"ax",%progbits
+  54              		.align	2
+  55              		.global	LCD_I2C_noBacklight
+  56              		.thumb
+  57              		.thumb_func
+  58              		.type	LCD_I2C_noBacklight, %function
+  59              	LCD_I2C_noBacklight:
+  60              	.LFB81:
+ 245:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.backlightval = LCD_NOBACKLIGHT;
+  61              		.loc 1 245 0
+  62              		.cfi_startproc
+  63              		@ args = 0, pretend = 0, frame = 0
+  64              		@ frame_needed = 0, uses_anonymous_args = 0
+  65 0000 08B5     		push	{r3, lr}
+  66              		.cfi_def_cfa_offset 8
+  67              		.cfi_offset 3, -8
+  68              		.cfi_offset 14, -4
+ 246:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(0);
+  69              		.loc 1 246 0
+  70 0002 0020     		movs	r0, #0
+  71 0004 024B     		ldr	r3, .L7
+  72 0006 D871     		strb	r0, [r3, #7]
+ 247:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+  73              		.loc 1 247 0
+  74 0008 FFF7FEFF 		bl	LCD_I2C_expanderWrite
+  75              	.LVL3:
+  76 000c 08BD     		pop	{r3, pc}
+  77              	.L8:
+  78 000e 00BF     		.align	2
+  79              	.L7:
+  80 0010 00000000 		.word	LCD_I2C_config
+  81              		.cfi_endproc
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 7
+
+
+  82              	.LFE81:
+  83              		.size	LCD_I2C_noBacklight, .-LCD_I2C_noBacklight
+  84              		.section	.text.LCD_I2C_backlight,"ax",%progbits
+  85              		.align	2
+  86              		.global	LCD_I2C_backlight
+  87              		.thumb
+  88              		.thumb_func
+  89              		.type	LCD_I2C_backlight, %function
+  90              	LCD_I2C_backlight:
+  91              	.LFB82:
+ 251:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.backlightval = LCD_BACKLIGHT;
+  92              		.loc 1 251 0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96 0000 08B5     		push	{r3, lr}
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 3, -8
+  99              		.cfi_offset 14, -4
+ 252:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(0);
+ 100              		.loc 1 252 0
+ 101 0002 0822     		movs	r2, #8
+ 102 0004 024B     		ldr	r3, .L11
+ 103 0006 DA71     		strb	r2, [r3, #7]
+ 253:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 104              		.loc 1 253 0
+ 105 0008 0020     		movs	r0, #0
+ 106 000a FFF7FEFF 		bl	LCD_I2C_expanderWrite
+ 107              	.LVL4:
+ 108 000e 08BD     		pop	{r3, pc}
+ 109              	.L12:
+ 110              		.align	2
+ 111              	.L11:
+ 112 0010 00000000 		.word	LCD_I2C_config
+ 113              		.cfi_endproc
+ 114              	.LFE82:
+ 115              		.size	LCD_I2C_backlight, .-LCD_I2C_backlight
+ 116              		.section	.text.LCD_I2C_setBacklight,"ax",%progbits
+ 117              		.align	2
+ 118              		.global	LCD_I2C_setBacklight
+ 119              		.thumb
+ 120              		.thumb_func
+ 121              		.type	LCD_I2C_setBacklight, %function
+ 122              	LCD_I2C_setBacklight:
+ 123              	.LFB87:
+ 259:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 260:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 261:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_write(uint8_t data)
+ 262:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 263:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_send(data, RS);
+ 264:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 265:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 266:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_command(uint8_t command)
+ 267:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 268:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_send(command, 0);
+ 269:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 270:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 8
+
+
+ 271:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_print(const char *word)
+ 272:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 273:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     for (uint32_t i = 0; word[i] != '\0'; ++i) {
+ 274:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****         LCD_I2C_write(word[i]);
+ 275:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     }
+ 276:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 277:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 278:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_setBacklight(bool backlight)
+ 279:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 124              		.loc 1 279 0
+ 125              		.cfi_startproc
+ 126              		@ args = 0, pretend = 0, frame = 0
+ 127              		@ frame_needed = 0, uses_anonymous_args = 0
+ 128              	.LVL5:
+ 129 0000 08B5     		push	{r3, lr}
+ 130              		.cfi_def_cfa_offset 8
+ 131              		.cfi_offset 3, -8
+ 132              		.cfi_offset 14, -4
+ 280:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     backlight ? LCD_I2C_backlight() : LCD_I2C_noBacklight();
+ 133              		.loc 1 280 0
+ 134 0002 10B1     		cbz	r0, .L14
+ 135              		.loc 1 280 0 is_stmt 0 discriminator 1
+ 136 0004 FFF7FEFF 		bl	LCD_I2C_backlight
+ 137              	.LVL6:
+ 138 0008 08BD     		pop	{r3, pc}
+ 139              	.LVL7:
+ 140              	.L14:
+ 141              		.loc 1 280 0 discriminator 2
+ 142 000a FFF7FEFF 		bl	LCD_I2C_noBacklight
+ 143              	.LVL8:
+ 144 000e 08BD     		pop	{r3, pc}
+ 145              		.cfi_endproc
+ 146              	.LFE87:
+ 147              		.size	LCD_I2C_setBacklight, .-LCD_I2C_setBacklight
+ 148              		.section	.text.LCD_I2C_pulseEnable,"ax",%progbits
+ 149              		.align	2
+ 150              		.global	LCD_I2C_pulseEnable
+ 151              		.thumb
+ 152              		.thumb_func
+ 153              		.type	LCD_I2C_pulseEnable, %function
+ 154              	LCD_I2C_pulseEnable:
+ 155              	.LFB89:
+ 281:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 282:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 283:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_loadCustomCharacter(uint8_t char_num, uint8_t *rows)
+ 284:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 285:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_createChar(char_num, rows);
+ 286:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 287:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 288:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_pulseEnable(uint8_t data)
+ 289:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 156              		.loc 1 289 0 is_stmt 1
+ 157              		.cfi_startproc
+ 158              		@ args = 0, pretend = 0, frame = 0
+ 159              		@ frame_needed = 0, uses_anonymous_args = 0
+ 160              	.LVL9:
+ 161 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 9
+
+
+ 162              		.cfi_def_cfa_offset 8
+ 163              		.cfi_offset 4, -8
+ 164              		.cfi_offset 14, -4
+ 165 0002 0446     		mov	r4, r0
+ 290:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     // EN high
+ 291:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(data | EN);
+ 166              		.loc 1 291 0
+ 167 0004 40F00400 		orr	r0, r0, #4
+ 168              	.LVL10:
+ 169 0008 FFF7FEFF 		bl	LCD_I2C_expanderWrite
+ 170              	.LVL11:
+ 292:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     // enable pulse must be >450ns
+ 293:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(1);
+ 171              		.loc 1 293 0
+ 172 000c 0120     		movs	r0, #1
+ 173 000e FFF7FEFF 		bl	CyDelayUs
+ 174              	.LVL12:
+ 294:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     // En low
+ 295:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(data & ~EN);
+ 175              		.loc 1 295 0
+ 176 0012 04F0FB00 		and	r0, r4, #251
+ 177 0016 FFF7FEFF 		bl	LCD_I2C_expanderWrite
+ 178              	.LVL13:
+ 296:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     // commands need > 37us to settle
+ 297:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(50);
+ 179              		.loc 1 297 0
+ 180 001a 3220     		movs	r0, #50
+ 181 001c FFF7FEFF 		bl	CyDelayUs
+ 182              	.LVL14:
+ 183 0020 10BD     		pop	{r4, pc}
+ 184              		.cfi_endproc
+ 185              	.LFE89:
+ 186              		.size	LCD_I2C_pulseEnable, .-LCD_I2C_pulseEnable
+ 187 0022 00BF     		.section	.text.LCD_I2C_write4bits,"ax",%progbits
+ 188              		.align	2
+ 189              		.global	LCD_I2C_write4bits
+ 190              		.thumb
+ 191              		.thumb_func
+ 192              		.type	LCD_I2C_write4bits, %function
+ 193              	LCD_I2C_write4bits:
+ 194              	.LFB91:
+ 298:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 299:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 300:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** // write either command or data
+ 301:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_send(uint8_t value, const uint8_t mode)
+ 302:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {
+ 303:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	uint8_t highnib = value & 0xf0;
+ 304:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	uint8_t lownib = (value << 4) & 0xf0;
+ 305:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(highnib | mode);
+ 306:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(lownib | mode);
+ 307:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 308:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 309:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** void LCD_I2C_write4bits(const uint8_t data)
+ 310:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** {    
+ 195              		.loc 1 310 0
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 10
+
+
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199              	.LVL15:
+ 200 0000 10B5     		push	{r4, lr}
+ 201              		.cfi_def_cfa_offset 8
+ 202              		.cfi_offset 4, -8
+ 203              		.cfi_offset 14, -4
+ 204 0002 0446     		mov	r4, r0
+ 311:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_expanderWrite(data);
+ 205              		.loc 1 311 0
+ 206 0004 FFF7FEFF 		bl	LCD_I2C_expanderWrite
+ 207              	.LVL16:
+ 312:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_pulseEnable(data);
+ 208              		.loc 1 312 0
+ 209 0008 2046     		mov	r0, r4
+ 210 000a FFF7FEFF 		bl	LCD_I2C_pulseEnable
+ 211              	.LVL17:
+ 212 000e 10BD     		pop	{r4, pc}
+ 213              		.cfi_endproc
+ 214              	.LFE91:
+ 215              		.size	LCD_I2C_write4bits, .-LCD_I2C_write4bits
+ 216              		.section	.text.LCD_I2C_send,"ax",%progbits
+ 217              		.align	2
+ 218              		.global	LCD_I2C_send
+ 219              		.thumb
+ 220              		.thumb_func
+ 221              		.type	LCD_I2C_send, %function
+ 222              	LCD_I2C_send:
+ 223              	.LFB90:
+ 302:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	uint8_t highnib = value & 0xf0;
+ 224              		.loc 1 302 0
+ 225              		.cfi_startproc
+ 226              		@ args = 0, pretend = 0, frame = 0
+ 227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 228              	.LVL18:
+ 229 0000 38B5     		push	{r3, r4, r5, lr}
+ 230              		.cfi_def_cfa_offset 16
+ 231              		.cfi_offset 3, -16
+ 232              		.cfi_offset 4, -12
+ 233              		.cfi_offset 5, -8
+ 234              		.cfi_offset 14, -4
+ 235 0002 0D46     		mov	r5, r1
+ 303:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	uint8_t lownib = (value << 4) & 0xf0;
+ 236              		.loc 1 303 0
+ 237 0004 00F0F003 		and	r3, r0, #240
+ 238              	.LVL19:
+ 304:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(highnib | mode);
+ 239              		.loc 1 304 0
+ 240 0008 0401     		lsls	r4, r0, #4
+ 241 000a E4B2     		uxtb	r4, r4
+ 242              	.LVL20:
+ 305:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_write4bits(lownib | mode);
+ 243              		.loc 1 305 0
+ 244 000c 43EA0100 		orr	r0, r3, r1
+ 245              	.LVL21:
+ 246 0010 FFF7FEFF 		bl	LCD_I2C_write4bits
+ 247              	.LVL22:
+ 306:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 11
+
+
+ 248              		.loc 1 306 0
+ 249 0014 44EA0500 		orr	r0, r4, r5
+ 250 0018 FFF7FEFF 		bl	LCD_I2C_write4bits
+ 251              	.LVL23:
+ 252 001c 38BD     		pop	{r3, r4, r5, pc}
+ 253              		.cfi_endproc
+ 254              	.LFE90:
+ 255              		.size	LCD_I2C_send, .-LCD_I2C_send
+ 256 001e 00BF     		.section	.text.LCD_I2C_write,"ax",%progbits
+ 257              		.align	2
+ 258              		.global	LCD_I2C_write
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.type	LCD_I2C_write, %function
+ 262              	LCD_I2C_write:
+ 263              	.LFB84:
+ 262:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_send(data, RS);
+ 264              		.loc 1 262 0
+ 265              		.cfi_startproc
+ 266              		@ args = 0, pretend = 0, frame = 0
+ 267              		@ frame_needed = 0, uses_anonymous_args = 0
+ 268              	.LVL24:
+ 269 0000 08B5     		push	{r3, lr}
+ 270              		.cfi_def_cfa_offset 8
+ 271              		.cfi_offset 3, -8
+ 272              		.cfi_offset 14, -4
+ 263:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 273              		.loc 1 263 0
+ 274 0002 0121     		movs	r1, #1
+ 275 0004 FFF7FEFF 		bl	LCD_I2C_send
+ 276              	.LVL25:
+ 277 0008 08BD     		pop	{r3, pc}
+ 278              		.cfi_endproc
+ 279              	.LFE84:
+ 280              		.size	LCD_I2C_write, .-LCD_I2C_write
+ 281 000a 00BF     		.section	.text.LCD_I2C_print,"ax",%progbits
+ 282              		.align	2
+ 283              		.global	LCD_I2C_print
+ 284              		.thumb
+ 285              		.thumb_func
+ 286              		.type	LCD_I2C_print, %function
+ 287              	LCD_I2C_print:
+ 288              	.LFB86:
+ 272:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     for (uint32_t i = 0; word[i] != '\0'; ++i) {
+ 289              		.loc 1 272 0
+ 290              		.cfi_startproc
+ 291              		@ args = 0, pretend = 0, frame = 0
+ 292              		@ frame_needed = 0, uses_anonymous_args = 0
+ 293              	.LVL26:
+ 294 0000 38B5     		push	{r3, r4, r5, lr}
+ 295              		.cfi_def_cfa_offset 16
+ 296              		.cfi_offset 3, -16
+ 297              		.cfi_offset 4, -12
+ 298              		.cfi_offset 5, -8
+ 299              		.cfi_offset 14, -4
+ 300 0002 0546     		mov	r5, r0
+ 301              	.LVL27:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 12
+
+
+ 302              	.LBB2:
+ 273:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****         LCD_I2C_write(word[i]);
+ 303              		.loc 1 273 0
+ 304 0004 0024     		movs	r4, #0
+ 305 0006 02E0     		b	.L26
+ 306              	.LVL28:
+ 307              	.L27:
+ 274:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     }
+ 308              		.loc 1 274 0 discriminator 3
+ 309 0008 FFF7FEFF 		bl	LCD_I2C_write
+ 310              	.LVL29:
+ 273:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****         LCD_I2C_write(word[i]);
+ 311              		.loc 1 273 0 discriminator 3
+ 312 000c 0134     		adds	r4, r4, #1
+ 313              	.LVL30:
+ 314              	.L26:
+ 273:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****         LCD_I2C_write(word[i]);
+ 315              		.loc 1 273 0 is_stmt 0 discriminator 1
+ 316 000e 285D     		ldrb	r0, [r5, r4]	@ zero_extendqisi2
+ 317 0010 0028     		cmp	r0, #0
+ 318 0012 F9D1     		bne	.L27
+ 319              	.LBE2:
+ 276:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 320              		.loc 1 276 0 is_stmt 1
+ 321 0014 38BD     		pop	{r3, r4, r5, pc}
+ 322              		.cfi_endproc
+ 323              	.LFE86:
+ 324              		.size	LCD_I2C_print, .-LCD_I2C_print
+ 325 0016 00BF     		.section	.text.LCD_I2C_command,"ax",%progbits
+ 326              		.align	2
+ 327              		.global	LCD_I2C_command
+ 328              		.thumb
+ 329              		.thumb_func
+ 330              		.type	LCD_I2C_command, %function
+ 331              	LCD_I2C_command:
+ 332              	.LFB85:
+ 267:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_send(command, 0);
+ 333              		.loc 1 267 0
+ 334              		.cfi_startproc
+ 335              		@ args = 0, pretend = 0, frame = 0
+ 336              		@ frame_needed = 0, uses_anonymous_args = 0
+ 337              	.LVL31:
+ 338 0000 08B5     		push	{r3, lr}
+ 339              		.cfi_def_cfa_offset 8
+ 340              		.cfi_offset 3, -8
+ 341              		.cfi_offset 14, -4
+ 268:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 342              		.loc 1 268 0
+ 343 0002 0021     		movs	r1, #0
+ 344 0004 FFF7FEFF 		bl	LCD_I2C_send
+ 345              	.LVL32:
+ 346 0008 08BD     		pop	{r3, pc}
+ 347              		.cfi_endproc
+ 348              	.LFE85:
+ 349              		.size	LCD_I2C_command, .-LCD_I2C_command
+ 350 000a 00BF     		.section	.text.LCD_I2C_clear,"ax",%progbits
+ 351              		.align	2
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 13
+
+
+ 352              		.global	LCD_I2C_clear
+ 353              		.thumb
+ 354              		.thumb_func
+ 355              		.type	LCD_I2C_clear, %function
+ 356              	LCD_I2C_clear:
+ 357              	.LFB65:
+ 134:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
+ 358              		.loc 1 134 0
+ 359              		.cfi_startproc
+ 360              		@ args = 0, pretend = 0, frame = 0
+ 361              		@ frame_needed = 0, uses_anonymous_args = 0
+ 362 0000 08B5     		push	{r3, lr}
+ 363              		.cfi_def_cfa_offset 8
+ 364              		.cfi_offset 3, -8
+ 365              		.cfi_offset 14, -4
+ 135:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(2);  // this command takes a long time!
+ 366              		.loc 1 135 0
+ 367 0002 0120     		movs	r0, #1
+ 368 0004 FFF7FEFF 		bl	LCD_I2C_command
+ 369              	.LVL33:
+ 136:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 370              		.loc 1 136 0
+ 371 0008 0220     		movs	r0, #2
+ 372 000a FFF7FEFF 		bl	CyDelay
+ 373              	.LVL34:
+ 374 000e 08BD     		pop	{r3, pc}
+ 375              		.cfi_endproc
+ 376              	.LFE65:
+ 377              		.size	LCD_I2C_clear, .-LCD_I2C_clear
+ 378              		.section	.text.LCD_I2C_home,"ax",%progbits
+ 379              		.align	2
+ 380              		.global	LCD_I2C_home
+ 381              		.thumb
+ 382              		.thumb_func
+ 383              		.type	LCD_I2C_home, %function
+ 384              	LCD_I2C_home:
+ 385              	.LFB66:
+ 140:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_command(LCD_RETURNHOME);  // set cursor position to zero
+ 386              		.loc 1 140 0
+ 387              		.cfi_startproc
+ 388              		@ args = 0, pretend = 0, frame = 0
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+ 390 0000 08B5     		push	{r3, lr}
+ 391              		.cfi_def_cfa_offset 8
+ 392              		.cfi_offset 3, -8
+ 393              		.cfi_offset 14, -4
+ 141:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(2);  // this command takes a long time!
+ 394              		.loc 1 141 0
+ 395 0002 0220     		movs	r0, #2
+ 396 0004 FFF7FEFF 		bl	LCD_I2C_command
+ 397              	.LVL35:
+ 142:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 398              		.loc 1 142 0
+ 399 0008 0220     		movs	r0, #2
+ 400 000a FFF7FEFF 		bl	CyDelay
+ 401              	.LVL36:
+ 402 000e 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 14
+
+
+ 403              		.cfi_endproc
+ 404              	.LFE66:
+ 405              		.size	LCD_I2C_home, .-LCD_I2C_home
+ 406              		.section	.text.LCD_I2C_setCursor,"ax",%progbits
+ 407              		.align	2
+ 408              		.global	LCD_I2C_setCursor
+ 409              		.thumb
+ 410              		.thumb_func
+ 411              		.type	LCD_I2C_setCursor, %function
+ 412              	LCD_I2C_setCursor:
+ 413              	.LFB67:
+ 146:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	const uint8_t row_offsets[4] = { 0x00, 0x40, 0x14, 0x54 };
+ 414              		.loc 1 146 0
+ 415              		.cfi_startproc
+ 416              		@ args = 0, pretend = 0, frame = 8
+ 417              		@ frame_needed = 0, uses_anonymous_args = 0
+ 418              	.LVL37:
+ 419 0000 00B5     		push	{lr}
+ 420              		.cfi_def_cfa_offset 4
+ 421              		.cfi_offset 14, -4
+ 422 0002 83B0     		sub	sp, sp, #12
+ 423              		.cfi_def_cfa_offset 16
+ 424 0004 0346     		mov	r3, r0
+ 147:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	if (row > LCD_I2C_config.rows) {
+ 425              		.loc 1 147 0
+ 426 0006 0B4A     		ldr	r2, .L38
+ 427 0008 1068     		ldr	r0, [r2]	@ unaligned
+ 428              	.LVL38:
+ 429 000a 0190     		str	r0, [sp, #4]	@ unaligned
+ 148:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		row = LCD_I2C_config.rows - 1;    // we count rows starting w/0
+ 430              		.loc 1 148 0
+ 431 000c 0A4A     		ldr	r2, .L38+4
+ 432 000e 5279     		ldrb	r2, [r2, #5]	@ zero_extendqisi2
+ 433 0010 8A42     		cmp	r2, r1
+ 434 0012 01D2     		bcs	.L36
+ 149:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+ 435              		.loc 1 149 0
+ 436 0014 511E     		subs	r1, r2, #1
+ 437              	.LVL39:
+ 438 0016 C9B2     		uxtb	r1, r1
+ 439              	.LVL40:
+ 440              	.L36:
+ 151:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 441              		.loc 1 151 0
+ 442 0018 02AA     		add	r2, sp, #8
+ 443 001a 1144     		add	r1, r1, r2
+ 444              	.LVL41:
+ 445 001c 11F8040C 		ldrb	r0, [r1, #-4]	@ zero_extendqisi2
+ 446 0020 1844     		add	r0, r0, r3
+ 447 0022 60F07F00 		orn	r0, r0, #127
+ 448 0026 C0B2     		uxtb	r0, r0
+ 449 0028 FFF7FEFF 		bl	LCD_I2C_command
+ 450              	.LVL42:
+ 152:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 451              		.loc 1 152 0
+ 452 002c 03B0     		add	sp, sp, #12
+ 453              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 15
+
+
+ 454              		@ sp needed
+ 455 002e 5DF804FB 		ldr	pc, [sp], #4
+ 456              	.L39:
+ 457 0032 00BF     		.align	2
+ 458              	.L38:
+ 459 0034 00000000 		.word	.LANCHOR0
+ 460 0038 00000000 		.word	LCD_I2C_config
+ 461              		.cfi_endproc
+ 462              	.LFE67:
+ 463              		.size	LCD_I2C_setCursor, .-LCD_I2C_setCursor
+ 464              		.section	.text.LCD_I2C_noDisplay,"ax",%progbits
+ 465              		.align	2
+ 466              		.global	LCD_I2C_noDisplay
+ 467              		.thumb
+ 468              		.thumb_func
+ 469              		.type	LCD_I2C_noDisplay, %function
+ 470              	LCD_I2C_noDisplay:
+ 471              	.LFB68:
+ 156:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_DISPLAYON;
+ 472              		.loc 1 156 0
+ 473              		.cfi_startproc
+ 474              		@ args = 0, pretend = 0, frame = 0
+ 475              		@ frame_needed = 0, uses_anonymous_args = 0
+ 476 0000 08B5     		push	{r3, lr}
+ 477              		.cfi_def_cfa_offset 8
+ 478              		.cfi_offset 3, -8
+ 479              		.cfi_offset 14, -4
+ 157:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 480              		.loc 1 157 0
+ 481 0002 054B     		ldr	r3, .L42
+ 482 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 483 0006 00F0FB00 		and	r0, r0, #251
+ 484 000a 9870     		strb	r0, [r3, #2]
+ 158:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 485              		.loc 1 158 0
+ 486 000c 40F00800 		orr	r0, r0, #8
+ 487 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 488              	.LVL43:
+ 489 0014 08BD     		pop	{r3, pc}
+ 490              	.L43:
+ 491 0016 00BF     		.align	2
+ 492              	.L42:
+ 493 0018 00000000 		.word	LCD_I2C_config
+ 494              		.cfi_endproc
+ 495              	.LFE68:
+ 496              		.size	LCD_I2C_noDisplay, .-LCD_I2C_noDisplay
+ 497              		.section	.text.LCD_I2C_display,"ax",%progbits
+ 498              		.align	2
+ 499              		.global	LCD_I2C_display
+ 500              		.thumb
+ 501              		.thumb_func
+ 502              		.type	LCD_I2C_display, %function
+ 503              	LCD_I2C_display:
+ 504              	.LFB69:
+ 162:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaycontrol |= LCD_DISPLAYON;
+ 505              		.loc 1 162 0
+ 506              		.cfi_startproc
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 16
+
+
+ 507              		@ args = 0, pretend = 0, frame = 0
+ 508              		@ frame_needed = 0, uses_anonymous_args = 0
+ 509 0000 08B5     		push	{r3, lr}
+ 510              		.cfi_def_cfa_offset 8
+ 511              		.cfi_offset 3, -8
+ 512              		.cfi_offset 14, -4
+ 163:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 513              		.loc 1 163 0
+ 514 0002 054B     		ldr	r3, .L46
+ 515 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 516 0006 40F00400 		orr	r0, r0, #4
+ 517 000a 9870     		strb	r0, [r3, #2]
+ 164:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 518              		.loc 1 164 0
+ 519 000c 40F00800 		orr	r0, r0, #8
+ 520 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 521              	.LVL44:
+ 522 0014 08BD     		pop	{r3, pc}
+ 523              	.L47:
+ 524 0016 00BF     		.align	2
+ 525              	.L46:
+ 526 0018 00000000 		.word	LCD_I2C_config
+ 527              		.cfi_endproc
+ 528              	.LFE69:
+ 529              		.size	LCD_I2C_display, .-LCD_I2C_display
+ 530              		.section	.text.LCD_I2C_noCursor,"ax",%progbits
+ 531              		.align	2
+ 532              		.global	LCD_I2C_noCursor
+ 533              		.thumb
+ 534              		.thumb_func
+ 535              		.type	LCD_I2C_noCursor, %function
+ 536              	LCD_I2C_noCursor:
+ 537              	.LFB70:
+ 169:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_CURSORON;
+ 538              		.loc 1 169 0
+ 539              		.cfi_startproc
+ 540              		@ args = 0, pretend = 0, frame = 0
+ 541              		@ frame_needed = 0, uses_anonymous_args = 0
+ 542 0000 08B5     		push	{r3, lr}
+ 543              		.cfi_def_cfa_offset 8
+ 544              		.cfi_offset 3, -8
+ 545              		.cfi_offset 14, -4
+ 170:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 546              		.loc 1 170 0
+ 547 0002 054B     		ldr	r3, .L50
+ 548 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 549 0006 00F0FD00 		and	r0, r0, #253
+ 550 000a 9870     		strb	r0, [r3, #2]
+ 171:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 551              		.loc 1 171 0
+ 552 000c 40F00800 		orr	r0, r0, #8
+ 553 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 554              	.LVL45:
+ 555 0014 08BD     		pop	{r3, pc}
+ 556              	.L51:
+ 557 0016 00BF     		.align	2
+ 558              	.L50:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 17
+
+
+ 559 0018 00000000 		.word	LCD_I2C_config
+ 560              		.cfi_endproc
+ 561              	.LFE70:
+ 562              		.size	LCD_I2C_noCursor, .-LCD_I2C_noCursor
+ 563              		.section	.text.LCD_I2C_cursor,"ax",%progbits
+ 564              		.align	2
+ 565              		.global	LCD_I2C_cursor
+ 566              		.thumb
+ 567              		.thumb_func
+ 568              		.type	LCD_I2C_cursor, %function
+ 569              	LCD_I2C_cursor:
+ 570              	.LFB71:
+ 175:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol |= LCD_CURSORON;
+ 571              		.loc 1 175 0
+ 572              		.cfi_startproc
+ 573              		@ args = 0, pretend = 0, frame = 0
+ 574              		@ frame_needed = 0, uses_anonymous_args = 0
+ 575 0000 08B5     		push	{r3, lr}
+ 576              		.cfi_def_cfa_offset 8
+ 577              		.cfi_offset 3, -8
+ 578              		.cfi_offset 14, -4
+ 176:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 579              		.loc 1 176 0
+ 580 0002 054B     		ldr	r3, .L54
+ 581 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 582 0006 40F00200 		orr	r0, r0, #2
+ 583 000a 9870     		strb	r0, [r3, #2]
+ 177:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 584              		.loc 1 177 0
+ 585 000c 40F00800 		orr	r0, r0, #8
+ 586 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 587              	.LVL46:
+ 588 0014 08BD     		pop	{r3, pc}
+ 589              	.L55:
+ 590 0016 00BF     		.align	2
+ 591              	.L54:
+ 592 0018 00000000 		.word	LCD_I2C_config
+ 593              		.cfi_endproc
+ 594              	.LFE71:
+ 595              		.size	LCD_I2C_cursor, .-LCD_I2C_cursor
+ 596              		.section	.text.LCD_I2C_noBlink,"ax",%progbits
+ 597              		.align	2
+ 598              		.global	LCD_I2C_noBlink
+ 599              		.thumb
+ 600              		.thumb_func
+ 601              		.type	LCD_I2C_noBlink, %function
+ 602              	LCD_I2C_noBlink:
+ 603              	.LFB72:
+ 182:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaycontrol &= ~LCD_BLINKON;
+ 604              		.loc 1 182 0
+ 605              		.cfi_startproc
+ 606              		@ args = 0, pretend = 0, frame = 0
+ 607              		@ frame_needed = 0, uses_anonymous_args = 0
+ 608 0000 08B5     		push	{r3, lr}
+ 609              		.cfi_def_cfa_offset 8
+ 610              		.cfi_offset 3, -8
+ 611              		.cfi_offset 14, -4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 18
+
+
+ 183:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 612              		.loc 1 183 0
+ 613 0002 054B     		ldr	r3, .L58
+ 614 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 615 0006 00F0FE00 		and	r0, r0, #254
+ 616 000a 9870     		strb	r0, [r3, #2]
+ 184:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 617              		.loc 1 184 0
+ 618 000c 40F00800 		orr	r0, r0, #8
+ 619 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 620              	.LVL47:
+ 621 0014 08BD     		pop	{r3, pc}
+ 622              	.L59:
+ 623 0016 00BF     		.align	2
+ 624              	.L58:
+ 625 0018 00000000 		.word	LCD_I2C_config
+ 626              		.cfi_endproc
+ 627              	.LFE72:
+ 628              		.size	LCD_I2C_noBlink, .-LCD_I2C_noBlink
+ 629              		.section	.text.LCD_I2C_blink,"ax",%progbits
+ 630              		.align	2
+ 631              		.global	LCD_I2C_blink
+ 632              		.thumb
+ 633              		.thumb_func
+ 634              		.type	LCD_I2C_blink, %function
+ 635              	LCD_I2C_blink:
+ 636              	.LFB73:
+ 188:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaycontrol |= LCD_BLINKON;
+ 637              		.loc 1 188 0
+ 638              		.cfi_startproc
+ 639              		@ args = 0, pretend = 0, frame = 0
+ 640              		@ frame_needed = 0, uses_anonymous_args = 0
+ 641 0000 08B5     		push	{r3, lr}
+ 642              		.cfi_def_cfa_offset 8
+ 643              		.cfi_offset 3, -8
+ 644              		.cfi_offset 14, -4
+ 189:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_DISPLAYCONTROL | LCD_I2C_config.displaycontrol);
+ 645              		.loc 1 189 0
+ 646 0002 054B     		ldr	r3, .L62
+ 647 0004 9878     		ldrb	r0, [r3, #2]	@ zero_extendqisi2
+ 648 0006 40F00100 		orr	r0, r0, #1
+ 649 000a 9870     		strb	r0, [r3, #2]
+ 190:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 650              		.loc 1 190 0
+ 651 000c 40F00800 		orr	r0, r0, #8
+ 652 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 653              	.LVL48:
+ 654 0014 08BD     		pop	{r3, pc}
+ 655              	.L63:
+ 656 0016 00BF     		.align	2
+ 657              	.L62:
+ 658 0018 00000000 		.word	LCD_I2C_config
+ 659              		.cfi_endproc
+ 660              	.LFE73:
+ 661              		.size	LCD_I2C_blink, .-LCD_I2C_blink
+ 662              		.section	.text.LCD_I2C_scrollDisplayLeft,"ax",%progbits
+ 663              		.align	2
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 19
+
+
+ 664              		.global	LCD_I2C_scrollDisplayLeft
+ 665              		.thumb
+ 666              		.thumb_func
+ 667              		.type	LCD_I2C_scrollDisplayLeft, %function
+ 668              	LCD_I2C_scrollDisplayLeft:
+ 669              	.LFB74:
+ 195:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
+ 670              		.loc 1 195 0
+ 671              		.cfi_startproc
+ 672              		@ args = 0, pretend = 0, frame = 0
+ 673              		@ frame_needed = 0, uses_anonymous_args = 0
+ 674 0000 08B5     		push	{r3, lr}
+ 675              		.cfi_def_cfa_offset 8
+ 676              		.cfi_offset 3, -8
+ 677              		.cfi_offset 14, -4
+ 196:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 678              		.loc 1 196 0
+ 679 0002 1820     		movs	r0, #24
+ 680 0004 FFF7FEFF 		bl	LCD_I2C_command
+ 681              	.LVL49:
+ 682 0008 08BD     		pop	{r3, pc}
+ 683              		.cfi_endproc
+ 684              	.LFE74:
+ 685              		.size	LCD_I2C_scrollDisplayLeft, .-LCD_I2C_scrollDisplayLeft
+ 686 000a 00BF     		.section	.text.LCD_I2C_scrollDisplayRight,"ax",%progbits
+ 687              		.align	2
+ 688              		.global	LCD_I2C_scrollDisplayRight
+ 689              		.thumb
+ 690              		.thumb_func
+ 691              		.type	LCD_I2C_scrollDisplayRight, %function
+ 692              	LCD_I2C_scrollDisplayRight:
+ 693              	.LFB75:
+ 200:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
+ 694              		.loc 1 200 0
+ 695              		.cfi_startproc
+ 696              		@ args = 0, pretend = 0, frame = 0
+ 697              		@ frame_needed = 0, uses_anonymous_args = 0
+ 698 0000 08B5     		push	{r3, lr}
+ 699              		.cfi_def_cfa_offset 8
+ 700              		.cfi_offset 3, -8
+ 701              		.cfi_offset 14, -4
+ 201:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 702              		.loc 1 201 0
+ 703 0002 1C20     		movs	r0, #28
+ 704 0004 FFF7FEFF 		bl	LCD_I2C_command
+ 705              	.LVL50:
+ 706 0008 08BD     		pop	{r3, pc}
+ 707              		.cfi_endproc
+ 708              	.LFE75:
+ 709              		.size	LCD_I2C_scrollDisplayRight, .-LCD_I2C_scrollDisplayRight
+ 710 000a 00BF     		.section	.text.LCD_I2C_leftToRight,"ax",%progbits
+ 711              		.align	2
+ 712              		.global	LCD_I2C_leftToRight
+ 713              		.thumb
+ 714              		.thumb_func
+ 715              		.type	LCD_I2C_leftToRight, %function
+ 716              	LCD_I2C_leftToRight:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 20
+
+
+ 717              	.LFB76:
+ 206:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaymode |= LCD_ENTRYLEFT;
+ 718              		.loc 1 206 0
+ 719              		.cfi_startproc
+ 720              		@ args = 0, pretend = 0, frame = 0
+ 721              		@ frame_needed = 0, uses_anonymous_args = 0
+ 722 0000 08B5     		push	{r3, lr}
+ 723              		.cfi_def_cfa_offset 8
+ 724              		.cfi_offset 3, -8
+ 725              		.cfi_offset 14, -4
+ 207:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 726              		.loc 1 207 0
+ 727 0002 054B     		ldr	r3, .L70
+ 728 0004 D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 729 0006 40F00200 		orr	r0, r0, #2
+ 730 000a D870     		strb	r0, [r3, #3]
+ 208:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 731              		.loc 1 208 0
+ 732 000c 40F00400 		orr	r0, r0, #4
+ 733 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 734              	.LVL51:
+ 735 0014 08BD     		pop	{r3, pc}
+ 736              	.L71:
+ 737 0016 00BF     		.align	2
+ 738              	.L70:
+ 739 0018 00000000 		.word	LCD_I2C_config
+ 740              		.cfi_endproc
+ 741              	.LFE76:
+ 742              		.size	LCD_I2C_leftToRight, .-LCD_I2C_leftToRight
+ 743              		.section	.text.LCD_I2C_rightToLeft,"ax",%progbits
+ 744              		.align	2
+ 745              		.global	LCD_I2C_rightToLeft
+ 746              		.thumb
+ 747              		.thumb_func
+ 748              		.type	LCD_I2C_rightToLeft, %function
+ 749              	LCD_I2C_rightToLeft:
+ 750              	.LFB77:
+ 213:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displaymode &= ~LCD_ENTRYLEFT;
+ 751              		.loc 1 213 0
+ 752              		.cfi_startproc
+ 753              		@ args = 0, pretend = 0, frame = 0
+ 754              		@ frame_needed = 0, uses_anonymous_args = 0
+ 755 0000 08B5     		push	{r3, lr}
+ 756              		.cfi_def_cfa_offset 8
+ 757              		.cfi_offset 3, -8
+ 758              		.cfi_offset 14, -4
+ 214:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 759              		.loc 1 214 0
+ 760 0002 054B     		ldr	r3, .L74
+ 761 0004 D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 762 0006 00F0FD00 		and	r0, r0, #253
+ 763 000a D870     		strb	r0, [r3, #3]
+ 215:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 764              		.loc 1 215 0
+ 765 000c 40F00400 		orr	r0, r0, #4
+ 766 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 767              	.LVL52:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 21
+
+
+ 768 0014 08BD     		pop	{r3, pc}
+ 769              	.L75:
+ 770 0016 00BF     		.align	2
+ 771              	.L74:
+ 772 0018 00000000 		.word	LCD_I2C_config
+ 773              		.cfi_endproc
+ 774              	.LFE77:
+ 775              		.size	LCD_I2C_rightToLeft, .-LCD_I2C_rightToLeft
+ 776              		.section	.text.LCD_I2C_autoscroll,"ax",%progbits
+ 777              		.align	2
+ 778              		.global	LCD_I2C_autoscroll
+ 779              		.thumb
+ 780              		.thumb_func
+ 781              		.type	LCD_I2C_autoscroll, %function
+ 782              	LCD_I2C_autoscroll:
+ 783              	.LFB78:
+ 220:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaymode |= LCD_ENTRYSHIFTINCREMENT;
+ 784              		.loc 1 220 0
+ 785              		.cfi_startproc
+ 786              		@ args = 0, pretend = 0, frame = 0
+ 787              		@ frame_needed = 0, uses_anonymous_args = 0
+ 788 0000 08B5     		push	{r3, lr}
+ 789              		.cfi_def_cfa_offset 8
+ 790              		.cfi_offset 3, -8
+ 791              		.cfi_offset 14, -4
+ 221:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 792              		.loc 1 221 0
+ 793 0002 054B     		ldr	r3, .L78
+ 794 0004 D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 795 0006 40F00100 		orr	r0, r0, #1
+ 796 000a D870     		strb	r0, [r3, #3]
+ 222:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 797              		.loc 1 222 0
+ 798 000c 40F00400 		orr	r0, r0, #4
+ 799 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 800              	.LVL53:
+ 801 0014 08BD     		pop	{r3, pc}
+ 802              	.L79:
+ 803 0016 00BF     		.align	2
+ 804              	.L78:
+ 805 0018 00000000 		.word	LCD_I2C_config
+ 806              		.cfi_endproc
+ 807              	.LFE78:
+ 808              		.size	LCD_I2C_autoscroll, .-LCD_I2C_autoscroll
+ 809              		.section	.text.LCD_I2C_noAutoscroll,"ax",%progbits
+ 810              		.align	2
+ 811              		.global	LCD_I2C_noAutoscroll
+ 812              		.thumb
+ 813              		.thumb_func
+ 814              		.type	LCD_I2C_noAutoscroll, %function
+ 815              	LCD_I2C_noAutoscroll:
+ 816              	.LFB79:
+ 227:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
+ 817              		.loc 1 227 0
+ 818              		.cfi_startproc
+ 819              		@ args = 0, pretend = 0, frame = 0
+ 820              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 22
+
+
+ 821 0000 08B5     		push	{r3, lr}
+ 822              		.cfi_def_cfa_offset 8
+ 823              		.cfi_offset 3, -8
+ 824              		.cfi_offset 14, -4
+ 228:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_ENTRYMODESET | LCD_I2C_config.displaymode);
+ 825              		.loc 1 228 0
+ 826 0002 054B     		ldr	r3, .L82
+ 827 0004 D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 828 0006 00F0FE00 		and	r0, r0, #254
+ 829 000a D870     		strb	r0, [r3, #3]
+ 229:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 830              		.loc 1 229 0
+ 831 000c 40F00400 		orr	r0, r0, #4
+ 832 0010 FFF7FEFF 		bl	LCD_I2C_command
+ 833              	.LVL54:
+ 834 0014 08BD     		pop	{r3, pc}
+ 835              	.L83:
+ 836 0016 00BF     		.align	2
+ 837              	.L82:
+ 838 0018 00000000 		.word	LCD_I2C_config
+ 839              		.cfi_endproc
+ 840              	.LFE79:
+ 841              		.size	LCD_I2C_noAutoscroll, .-LCD_I2C_noAutoscroll
+ 842              		.section	.text.LCD_I2C_createChar,"ax",%progbits
+ 843              		.align	2
+ 844              		.global	LCD_I2C_createChar
+ 845              		.thumb
+ 846              		.thumb_func
+ 847              		.type	LCD_I2C_createChar, %function
+ 848              	LCD_I2C_createChar:
+ 849              	.LFB80:
+ 235:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     location &= 0x7; // we only have 8 locations 0-7
+ 850              		.loc 1 235 0
+ 851              		.cfi_startproc
+ 852              		@ args = 0, pretend = 0, frame = 0
+ 853              		@ frame_needed = 0, uses_anonymous_args = 0
+ 854              	.LVL55:
+ 855 0000 38B5     		push	{r3, r4, r5, lr}
+ 856              		.cfi_def_cfa_offset 16
+ 857              		.cfi_offset 3, -16
+ 858              		.cfi_offset 4, -12
+ 859              		.cfi_offset 5, -8
+ 860              		.cfi_offset 14, -4
+ 861 0002 0D46     		mov	r5, r1
+ 236:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_command(LCD_SETCGRAMADDR | (location << 3));
+ 862              		.loc 1 236 0
+ 863 0004 00F00700 		and	r0, r0, #7
+ 864              	.LVL56:
+ 237:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	for (uint32_t i = 0; i < 8; i++) {
+ 865              		.loc 1 237 0
+ 866 0008 C000     		lsls	r0, r0, #3
+ 867              	.LVL57:
+ 868 000a 40F04000 		orr	r0, r0, #64
+ 869 000e FFF7FEFF 		bl	LCD_I2C_command
+ 870              	.LVL58:
+ 871              	.LBB3:
+ 238:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_write(charmap[i]);
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 23
+
+
+ 872              		.loc 1 238 0
+ 873 0012 0024     		movs	r4, #0
+ 874 0014 03E0     		b	.L85
+ 875              	.LVL59:
+ 876              	.L86:
+ 239:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+ 877              		.loc 1 239 0 discriminator 3
+ 878 0016 285D     		ldrb	r0, [r5, r4]	@ zero_extendqisi2
+ 879 0018 FFF7FEFF 		bl	LCD_I2C_write
+ 880              	.LVL60:
+ 238:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_write(charmap[i]);
+ 881              		.loc 1 238 0 discriminator 3
+ 882 001c 0134     		adds	r4, r4, #1
+ 883              	.LVL61:
+ 884              	.L85:
+ 238:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 		LCD_I2C_write(charmap[i]);
+ 885              		.loc 1 238 0 is_stmt 0 discriminator 1
+ 886 001e 072C     		cmp	r4, #7
+ 887 0020 F9D9     		bls	.L86
+ 888              	.LBE3:
+ 241:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 889              		.loc 1 241 0 is_stmt 1
+ 890 0022 38BD     		pop	{r3, r4, r5, pc}
+ 891              		.cfi_endproc
+ 892              	.LFE80:
+ 893              		.size	LCD_I2C_createChar, .-LCD_I2C_createChar
+ 894              		.section	.text.LCD_I2C_loadCustomCharacter,"ax",%progbits
+ 895              		.align	2
+ 896              		.global	LCD_I2C_loadCustomCharacter
+ 897              		.thumb
+ 898              		.thumb_func
+ 899              		.type	LCD_I2C_loadCustomCharacter, %function
+ 900              	LCD_I2C_loadCustomCharacter:
+ 901              	.LFB88:
+ 284:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_createChar(char_num, rows);
+ 902              		.loc 1 284 0
+ 903              		.cfi_startproc
+ 904              		@ args = 0, pretend = 0, frame = 0
+ 905              		@ frame_needed = 0, uses_anonymous_args = 0
+ 906              	.LVL62:
+ 907 0000 08B5     		push	{r3, lr}
+ 908              		.cfi_def_cfa_offset 8
+ 909              		.cfi_offset 3, -8
+ 910              		.cfi_offset 14, -4
+ 285:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 911              		.loc 1 285 0
+ 912 0002 FFF7FEFF 		bl	LCD_I2C_createChar
+ 913              	.LVL63:
+ 914 0006 08BD     		pop	{r3, pc}
+ 915              		.cfi_endproc
+ 916              	.LFE88:
+ 917              		.size	LCD_I2C_loadCustomCharacter, .-LCD_I2C_loadCustomCharacter
+ 918              		.section	.text.LCD_I2C_begin,"ax",%progbits
+ 919              		.align	2
+ 920              		.global	LCD_I2C_begin
+ 921              		.thumb
+ 922              		.thumb_func
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 24
+
+
+ 923              		.type	LCD_I2C_begin, %function
+ 924              	LCD_I2C_begin:
+ 925              	.LFB64:
+  88:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	// Now we pull both RS and R/W low to begin commands
+ 926              		.loc 1 88 0
+ 927              		.cfi_startproc
+ 928              		@ args = 0, pretend = 0, frame = 0
+ 929              		@ frame_needed = 0, uses_anonymous_args = 0
+ 930 0000 10B5     		push	{r4, lr}
+ 931              		.cfi_def_cfa_offset 8
+ 932              		.cfi_offset 4, -8
+ 933              		.cfi_offset 14, -4
+  91:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelay(1000);
+ 934              		.loc 1 91 0
+ 935 0002 194C     		ldr	r4, .L92
+ 936 0004 E079     		ldrb	r0, [r4, #7]	@ zero_extendqisi2
+ 937 0006 FFF7FEFF 		bl	LCD_I2C_expanderWrite
+ 938              	.LVL64:
+  92:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 939              		.loc 1 92 0
+ 940 000a 4FF47A70 		mov	r0, #1000
+ 941 000e FFF7FEFF 		bl	CyDelay
+ 942              	.LVL65:
+  99:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(4500); // wait min 4.1ms
+ 943              		.loc 1 99 0
+ 944 0012 3020     		movs	r0, #48
+ 945 0014 FFF7FEFF 		bl	LCD_I2C_write4bits
+ 946              	.LVL66:
+ 100:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 947              		.loc 1 100 0
+ 948 0018 41F29410 		movw	r0, #4500
+ 949 001c FFF7FEFF 		bl	CyDelayUs
+ 950              	.LVL67:
+ 103:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(4500); // wait min 4.1ms
+ 951              		.loc 1 103 0
+ 952 0020 3020     		movs	r0, #48
+ 953 0022 FFF7FEFF 		bl	LCD_I2C_write4bits
+ 954              	.LVL68:
+ 104:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 955              		.loc 1 104 0
+ 956 0026 41F29410 		movw	r0, #4500
+ 957 002a FFF7FEFF 		bl	CyDelayUs
+ 958              	.LVL69:
+ 107:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	CyDelayUs(150);
+ 959              		.loc 1 107 0
+ 960 002e 3020     		movs	r0, #48
+ 961 0030 FFF7FEFF 		bl	LCD_I2C_write4bits
+ 962              	.LVL70:
+ 108:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 963              		.loc 1 108 0
+ 964 0034 9620     		movs	r0, #150
+ 965 0036 FFF7FEFF 		bl	CyDelayUs
+ 966              	.LVL71:
+ 111:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 
+ 967              		.loc 1 111 0
+ 968 003a 2020     		movs	r0, #32
+ 969 003c FFF7FEFF 		bl	LCD_I2C_write4bits
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 25
+
+
+ 970              	.LVL72:
+ 114:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 971              		.loc 1 114 0
+ 972 0040 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 973 0042 40F02000 		orr	r0, r0, #32
+ 974 0046 FFF7FEFF 		bl	LCD_I2C_command
+ 975              	.LVL73:
+ 117:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_display();
+ 976              		.loc 1 117 0
+ 977 004a 0423     		movs	r3, #4
+ 978 004c A370     		strb	r3, [r4, #2]
+ 118:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 979              		.loc 1 118 0
+ 980 004e FFF7FEFF 		bl	LCD_I2C_display
+ 981              	.LVL74:
+ 121:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 982              		.loc 1 121 0
+ 983 0052 FFF7FEFF 		bl	LCD_I2C_clear
+ 984              	.LVL75:
+ 124:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 985              		.loc 1 124 0
+ 986 0056 0223     		movs	r3, #2
+ 987 0058 E370     		strb	r3, [r4, #3]
+ 127:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	
+ 988              		.loc 1 127 0
+ 989 005a 0620     		movs	r0, #6
+ 990 005c FFF7FEFF 		bl	LCD_I2C_command
+ 991              	.LVL76:
+ 129:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 992              		.loc 1 129 0
+ 993 0060 FFF7FEFF 		bl	LCD_I2C_home
+ 994              	.LVL77:
+ 995 0064 10BD     		pop	{r4, pc}
+ 996              	.L93:
+ 997 0066 00BF     		.align	2
+ 998              	.L92:
+ 999 0068 00000000 		.word	LCD_I2C_config
+ 1000              		.cfi_endproc
+ 1001              	.LFE64:
+ 1002              		.size	LCD_I2C_begin, .-LCD_I2C_begin
+ 1003              		.section	.text.LCD_I2C_start,"ax",%progbits
+ 1004              		.align	2
+ 1005              		.global	LCD_I2C_start
+ 1006              		.thumb
+ 1007              		.thumb_func
+ 1008              		.type	LCD_I2C_start, %function
+ 1009              	LCD_I2C_start:
+ 1010              	.LFB63:
+  62:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.addr = 39;
+ 1011              		.loc 1 62 0
+ 1012              		.cfi_startproc
+ 1013              		@ args = 0, pretend = 0, frame = 0
+ 1014              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1015 0000 08B5     		push	{r3, lr}
+ 1016              		.cfi_def_cfa_offset 8
+ 1017              		.cfi_offset 3, -8
+ 1018              		.cfi_offset 14, -4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 26
+
+
+  63:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.cols = 16;
+ 1019              		.loc 1 63 0
+ 1020 0002 094B     		ldr	r3, .L96
+ 1021 0004 2722     		movs	r2, #39
+ 1022 0006 1A70     		strb	r2, [r3]
+  64:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.rows = 2;
+ 1023              		.loc 1 64 0
+ 1024 0008 1022     		movs	r2, #16
+ 1025 000a 1A71     		strb	r2, [r3, #4]
+  65:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.charsize = 0;
+ 1026              		.loc 1 65 0
+ 1027 000c 0222     		movs	r2, #2
+ 1028 000e 5A71     		strb	r2, [r3, #5]
+  66:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     LCD_I2C_config.backlightval = LCD_BACKLIGHT;
+ 1029              		.loc 1 66 0
+ 1030 0010 0022     		movs	r2, #0
+ 1031 0012 9A71     		strb	r2, [r3, #6]
+  67:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	LCD_I2C_config.displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
+ 1032              		.loc 1 67 0
+ 1033 0014 0822     		movs	r2, #8
+ 1034 0016 DA71     		strb	r2, [r3, #7]
+  71:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** 	}
+ 1035              		.loc 1 71 0
+ 1036 0018 5A70     		strb	r2, [r3, #1]
+  82:Generated_Source\PSoC5/LCD_I2C_FUNCS.c ****     
+ 1037              		.loc 1 82 0
+ 1038 001a 3220     		movs	r0, #50
+ 1039 001c FFF7FEFF 		bl	CyDelay
+ 1040              	.LVL78:
+  84:Generated_Source\PSoC5/LCD_I2C_FUNCS.c **** }
+ 1041              		.loc 1 84 0
+ 1042 0020 FFF7FEFF 		bl	LCD_I2C_begin
+ 1043              	.LVL79:
+ 1044 0024 08BD     		pop	{r3, pc}
+ 1045              	.L97:
+ 1046 0026 00BF     		.align	2
+ 1047              	.L96:
+ 1048 0028 00000000 		.word	LCD_I2C_config
+ 1049              		.cfi_endproc
+ 1050              	.LFE63:
+ 1051              		.size	LCD_I2C_start, .-LCD_I2C_start
+ 1052              		.comm	LCD_I2C_config,8,4
+ 1053              		.section	.rodata
+ 1054              		.align	2
+ 1055              		.set	.LANCHOR0,. + 0
+ 1056              	.LC0:
+ 1057 0000 00       		.byte	0
+ 1058 0001 40       		.byte	64
+ 1059 0002 14       		.byte	20
+ 1060 0003 54       		.byte	84
+ 1061              		.text
+ 1062              	.Letext0:
+ 1063              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1064              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1065              		.file 4 "Generated_Source\\PSoC5\\LCD_I2C_FUNCS.h"
+ 1066              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 1067              		.file 6 "Generated_Source\\PSoC5\\LCD_I2C_LL_I2C.h"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 27
+
+
+ 1068              		.file 7 "Generated_Source\\PSoC5\\CyLib.h"
+ 1069              		.section	.debug_info,"",%progbits
+ 1070              	.Ldebug_info0:
+ 1071 0000 59080000 		.4byte	0x859
+ 1072 0004 0400     		.2byte	0x4
+ 1073 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1074 000a 04       		.byte	0x4
+ 1075 000b 01       		.uleb128 0x1
+ 1076 000c 10040000 		.4byte	.LASF75
+ 1077 0010 0C       		.byte	0xc
+ 1078 0011 0B000000 		.4byte	.LASF76
+ 1079 0015 9C020000 		.4byte	.LASF77
+ 1080 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1081 001d 00000000 		.4byte	0
+ 1082 0021 00000000 		.4byte	.Ldebug_line0
+ 1083 0025 02       		.uleb128 0x2
+ 1084 0026 01       		.byte	0x1
+ 1085 0027 06       		.byte	0x6
+ 1086 0028 F9010000 		.4byte	.LASF0
+ 1087 002c 03       		.uleb128 0x3
+ 1088 002d C2040000 		.4byte	.LASF4
+ 1089 0031 02       		.byte	0x2
+ 1090 0032 1D       		.byte	0x1d
+ 1091 0033 37000000 		.4byte	0x37
+ 1092 0037 02       		.uleb128 0x2
+ 1093 0038 01       		.byte	0x1
+ 1094 0039 08       		.byte	0x8
+ 1095 003a B8010000 		.4byte	.LASF1
+ 1096 003e 02       		.uleb128 0x2
+ 1097 003f 02       		.byte	0x2
+ 1098 0040 05       		.byte	0x5
+ 1099 0041 3F000000 		.4byte	.LASF2
+ 1100 0045 02       		.uleb128 0x2
+ 1101 0046 02       		.byte	0x2
+ 1102 0047 07       		.byte	0x7
+ 1103 0048 72020000 		.4byte	.LASF3
+ 1104 004c 03       		.uleb128 0x3
+ 1105 004d 2B030000 		.4byte	.LASF5
+ 1106 0051 02       		.byte	0x2
+ 1107 0052 3F       		.byte	0x3f
+ 1108 0053 57000000 		.4byte	0x57
+ 1109 0057 02       		.uleb128 0x2
+ 1110 0058 04       		.byte	0x4
+ 1111 0059 05       		.byte	0x5
+ 1112 005a 32010000 		.4byte	.LASF6
+ 1113 005e 03       		.uleb128 0x3
+ 1114 005f BA000000 		.4byte	.LASF7
+ 1115 0063 02       		.byte	0x2
+ 1116 0064 41       		.byte	0x41
+ 1117 0065 69000000 		.4byte	0x69
+ 1118 0069 02       		.uleb128 0x2
+ 1119 006a 04       		.byte	0x4
+ 1120 006b 07       		.byte	0x7
+ 1121 006c EB020000 		.4byte	.LASF8
+ 1122 0070 02       		.uleb128 0x2
+ 1123 0071 08       		.byte	0x8
+ 1124 0072 05       		.byte	0x5
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 28
+
+
+ 1125 0073 15010000 		.4byte	.LASF9
+ 1126 0077 02       		.uleb128 0x2
+ 1127 0078 08       		.byte	0x8
+ 1128 0079 07       		.byte	0x7
+ 1129 007a 0D020000 		.4byte	.LASF10
+ 1130 007e 04       		.uleb128 0x4
+ 1131 007f 04       		.byte	0x4
+ 1132 0080 05       		.byte	0x5
+ 1133 0081 696E7400 		.ascii	"int\000"
+ 1134 0085 02       		.uleb128 0x2
+ 1135 0086 04       		.byte	0x4
+ 1136 0087 07       		.byte	0x7
+ 1137 0088 34020000 		.4byte	.LASF11
+ 1138 008c 03       		.uleb128 0x3
+ 1139 008d DE000000 		.4byte	.LASF12
+ 1140 0091 03       		.byte	0x3
+ 1141 0092 18       		.byte	0x18
+ 1142 0093 2C000000 		.4byte	0x2c
+ 1143 0097 03       		.uleb128 0x3
+ 1144 0098 05020000 		.4byte	.LASF13
+ 1145 009c 03       		.byte	0x3
+ 1146 009d 2C       		.byte	0x2c
+ 1147 009e 4C000000 		.4byte	0x4c
+ 1148 00a2 03       		.uleb128 0x3
+ 1149 00a3 2B020000 		.4byte	.LASF14
+ 1150 00a7 03       		.byte	0x3
+ 1151 00a8 30       		.byte	0x30
+ 1152 00a9 5E000000 		.4byte	0x5e
+ 1153 00ad 02       		.uleb128 0x2
+ 1154 00ae 04       		.byte	0x4
+ 1155 00af 04       		.byte	0x4
+ 1156 00b0 05000000 		.4byte	.LASF15
+ 1157 00b4 02       		.uleb128 0x2
+ 1158 00b5 08       		.byte	0x8
+ 1159 00b6 04       		.byte	0x4
+ 1160 00b7 C0030000 		.4byte	.LASF16
+ 1161 00bb 02       		.uleb128 0x2
+ 1162 00bc 01       		.byte	0x1
+ 1163 00bd 08       		.byte	0x8
+ 1164 00be 97020000 		.4byte	.LASF17
+ 1165 00c2 02       		.uleb128 0x2
+ 1166 00c3 08       		.byte	0x8
+ 1167 00c4 04       		.byte	0x4
+ 1168 00c5 AE000000 		.4byte	.LASF18
+ 1169 00c9 02       		.uleb128 0x2
+ 1170 00ca 04       		.byte	0x4
+ 1171 00cb 07       		.byte	0x7
+ 1172 00cc 4E000000 		.4byte	.LASF19
+ 1173 00d0 05       		.uleb128 0x5
+ 1174 00d1 04       		.byte	0x4
+ 1175 00d2 D6000000 		.4byte	0xd6
+ 1176 00d6 06       		.uleb128 0x6
+ 1177 00d7 BB000000 		.4byte	0xbb
+ 1178 00db 07       		.uleb128 0x7
+ 1179 00dc 7E030000 		.4byte	.LASF78
+ 1180 00e0 08       		.byte	0x8
+ 1181 00e1 04       		.byte	0x4
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 29
+
+
+ 1182 00e2 1D       		.byte	0x1d
+ 1183 00e3 48010000 		.4byte	0x148
+ 1184 00e7 08       		.uleb128 0x8
+ 1185 00e8 3B010000 		.4byte	.LASF20
+ 1186 00ec 04       		.byte	0x4
+ 1187 00ed 1E       		.byte	0x1e
+ 1188 00ee 8C000000 		.4byte	0x8c
+ 1189 00f2 00       		.byte	0
+ 1190 00f3 08       		.uleb128 0x8
+ 1191 00f4 3E030000 		.4byte	.LASF21
+ 1192 00f8 04       		.byte	0x4
+ 1193 00f9 1F       		.byte	0x1f
+ 1194 00fa 8C000000 		.4byte	0x8c
+ 1195 00fe 01       		.byte	0x1
+ 1196 00ff 08       		.uleb128 0x8
+ 1197 0100 41020000 		.4byte	.LASF22
+ 1198 0104 04       		.byte	0x4
+ 1199 0105 20       		.byte	0x20
+ 1200 0106 8C000000 		.4byte	0x8c
+ 1201 010a 02       		.byte	0x2
+ 1202 010b 08       		.uleb128 0x8
+ 1203 010c A2000000 		.4byte	.LASF23
+ 1204 0110 04       		.byte	0x4
+ 1205 0111 21       		.byte	0x21
+ 1206 0112 8C000000 		.4byte	0x8c
+ 1207 0116 03       		.byte	0x3
+ 1208 0117 08       		.uleb128 0x8
+ 1209 0118 10030000 		.4byte	.LASF24
+ 1210 011c 04       		.byte	0x4
+ 1211 011d 22       		.byte	0x22
+ 1212 011e 8C000000 		.4byte	0x8c
+ 1213 0122 04       		.byte	0x4
+ 1214 0123 08       		.uleb128 0x8
+ 1215 0124 49000000 		.4byte	.LASF25
+ 1216 0128 04       		.byte	0x4
+ 1217 0129 23       		.byte	0x23
+ 1218 012a 8C000000 		.4byte	0x8c
+ 1219 012e 05       		.byte	0x5
+ 1220 012f 08       		.uleb128 0x8
+ 1221 0130 6B000000 		.4byte	.LASF26
+ 1222 0134 04       		.byte	0x4
+ 1223 0135 24       		.byte	0x24
+ 1224 0136 8C000000 		.4byte	0x8c
+ 1225 013a 06       		.byte	0x6
+ 1226 013b 08       		.uleb128 0x8
+ 1227 013c 8D010000 		.4byte	.LASF27
+ 1228 0140 04       		.byte	0x4
+ 1229 0141 25       		.byte	0x25
+ 1230 0142 8C000000 		.4byte	0x8c
+ 1231 0146 07       		.byte	0x7
+ 1232 0147 00       		.byte	0
+ 1233 0148 09       		.uleb128 0x9
+ 1234 0149 68030000 		.4byte	.LASF28
+ 1235 014d 01       		.byte	0x1
+ 1236 014e 0001     		.2byte	0x100
+ 1237 0150 00000000 		.4byte	.LFB83
+ 1238 0154 14000000 		.4byte	.LFE83-.LFB83
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 30
+
+
+ 1239 0158 01       		.uleb128 0x1
+ 1240 0159 9C       		.byte	0x9c
+ 1241 015a 78010000 		.4byte	0x178
+ 1242 015e 0A       		.uleb128 0xa
+ 1243 015f E6020000 		.4byte	.LASF32
+ 1244 0163 01       		.byte	0x1
+ 1245 0164 0001     		.2byte	0x100
+ 1246 0166 8C000000 		.4byte	0x8c
+ 1247 016a 00000000 		.4byte	.LLST0
+ 1248 016e 0B       		.uleb128 0xb
+ 1249 016f 0E000000 		.4byte	.LVL2
+ 1250 0173 3B080000 		.4byte	0x83b
+ 1251 0177 00       		.byte	0
+ 1252 0178 0C       		.uleb128 0xc
+ 1253 0179 AC030000 		.4byte	.LASF29
+ 1254 017d 01       		.byte	0x1
+ 1255 017e F4       		.byte	0xf4
+ 1256 017f 00000000 		.4byte	.LFB81
+ 1257 0183 14000000 		.4byte	.LFE81-.LFB81
+ 1258 0187 01       		.uleb128 0x1
+ 1259 0188 9C       		.byte	0x9c
+ 1260 0189 9D010000 		.4byte	0x19d
+ 1261 018d 0D       		.uleb128 0xd
+ 1262 018e 0C000000 		.4byte	.LVL3
+ 1263 0192 48010000 		.4byte	0x148
+ 1264 0196 0E       		.uleb128 0xe
+ 1265 0197 01       		.uleb128 0x1
+ 1266 0198 50       		.byte	0x50
+ 1267 0199 01       		.uleb128 0x1
+ 1268 019a 30       		.byte	0x30
+ 1269 019b 00       		.byte	0
+ 1270 019c 00       		.byte	0
+ 1271 019d 0C       		.uleb128 0xc
+ 1272 019e 85020000 		.4byte	.LASF30
+ 1273 01a2 01       		.byte	0x1
+ 1274 01a3 FA       		.byte	0xfa
+ 1275 01a4 00000000 		.4byte	.LFB82
+ 1276 01a8 14000000 		.4byte	.LFE82-.LFB82
+ 1277 01ac 01       		.uleb128 0x1
+ 1278 01ad 9C       		.byte	0x9c
+ 1279 01ae C2010000 		.4byte	0x1c2
+ 1280 01b2 0D       		.uleb128 0xd
+ 1281 01b3 0E000000 		.4byte	.LVL4
+ 1282 01b7 48010000 		.4byte	0x148
+ 1283 01bb 0E       		.uleb128 0xe
+ 1284 01bc 01       		.uleb128 0x1
+ 1285 01bd 50       		.byte	0x50
+ 1286 01be 01       		.uleb128 0x1
+ 1287 01bf 30       		.byte	0x30
+ 1288 01c0 00       		.byte	0
+ 1289 01c1 00       		.byte	0
+ 1290 01c2 09       		.uleb128 0x9
+ 1291 01c3 E4010000 		.4byte	.LASF31
+ 1292 01c7 01       		.byte	0x1
+ 1293 01c8 1601     		.2byte	0x116
+ 1294 01ca 00000000 		.4byte	.LFB87
+ 1295 01ce 10000000 		.4byte	.LFE87-.LFB87
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 31
+
+
+ 1296 01d2 01       		.uleb128 0x1
+ 1297 01d3 9C       		.byte	0x9c
+ 1298 01d4 FB010000 		.4byte	0x1fb
+ 1299 01d8 0A       		.uleb128 0xa
+ 1300 01d9 4E030000 		.4byte	.LASF33
+ 1301 01dd 01       		.byte	0x1
+ 1302 01de 1601     		.2byte	0x116
+ 1303 01e0 FB010000 		.4byte	0x1fb
+ 1304 01e4 21000000 		.4byte	.LLST1
+ 1305 01e8 0B       		.uleb128 0xb
+ 1306 01e9 08000000 		.4byte	.LVL6
+ 1307 01ed 9D010000 		.4byte	0x19d
+ 1308 01f1 0B       		.uleb128 0xb
+ 1309 01f2 0E000000 		.4byte	.LVL8
+ 1310 01f6 78010000 		.4byte	0x178
+ 1311 01fa 00       		.byte	0
+ 1312 01fb 02       		.uleb128 0x2
+ 1313 01fc 01       		.byte	0x1
+ 1314 01fd 02       		.byte	0x2
+ 1315 01fe E0020000 		.4byte	.LASF34
+ 1316 0202 09       		.uleb128 0x9
+ 1317 0203 9E040000 		.4byte	.LASF35
+ 1318 0207 01       		.byte	0x1
+ 1319 0208 2001     		.2byte	0x120
+ 1320 020a 00000000 		.4byte	.LFB89
+ 1321 020e 22000000 		.4byte	.LFE89-.LFB89
+ 1322 0212 01       		.uleb128 0x1
+ 1323 0213 9C       		.byte	0x9c
+ 1324 0214 79020000 		.4byte	0x279
+ 1325 0218 0A       		.uleb128 0xa
+ 1326 0219 E6020000 		.4byte	.LASF32
+ 1327 021d 01       		.byte	0x1
+ 1328 021e 2001     		.2byte	0x120
+ 1329 0220 8C000000 		.4byte	0x8c
+ 1330 0224 5B000000 		.4byte	.LLST2
+ 1331 0228 0F       		.uleb128 0xf
+ 1332 0229 0C000000 		.4byte	.LVL11
+ 1333 022d 48010000 		.4byte	0x148
+ 1334 0231 3E020000 		.4byte	0x23e
+ 1335 0235 0E       		.uleb128 0xe
+ 1336 0236 01       		.uleb128 0x1
+ 1337 0237 50       		.byte	0x50
+ 1338 0238 04       		.uleb128 0x4
+ 1339 0239 74       		.byte	0x74
+ 1340 023a 00       		.sleb128 0
+ 1341 023b 34       		.byte	0x34
+ 1342 023c 21       		.byte	0x21
+ 1343 023d 00       		.byte	0
+ 1344 023e 0F       		.uleb128 0xf
+ 1345 023f 12000000 		.4byte	.LVL12
+ 1346 0243 46080000 		.4byte	0x846
+ 1347 0247 51020000 		.4byte	0x251
+ 1348 024b 0E       		.uleb128 0xe
+ 1349 024c 01       		.uleb128 0x1
+ 1350 024d 50       		.byte	0x50
+ 1351 024e 01       		.uleb128 0x1
+ 1352 024f 31       		.byte	0x31
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 32
+
+
+ 1353 0250 00       		.byte	0
+ 1354 0251 0F       		.uleb128 0xf
+ 1355 0252 1A000000 		.4byte	.LVL13
+ 1356 0256 48010000 		.4byte	0x148
+ 1357 025a 68020000 		.4byte	0x268
+ 1358 025e 0E       		.uleb128 0xe
+ 1359 025f 01       		.uleb128 0x1
+ 1360 0260 50       		.byte	0x50
+ 1361 0261 05       		.uleb128 0x5
+ 1362 0262 74       		.byte	0x74
+ 1363 0263 00       		.sleb128 0
+ 1364 0264 08       		.byte	0x8
+ 1365 0265 FB       		.byte	0xfb
+ 1366 0266 1A       		.byte	0x1a
+ 1367 0267 00       		.byte	0
+ 1368 0268 0D       		.uleb128 0xd
+ 1369 0269 20000000 		.4byte	.LVL14
+ 1370 026d 46080000 		.4byte	0x846
+ 1371 0271 0E       		.uleb128 0xe
+ 1372 0272 01       		.uleb128 0x1
+ 1373 0273 50       		.byte	0x50
+ 1374 0274 02       		.uleb128 0x2
+ 1375 0275 08       		.byte	0x8
+ 1376 0276 32       		.byte	0x32
+ 1377 0277 00       		.byte	0
+ 1378 0278 00       		.byte	0
+ 1379 0279 09       		.uleb128 0x9
+ 1380 027a FD020000 		.4byte	.LASF36
+ 1381 027e 01       		.byte	0x1
+ 1382 027f 3501     		.2byte	0x135
+ 1383 0281 00000000 		.4byte	.LFB91
+ 1384 0285 10000000 		.4byte	.LFE91-.LFB91
+ 1385 0289 01       		.uleb128 0x1
+ 1386 028a 9C       		.byte	0x9c
+ 1387 028b C4020000 		.4byte	0x2c4
+ 1388 028f 0A       		.uleb128 0xa
+ 1389 0290 E6020000 		.4byte	.LASF32
+ 1390 0294 01       		.byte	0x1
+ 1391 0295 3501     		.2byte	0x135
+ 1392 0297 C4020000 		.4byte	0x2c4
+ 1393 029b 7C000000 		.4byte	.LLST3
+ 1394 029f 0F       		.uleb128 0xf
+ 1395 02a0 08000000 		.4byte	.LVL16
+ 1396 02a4 48010000 		.4byte	0x148
+ 1397 02a8 B3020000 		.4byte	0x2b3
+ 1398 02ac 0E       		.uleb128 0xe
+ 1399 02ad 01       		.uleb128 0x1
+ 1400 02ae 50       		.byte	0x50
+ 1401 02af 02       		.uleb128 0x2
+ 1402 02b0 74       		.byte	0x74
+ 1403 02b1 00       		.sleb128 0
+ 1404 02b2 00       		.byte	0
+ 1405 02b3 0D       		.uleb128 0xd
+ 1406 02b4 0E000000 		.4byte	.LVL17
+ 1407 02b8 02020000 		.4byte	0x202
+ 1408 02bc 0E       		.uleb128 0xe
+ 1409 02bd 01       		.uleb128 0x1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 33
+
+
+ 1410 02be 50       		.byte	0x50
+ 1411 02bf 02       		.uleb128 0x2
+ 1412 02c0 74       		.byte	0x74
+ 1413 02c1 00       		.sleb128 0
+ 1414 02c2 00       		.byte	0
+ 1415 02c3 00       		.byte	0
+ 1416 02c4 06       		.uleb128 0x6
+ 1417 02c5 8C000000 		.4byte	0x8c
+ 1418 02c9 09       		.uleb128 0x9
+ 1419 02ca 32000000 		.4byte	.LASF37
+ 1420 02ce 01       		.byte	0x1
+ 1421 02cf 2D01     		.2byte	0x12d
+ 1422 02d1 00000000 		.4byte	.LFB90
+ 1423 02d5 1E000000 		.4byte	.LFE90-.LFB90
+ 1424 02d9 01       		.uleb128 0x1
+ 1425 02da 9C       		.byte	0x9c
+ 1426 02db 3A030000 		.4byte	0x33a
+ 1427 02df 0A       		.uleb128 0xa
+ 1428 02e0 D8000000 		.4byte	.LASF38
+ 1429 02e4 01       		.byte	0x1
+ 1430 02e5 2D01     		.2byte	0x12d
+ 1431 02e7 8C000000 		.4byte	0x8c
+ 1432 02eb 9D000000 		.4byte	.LLST4
+ 1433 02ef 0A       		.uleb128 0xa
+ 1434 02f0 C5000000 		.4byte	.LASF39
+ 1435 02f4 01       		.byte	0x1
+ 1436 02f5 2D01     		.2byte	0x12d
+ 1437 02f7 C4020000 		.4byte	0x2c4
+ 1438 02fb BE000000 		.4byte	.LLST5
+ 1439 02ff 10       		.uleb128 0x10
+ 1440 0300 A6010000 		.4byte	.LASF40
+ 1441 0304 01       		.byte	0x1
+ 1442 0305 2F01     		.2byte	0x12f
+ 1443 0307 8C000000 		.4byte	0x8c
+ 1444 030b DF000000 		.4byte	.LLST6
+ 1445 030f 11       		.uleb128 0x11
+ 1446 0310 24020000 		.4byte	.LASF41
+ 1447 0314 01       		.byte	0x1
+ 1448 0315 3001     		.2byte	0x130
+ 1449 0317 8C000000 		.4byte	0x8c
+ 1450 031b 01       		.uleb128 0x1
+ 1451 031c 54       		.byte	0x54
+ 1452 031d 0B       		.uleb128 0xb
+ 1453 031e 14000000 		.4byte	.LVL22
+ 1454 0322 79020000 		.4byte	0x279
+ 1455 0326 0D       		.uleb128 0xd
+ 1456 0327 1C000000 		.4byte	.LVL23
+ 1457 032b 79020000 		.4byte	0x279
+ 1458 032f 0E       		.uleb128 0xe
+ 1459 0330 01       		.uleb128 0x1
+ 1460 0331 50       		.byte	0x50
+ 1461 0332 05       		.uleb128 0x5
+ 1462 0333 74       		.byte	0x74
+ 1463 0334 00       		.sleb128 0
+ 1464 0335 75       		.byte	0x75
+ 1465 0336 00       		.sleb128 0
+ 1466 0337 21       		.byte	0x21
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 34
+
+
+ 1467 0338 00       		.byte	0
+ 1468 0339 00       		.byte	0
+ 1469 033a 09       		.uleb128 0x9
+ 1470 033b F9000000 		.4byte	.LASF42
+ 1471 033f 01       		.byte	0x1
+ 1472 0340 0501     		.2byte	0x105
+ 1473 0342 00000000 		.4byte	.LFB84
+ 1474 0346 0A000000 		.4byte	.LFE84-.LFB84
+ 1475 034a 01       		.uleb128 0x1
+ 1476 034b 9C       		.byte	0x9c
+ 1477 034c 70030000 		.4byte	0x370
+ 1478 0350 0A       		.uleb128 0xa
+ 1479 0351 E6020000 		.4byte	.LASF32
+ 1480 0355 01       		.byte	0x1
+ 1481 0356 0501     		.2byte	0x105
+ 1482 0358 8C000000 		.4byte	0x8c
+ 1483 035c F2000000 		.4byte	.LLST7
+ 1484 0360 0D       		.uleb128 0xd
+ 1485 0361 08000000 		.4byte	.LVL25
+ 1486 0365 C9020000 		.4byte	0x2c9
+ 1487 0369 0E       		.uleb128 0xe
+ 1488 036a 01       		.uleb128 0x1
+ 1489 036b 51       		.byte	0x51
+ 1490 036c 01       		.uleb128 0x1
+ 1491 036d 31       		.byte	0x31
+ 1492 036e 00       		.byte	0
+ 1493 036f 00       		.byte	0
+ 1494 0370 09       		.uleb128 0x9
+ 1495 0371 07010000 		.4byte	.LASF43
+ 1496 0375 01       		.byte	0x1
+ 1497 0376 0F01     		.2byte	0x10f
+ 1498 0378 00000000 		.4byte	.LFB86
+ 1499 037c 16000000 		.4byte	.LFE86-.LFB86
+ 1500 0380 01       		.uleb128 0x1
+ 1501 0381 9C       		.byte	0x9c
+ 1502 0382 B8030000 		.4byte	0x3b8
+ 1503 0386 0A       		.uleb128 0xa
+ 1504 0387 00000000 		.4byte	.LASF44
+ 1505 038b 01       		.byte	0x1
+ 1506 038c 0F01     		.2byte	0x10f
+ 1507 038e D0000000 		.4byte	0xd0
+ 1508 0392 13010000 		.4byte	.LLST8
+ 1509 0396 12       		.uleb128 0x12
+ 1510 0397 04000000 		.4byte	.LBB2
+ 1511 039b 10000000 		.4byte	.LBE2-.LBB2
+ 1512 039f 13       		.uleb128 0x13
+ 1513 03a0 6900     		.ascii	"i\000"
+ 1514 03a2 01       		.byte	0x1
+ 1515 03a3 1101     		.2byte	0x111
+ 1516 03a5 A2000000 		.4byte	0xa2
+ 1517 03a9 31010000 		.4byte	.LLST9
+ 1518 03ad 0B       		.uleb128 0xb
+ 1519 03ae 0C000000 		.4byte	.LVL29
+ 1520 03b2 3A030000 		.4byte	0x33a
+ 1521 03b6 00       		.byte	0
+ 1522 03b7 00       		.byte	0
+ 1523 03b8 09       		.uleb128 0x9
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 35
+
+
+ 1524 03b9 58030000 		.4byte	.LASF45
+ 1525 03bd 01       		.byte	0x1
+ 1526 03be 0A01     		.2byte	0x10a
+ 1527 03c0 00000000 		.4byte	.LFB85
+ 1528 03c4 0A000000 		.4byte	.LFE85-.LFB85
+ 1529 03c8 01       		.uleb128 0x1
+ 1530 03c9 9C       		.byte	0x9c
+ 1531 03ca EE030000 		.4byte	0x3ee
+ 1532 03ce 0A       		.uleb128 0xa
+ 1533 03cf BA040000 		.4byte	.LASF46
+ 1534 03d3 01       		.byte	0x1
+ 1535 03d4 0A01     		.2byte	0x10a
+ 1536 03d6 8C000000 		.4byte	0x8c
+ 1537 03da 50010000 		.4byte	.LLST10
+ 1538 03de 0D       		.uleb128 0xd
+ 1539 03df 08000000 		.4byte	.LVL32
+ 1540 03e3 C9020000 		.4byte	0x2c9
+ 1541 03e7 0E       		.uleb128 0xe
+ 1542 03e8 01       		.uleb128 0x1
+ 1543 03e9 51       		.byte	0x51
+ 1544 03ea 01       		.uleb128 0x1
+ 1545 03eb 30       		.byte	0x30
+ 1546 03ec 00       		.byte	0
+ 1547 03ed 00       		.byte	0
+ 1548 03ee 0C       		.uleb128 0xc
+ 1549 03ef CA000000 		.4byte	.LASF47
+ 1550 03f3 01       		.byte	0x1
+ 1551 03f4 85       		.byte	0x85
+ 1552 03f5 00000000 		.4byte	.LFB65
+ 1553 03f9 10000000 		.4byte	.LFE65-.LFB65
+ 1554 03fd 01       		.uleb128 0x1
+ 1555 03fe 9C       		.byte	0x9c
+ 1556 03ff 26040000 		.4byte	0x426
+ 1557 0403 0F       		.uleb128 0xf
+ 1558 0404 08000000 		.4byte	.LVL33
+ 1559 0408 B8030000 		.4byte	0x3b8
+ 1560 040c 16040000 		.4byte	0x416
+ 1561 0410 0E       		.uleb128 0xe
+ 1562 0411 01       		.uleb128 0x1
+ 1563 0412 50       		.byte	0x50
+ 1564 0413 01       		.uleb128 0x1
+ 1565 0414 31       		.byte	0x31
+ 1566 0415 00       		.byte	0
+ 1567 0416 0D       		.uleb128 0xd
+ 1568 0417 0E000000 		.4byte	.LVL34
+ 1569 041b 51080000 		.4byte	0x851
+ 1570 041f 0E       		.uleb128 0xe
+ 1571 0420 01       		.uleb128 0x1
+ 1572 0421 50       		.byte	0x50
+ 1573 0422 01       		.uleb128 0x1
+ 1574 0423 32       		.byte	0x32
+ 1575 0424 00       		.byte	0
+ 1576 0425 00       		.byte	0
+ 1577 0426 0C       		.uleb128 0xc
+ 1578 0427 6C010000 		.4byte	.LASF48
+ 1579 042b 01       		.byte	0x1
+ 1580 042c 8B       		.byte	0x8b
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 36
+
+
+ 1581 042d 00000000 		.4byte	.LFB66
+ 1582 0431 10000000 		.4byte	.LFE66-.LFB66
+ 1583 0435 01       		.uleb128 0x1
+ 1584 0436 9C       		.byte	0x9c
+ 1585 0437 5E040000 		.4byte	0x45e
+ 1586 043b 0F       		.uleb128 0xf
+ 1587 043c 08000000 		.4byte	.LVL35
+ 1588 0440 B8030000 		.4byte	0x3b8
+ 1589 0444 4E040000 		.4byte	0x44e
+ 1590 0448 0E       		.uleb128 0xe
+ 1591 0449 01       		.uleb128 0x1
+ 1592 044a 50       		.byte	0x50
+ 1593 044b 01       		.uleb128 0x1
+ 1594 044c 32       		.byte	0x32
+ 1595 044d 00       		.byte	0
+ 1596 044e 0D       		.uleb128 0xd
+ 1597 044f 0E000000 		.4byte	.LVL36
+ 1598 0453 51080000 		.4byte	0x851
+ 1599 0457 0E       		.uleb128 0xe
+ 1600 0458 01       		.uleb128 0x1
+ 1601 0459 50       		.byte	0x50
+ 1602 045a 01       		.uleb128 0x1
+ 1603 045b 32       		.byte	0x32
+ 1604 045c 00       		.byte	0
+ 1605 045d 00       		.byte	0
+ 1606 045e 0C       		.uleb128 0xc
+ 1607 045f 50020000 		.4byte	.LASF49
+ 1608 0463 01       		.byte	0x1
+ 1609 0464 91       		.byte	0x91
+ 1610 0465 00000000 		.4byte	.LFB67
+ 1611 0469 3C000000 		.4byte	.LFE67-.LFB67
+ 1612 046d 01       		.uleb128 0x1
+ 1613 046e 9C       		.byte	0x9c
+ 1614 046f A9040000 		.4byte	0x4a9
+ 1615 0473 14       		.uleb128 0x14
+ 1616 0474 636F6C00 		.ascii	"col\000"
+ 1617 0478 01       		.byte	0x1
+ 1618 0479 91       		.byte	0x91
+ 1619 047a 8C000000 		.4byte	0x8c
+ 1620 047e 71010000 		.4byte	.LLST11
+ 1621 0482 14       		.uleb128 0x14
+ 1622 0483 726F7700 		.ascii	"row\000"
+ 1623 0487 01       		.byte	0x1
+ 1624 0488 91       		.byte	0x91
+ 1625 0489 8C000000 		.4byte	0x8c
+ 1626 048d 92010000 		.4byte	.LLST12
+ 1627 0491 15       		.uleb128 0x15
+ 1628 0492 9A010000 		.4byte	.LASF50
+ 1629 0496 01       		.byte	0x1
+ 1630 0497 93       		.byte	0x93
+ 1631 0498 B9040000 		.4byte	0x4b9
+ 1632 049c 02       		.uleb128 0x2
+ 1633 049d 91       		.byte	0x91
+ 1634 049e 74       		.sleb128 -12
+ 1635 049f 0B       		.uleb128 0xb
+ 1636 04a0 2C000000 		.4byte	.LVL42
+ 1637 04a4 B8030000 		.4byte	0x3b8
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 37
+
+
+ 1638 04a8 00       		.byte	0
+ 1639 04a9 16       		.uleb128 0x16
+ 1640 04aa C4020000 		.4byte	0x2c4
+ 1641 04ae B9040000 		.4byte	0x4b9
+ 1642 04b2 17       		.uleb128 0x17
+ 1643 04b3 C9000000 		.4byte	0xc9
+ 1644 04b7 03       		.byte	0x3
+ 1645 04b8 00       		.byte	0
+ 1646 04b9 06       		.uleb128 0x6
+ 1647 04ba A9040000 		.4byte	0x4a9
+ 1648 04be 0C       		.uleb128 0xc
+ 1649 04bf 5A010000 		.4byte	.LASF51
+ 1650 04c3 01       		.byte	0x1
+ 1651 04c4 9B       		.byte	0x9b
+ 1652 04c5 00000000 		.4byte	.LFB68
+ 1653 04c9 1C000000 		.4byte	.LFE68-.LFB68
+ 1654 04cd 01       		.uleb128 0x1
+ 1655 04ce 9C       		.byte	0x9c
+ 1656 04cf DD040000 		.4byte	0x4dd
+ 1657 04d3 0B       		.uleb128 0xb
+ 1658 04d4 14000000 		.4byte	.LVL43
+ 1659 04d8 B8030000 		.4byte	0x3b8
+ 1660 04dc 00       		.byte	0
+ 1661 04dd 0C       		.uleb128 0xc
+ 1662 04de D0020000 		.4byte	.LASF52
+ 1663 04e2 01       		.byte	0x1
+ 1664 04e3 A1       		.byte	0xa1
+ 1665 04e4 00000000 		.4byte	.LFB69
+ 1666 04e8 1C000000 		.4byte	.LFE69-.LFB69
+ 1667 04ec 01       		.uleb128 0x1
+ 1668 04ed 9C       		.byte	0x9c
+ 1669 04ee FC040000 		.4byte	0x4fc
+ 1670 04f2 0B       		.uleb128 0xb
+ 1671 04f3 14000000 		.4byte	.LVL44
+ 1672 04f7 B8030000 		.4byte	0x3b8
+ 1673 04fb 00       		.byte	0
+ 1674 04fc 0C       		.uleb128 0xc
+ 1675 04fd 9B030000 		.4byte	.LASF53
+ 1676 0501 01       		.byte	0x1
+ 1677 0502 A8       		.byte	0xa8
+ 1678 0503 00000000 		.4byte	.LFB70
+ 1679 0507 1C000000 		.4byte	.LFE70-.LFB70
+ 1680 050b 01       		.uleb128 0x1
+ 1681 050c 9C       		.byte	0x9c
+ 1682 050d 1B050000 		.4byte	0x51b
+ 1683 0511 0B       		.uleb128 0xb
+ 1684 0512 14000000 		.4byte	.LVL45
+ 1685 0516 B8030000 		.4byte	0x3b8
+ 1686 051a 00       		.byte	0
+ 1687 051b 0C       		.uleb128 0xc
+ 1688 051c 23010000 		.4byte	.LASF54
+ 1689 0520 01       		.byte	0x1
+ 1690 0521 AE       		.byte	0xae
+ 1691 0522 00000000 		.4byte	.LFB71
+ 1692 0526 1C000000 		.4byte	.LFE71-.LFB71
+ 1693 052a 01       		.uleb128 0x1
+ 1694 052b 9C       		.byte	0x9c
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 38
+
+
+ 1695 052c 3A050000 		.4byte	0x53a
+ 1696 0530 0B       		.uleb128 0xb
+ 1697 0531 14000000 		.4byte	.LVL46
+ 1698 0535 B8030000 		.4byte	0x3b8
+ 1699 0539 00       		.byte	0
+ 1700 053a 0C       		.uleb128 0xc
+ 1701 053b 62020000 		.4byte	.LASF55
+ 1702 053f 01       		.byte	0x1
+ 1703 0540 B5       		.byte	0xb5
+ 1704 0541 00000000 		.4byte	.LFB72
+ 1705 0545 1C000000 		.4byte	.LFE72-.LFB72
+ 1706 0549 01       		.uleb128 0x1
+ 1707 054a 9C       		.byte	0x9c
+ 1708 054b 59050000 		.4byte	0x559
+ 1709 054f 0B       		.uleb128 0xb
+ 1710 0550 14000000 		.4byte	.LVL47
+ 1711 0554 B8030000 		.4byte	0x3b8
+ 1712 0558 00       		.byte	0
+ 1713 0559 0C       		.uleb128 0xc
+ 1714 055a 1D030000 		.4byte	.LASF56
+ 1715 055e 01       		.byte	0x1
+ 1716 055f BB       		.byte	0xbb
+ 1717 0560 00000000 		.4byte	.LFB73
+ 1718 0564 1C000000 		.4byte	.LFE73-.LFB73
+ 1719 0568 01       		.uleb128 0x1
+ 1720 0569 9C       		.byte	0x9c
+ 1721 056a 78050000 		.4byte	0x578
+ 1722 056e 0B       		.uleb128 0xb
+ 1723 056f 14000000 		.4byte	.LVL48
+ 1724 0573 B8030000 		.4byte	0x3b8
+ 1725 0577 00       		.byte	0
+ 1726 0578 0C       		.uleb128 0xc
+ 1727 0579 40010000 		.4byte	.LASF57
+ 1728 057d 01       		.byte	0x1
+ 1729 057e C2       		.byte	0xc2
+ 1730 057f 00000000 		.4byte	.LFB74
+ 1731 0583 0A000000 		.4byte	.LFE74-.LFB74
+ 1732 0587 01       		.uleb128 0x1
+ 1733 0588 9C       		.byte	0x9c
+ 1734 0589 9D050000 		.4byte	0x59d
+ 1735 058d 0D       		.uleb128 0xd
+ 1736 058e 08000000 		.4byte	.LVL49
+ 1737 0592 B8030000 		.4byte	0x3b8
+ 1738 0596 0E       		.uleb128 0xe
+ 1739 0597 01       		.uleb128 0x1
+ 1740 0598 50       		.byte	0x50
+ 1741 0599 01       		.uleb128 0x1
+ 1742 059a 48       		.byte	0x48
+ 1743 059b 00       		.byte	0
+ 1744 059c 00       		.byte	0
+ 1745 059d 0C       		.uleb128 0xc
+ 1746 059e 74000000 		.4byte	.LASF58
+ 1747 05a2 01       		.byte	0x1
+ 1748 05a3 C7       		.byte	0xc7
+ 1749 05a4 00000000 		.4byte	.LFB75
+ 1750 05a8 0A000000 		.4byte	.LFE75-.LFB75
+ 1751 05ac 01       		.uleb128 0x1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 39
+
+
+ 1752 05ad 9C       		.byte	0x9c
+ 1753 05ae C2050000 		.4byte	0x5c2
+ 1754 05b2 0D       		.uleb128 0xd
+ 1755 05b3 08000000 		.4byte	.LVL50
+ 1756 05b7 B8030000 		.4byte	0x3b8
+ 1757 05bb 0E       		.uleb128 0xe
+ 1758 05bc 01       		.uleb128 0x1
+ 1759 05bd 50       		.byte	0x50
+ 1760 05be 01       		.uleb128 0x1
+ 1761 05bf 4C       		.byte	0x4c
+ 1762 05c0 00       		.byte	0
+ 1763 05c1 00       		.byte	0
+ 1764 05c2 0C       		.uleb128 0xc
+ 1765 05c3 57000000 		.4byte	.LASF59
+ 1766 05c7 01       		.byte	0x1
+ 1767 05c8 CD       		.byte	0xcd
+ 1768 05c9 00000000 		.4byte	.LFB76
+ 1769 05cd 1C000000 		.4byte	.LFE76-.LFB76
+ 1770 05d1 01       		.uleb128 0x1
+ 1771 05d2 9C       		.byte	0x9c
+ 1772 05d3 E1050000 		.4byte	0x5e1
+ 1773 05d7 0B       		.uleb128 0xb
+ 1774 05d8 14000000 		.4byte	.LVL51
+ 1775 05dc B8030000 		.4byte	0x3b8
+ 1776 05e0 00       		.byte	0
+ 1777 05e1 0C       		.uleb128 0xc
+ 1778 05e2 79010000 		.4byte	.LASF60
+ 1779 05e6 01       		.byte	0x1
+ 1780 05e7 D4       		.byte	0xd4
+ 1781 05e8 00000000 		.4byte	.LFB77
+ 1782 05ec 1C000000 		.4byte	.LFE77-.LFB77
+ 1783 05f0 01       		.uleb128 0x1
+ 1784 05f1 9C       		.byte	0x9c
+ 1785 05f2 00060000 		.4byte	0x600
+ 1786 05f6 0B       		.uleb128 0xb
+ 1787 05f7 14000000 		.4byte	.LVL52
+ 1788 05fb B8030000 		.4byte	0x3b8
+ 1789 05ff 00       		.byte	0
+ 1790 0600 0C       		.uleb128 0xc
+ 1791 0601 E6000000 		.4byte	.LASF61
+ 1792 0605 01       		.byte	0x1
+ 1793 0606 DB       		.byte	0xdb
+ 1794 0607 00000000 		.4byte	.LFB78
+ 1795 060b 1C000000 		.4byte	.LFE78-.LFB78
+ 1796 060f 01       		.uleb128 0x1
+ 1797 0610 9C       		.byte	0x9c
+ 1798 0611 1F060000 		.4byte	0x61f
+ 1799 0615 0B       		.uleb128 0xb
+ 1800 0616 14000000 		.4byte	.LVL53
+ 1801 061a B8030000 		.4byte	0x3b8
+ 1802 061e 00       		.byte	0
+ 1803 061f 0C       		.uleb128 0xc
+ 1804 0620 CF010000 		.4byte	.LASF62
+ 1805 0624 01       		.byte	0x1
+ 1806 0625 E2       		.byte	0xe2
+ 1807 0626 00000000 		.4byte	.LFB79
+ 1808 062a 1C000000 		.4byte	.LFE79-.LFB79
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 40
+
+
+ 1809 062e 01       		.uleb128 0x1
+ 1810 062f 9C       		.byte	0x9c
+ 1811 0630 3E060000 		.4byte	0x63e
+ 1812 0634 0B       		.uleb128 0xb
+ 1813 0635 14000000 		.4byte	.LVL54
+ 1814 0639 B8030000 		.4byte	0x3b8
+ 1815 063d 00       		.byte	0
+ 1816 063e 0C       		.uleb128 0xc
+ 1817 063f 8F000000 		.4byte	.LASF63
+ 1818 0643 01       		.byte	0x1
+ 1819 0644 EA       		.byte	0xea
+ 1820 0645 00000000 		.4byte	.LFB80
+ 1821 0649 24000000 		.4byte	.LFE80-.LFB80
+ 1822 064d 01       		.uleb128 0x1
+ 1823 064e 9C       		.byte	0x9c
+ 1824 064f 9F060000 		.4byte	0x69f
+ 1825 0653 18       		.uleb128 0x18
+ 1826 0654 35030000 		.4byte	.LASF64
+ 1827 0658 01       		.byte	0x1
+ 1828 0659 EA       		.byte	0xea
+ 1829 065a 8C000000 		.4byte	0x8c
+ 1830 065e BE010000 		.4byte	.LLST13
+ 1831 0662 18       		.uleb128 0x18
+ 1832 0663 15030000 		.4byte	.LASF65
+ 1833 0667 01       		.byte	0x1
+ 1834 0668 EA       		.byte	0xea
+ 1835 0669 9F060000 		.4byte	0x69f
+ 1836 066d DC010000 		.4byte	.LLST14
+ 1837 0671 19       		.uleb128 0x19
+ 1838 0672 12000000 		.4byte	.LBB3
+ 1839 0676 10000000 		.4byte	.LBE3-.LBB3
+ 1840 067a 95060000 		.4byte	0x695
+ 1841 067e 1A       		.uleb128 0x1a
+ 1842 067f 6900     		.ascii	"i\000"
+ 1843 0681 01       		.byte	0x1
+ 1844 0682 EE       		.byte	0xee
+ 1845 0683 A2000000 		.4byte	0xa2
+ 1846 0687 FA010000 		.4byte	.LLST15
+ 1847 068b 0B       		.uleb128 0xb
+ 1848 068c 1C000000 		.4byte	.LVL60
+ 1849 0690 3A030000 		.4byte	0x33a
+ 1850 0694 00       		.byte	0
+ 1851 0695 0B       		.uleb128 0xb
+ 1852 0696 12000000 		.4byte	.LVL58
+ 1853 069a B8030000 		.4byte	0x3b8
+ 1854 069e 00       		.byte	0
+ 1855 069f 05       		.uleb128 0x5
+ 1856 06a0 04       		.byte	0x4
+ 1857 06a1 8C000000 		.4byte	0x8c
+ 1858 06a5 09       		.uleb128 0x9
+ 1859 06a6 D5030000 		.4byte	.LASF66
+ 1860 06aa 01       		.byte	0x1
+ 1861 06ab 1B01     		.2byte	0x11b
+ 1862 06ad 00000000 		.4byte	.LFB88
+ 1863 06b1 08000000 		.4byte	.LFE88-.LFB88
+ 1864 06b5 01       		.uleb128 0x1
+ 1865 06b6 9C       		.byte	0x9c
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 41
+
+
+ 1866 06b7 ED060000 		.4byte	0x6ed
+ 1867 06bb 0A       		.uleb128 0xa
+ 1868 06bc C6010000 		.4byte	.LASF67
+ 1869 06c0 01       		.byte	0x1
+ 1870 06c1 1B01     		.2byte	0x11b
+ 1871 06c3 8C000000 		.4byte	0x8c
+ 1872 06c7 19020000 		.4byte	.LLST16
+ 1873 06cb 0A       		.uleb128 0xa
+ 1874 06cc 49000000 		.4byte	.LASF25
+ 1875 06d0 01       		.byte	0x1
+ 1876 06d1 1B01     		.2byte	0x11b
+ 1877 06d3 9F060000 		.4byte	0x69f
+ 1878 06d7 3A020000 		.4byte	.LLST17
+ 1879 06db 0D       		.uleb128 0xd
+ 1880 06dc 06000000 		.4byte	.LVL63
+ 1881 06e0 3E060000 		.4byte	0x63e
+ 1882 06e4 0E       		.uleb128 0xe
+ 1883 06e5 01       		.uleb128 0x1
+ 1884 06e6 51       		.byte	0x51
+ 1885 06e7 03       		.uleb128 0x3
+ 1886 06e8 F3       		.byte	0xf3
+ 1887 06e9 01       		.uleb128 0x1
+ 1888 06ea 51       		.byte	0x51
+ 1889 06eb 00       		.byte	0
+ 1890 06ec 00       		.byte	0
+ 1891 06ed 0C       		.uleb128 0xc
+ 1892 06ee C7030000 		.4byte	.LASF68
+ 1893 06f2 01       		.byte	0x1
+ 1894 06f3 57       		.byte	0x57
+ 1895 06f4 00000000 		.4byte	.LFB64
+ 1896 06f8 6C000000 		.4byte	.LFE64-.LFB64
+ 1897 06fc 01       		.uleb128 0x1
+ 1898 06fd 9C       		.byte	0x9c
+ 1899 06fe E6070000 		.4byte	0x7e6
+ 1900 0702 0B       		.uleb128 0xb
+ 1901 0703 0A000000 		.4byte	.LVL64
+ 1902 0707 48010000 		.4byte	0x148
+ 1903 070b 0F       		.uleb128 0xf
+ 1904 070c 12000000 		.4byte	.LVL65
+ 1905 0710 51080000 		.4byte	0x851
+ 1906 0714 20070000 		.4byte	0x720
+ 1907 0718 0E       		.uleb128 0xe
+ 1908 0719 01       		.uleb128 0x1
+ 1909 071a 50       		.byte	0x50
+ 1910 071b 03       		.uleb128 0x3
+ 1911 071c 0A       		.byte	0xa
+ 1912 071d E803     		.2byte	0x3e8
+ 1913 071f 00       		.byte	0
+ 1914 0720 0F       		.uleb128 0xf
+ 1915 0721 18000000 		.4byte	.LVL66
+ 1916 0725 79020000 		.4byte	0x279
+ 1917 0729 34070000 		.4byte	0x734
+ 1918 072d 0E       		.uleb128 0xe
+ 1919 072e 01       		.uleb128 0x1
+ 1920 072f 50       		.byte	0x50
+ 1921 0730 02       		.uleb128 0x2
+ 1922 0731 08       		.byte	0x8
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 42
+
+
+ 1923 0732 30       		.byte	0x30
+ 1924 0733 00       		.byte	0
+ 1925 0734 0F       		.uleb128 0xf
+ 1926 0735 20000000 		.4byte	.LVL67
+ 1927 0739 46080000 		.4byte	0x846
+ 1928 073d 49070000 		.4byte	0x749
+ 1929 0741 0E       		.uleb128 0xe
+ 1930 0742 01       		.uleb128 0x1
+ 1931 0743 50       		.byte	0x50
+ 1932 0744 03       		.uleb128 0x3
+ 1933 0745 0A       		.byte	0xa
+ 1934 0746 9411     		.2byte	0x1194
+ 1935 0748 00       		.byte	0
+ 1936 0749 0F       		.uleb128 0xf
+ 1937 074a 26000000 		.4byte	.LVL68
+ 1938 074e 79020000 		.4byte	0x279
+ 1939 0752 5D070000 		.4byte	0x75d
+ 1940 0756 0E       		.uleb128 0xe
+ 1941 0757 01       		.uleb128 0x1
+ 1942 0758 50       		.byte	0x50
+ 1943 0759 02       		.uleb128 0x2
+ 1944 075a 08       		.byte	0x8
+ 1945 075b 30       		.byte	0x30
+ 1946 075c 00       		.byte	0
+ 1947 075d 0F       		.uleb128 0xf
+ 1948 075e 2E000000 		.4byte	.LVL69
+ 1949 0762 46080000 		.4byte	0x846
+ 1950 0766 72070000 		.4byte	0x772
+ 1951 076a 0E       		.uleb128 0xe
+ 1952 076b 01       		.uleb128 0x1
+ 1953 076c 50       		.byte	0x50
+ 1954 076d 03       		.uleb128 0x3
+ 1955 076e 0A       		.byte	0xa
+ 1956 076f 9411     		.2byte	0x1194
+ 1957 0771 00       		.byte	0
+ 1958 0772 0F       		.uleb128 0xf
+ 1959 0773 34000000 		.4byte	.LVL70
+ 1960 0777 79020000 		.4byte	0x279
+ 1961 077b 86070000 		.4byte	0x786
+ 1962 077f 0E       		.uleb128 0xe
+ 1963 0780 01       		.uleb128 0x1
+ 1964 0781 50       		.byte	0x50
+ 1965 0782 02       		.uleb128 0x2
+ 1966 0783 08       		.byte	0x8
+ 1967 0784 30       		.byte	0x30
+ 1968 0785 00       		.byte	0
+ 1969 0786 0F       		.uleb128 0xf
+ 1970 0787 3A000000 		.4byte	.LVL71
+ 1971 078b 46080000 		.4byte	0x846
+ 1972 078f 9A070000 		.4byte	0x79a
+ 1973 0793 0E       		.uleb128 0xe
+ 1974 0794 01       		.uleb128 0x1
+ 1975 0795 50       		.byte	0x50
+ 1976 0796 02       		.uleb128 0x2
+ 1977 0797 08       		.byte	0x8
+ 1978 0798 96       		.byte	0x96
+ 1979 0799 00       		.byte	0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 43
+
+
+ 1980 079a 0F       		.uleb128 0xf
+ 1981 079b 40000000 		.4byte	.LVL72
+ 1982 079f 79020000 		.4byte	0x279
+ 1983 07a3 AE070000 		.4byte	0x7ae
+ 1984 07a7 0E       		.uleb128 0xe
+ 1985 07a8 01       		.uleb128 0x1
+ 1986 07a9 50       		.byte	0x50
+ 1987 07aa 02       		.uleb128 0x2
+ 1988 07ab 08       		.byte	0x8
+ 1989 07ac 20       		.byte	0x20
+ 1990 07ad 00       		.byte	0
+ 1991 07ae 0B       		.uleb128 0xb
+ 1992 07af 4A000000 		.4byte	.LVL73
+ 1993 07b3 B8030000 		.4byte	0x3b8
+ 1994 07b7 0B       		.uleb128 0xb
+ 1995 07b8 52000000 		.4byte	.LVL74
+ 1996 07bc DD040000 		.4byte	0x4dd
+ 1997 07c0 0B       		.uleb128 0xb
+ 1998 07c1 56000000 		.4byte	.LVL75
+ 1999 07c5 EE030000 		.4byte	0x3ee
+ 2000 07c9 0F       		.uleb128 0xf
+ 2001 07ca 60000000 		.4byte	.LVL76
+ 2002 07ce B8030000 		.4byte	0x3b8
+ 2003 07d2 DC070000 		.4byte	0x7dc
+ 2004 07d6 0E       		.uleb128 0xe
+ 2005 07d7 01       		.uleb128 0x1
+ 2006 07d8 50       		.byte	0x50
+ 2007 07d9 01       		.uleb128 0x1
+ 2008 07da 36       		.byte	0x36
+ 2009 07db 00       		.byte	0
+ 2010 07dc 0B       		.uleb128 0xb
+ 2011 07dd 64000000 		.4byte	.LVL77
+ 2012 07e1 26040000 		.4byte	0x426
+ 2013 07e5 00       		.byte	0
+ 2014 07e6 0C       		.uleb128 0xc
+ 2015 07e7 8D030000 		.4byte	.LASF69
+ 2016 07eb 01       		.byte	0x1
+ 2017 07ec 3D       		.byte	0x3d
+ 2018 07ed 00000000 		.4byte	.LFB63
+ 2019 07f1 2C000000 		.4byte	.LFE63-.LFB63
+ 2020 07f5 01       		.uleb128 0x1
+ 2021 07f6 9C       		.byte	0x9c
+ 2022 07f7 19080000 		.4byte	0x819
+ 2023 07fb 0F       		.uleb128 0xf
+ 2024 07fc 20000000 		.4byte	.LVL78
+ 2025 0800 51080000 		.4byte	0x851
+ 2026 0804 0F080000 		.4byte	0x80f
+ 2027 0808 0E       		.uleb128 0xe
+ 2028 0809 01       		.uleb128 0x1
+ 2029 080a 50       		.byte	0x50
+ 2030 080b 02       		.uleb128 0x2
+ 2031 080c 08       		.byte	0x8
+ 2032 080d 32       		.byte	0x32
+ 2033 080e 00       		.byte	0
+ 2034 080f 0B       		.uleb128 0xb
+ 2035 0810 24000000 		.4byte	.LVL79
+ 2036 0814 ED060000 		.4byte	0x6ed
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 44
+
+
+ 2037 0818 00       		.byte	0
+ 2038 0819 1B       		.uleb128 0x1b
+ 2039 081a 03040000 		.4byte	.LASF70
+ 2040 081e 05       		.byte	0x5
+ 2041 081f 1207     		.2byte	0x712
+ 2042 0821 25080000 		.4byte	0x825
+ 2043 0825 1C       		.uleb128 0x1c
+ 2044 0826 97000000 		.4byte	0x97
+ 2045 082a 1D       		.uleb128 0x1d
+ 2046 082b C1020000 		.4byte	.LASF71
+ 2047 082f 01       		.byte	0x1
+ 2048 0830 22       		.byte	0x22
+ 2049 0831 DB000000 		.4byte	0xdb
+ 2050 0835 05       		.uleb128 0x5
+ 2051 0836 03       		.byte	0x3
+ 2052 0837 00000000 		.4byte	LCD_I2C_config
+ 2053 083b 1E       		.uleb128 0x1e
+ 2054 083c F1030000 		.4byte	.LASF72
+ 2055 0840 F1030000 		.4byte	.LASF72
+ 2056 0844 06       		.byte	0x6
+ 2057 0845 1B       		.byte	0x1b
+ 2058 0846 1E       		.uleb128 0x1e
+ 2059 0847 AE010000 		.4byte	.LASF73
+ 2060 084b AE010000 		.4byte	.LASF73
+ 2061 084f 07       		.byte	0x7
+ 2062 0850 77       		.byte	0x77
+ 2063 0851 1E       		.uleb128 0x1e
+ 2064 0852 B2040000 		.4byte	.LASF74
+ 2065 0856 B2040000 		.4byte	.LASF74
+ 2066 085a 07       		.byte	0x7
+ 2067 085b 76       		.byte	0x76
+ 2068 085c 00       		.byte	0
+ 2069              		.section	.debug_abbrev,"",%progbits
+ 2070              	.Ldebug_abbrev0:
+ 2071 0000 01       		.uleb128 0x1
+ 2072 0001 11       		.uleb128 0x11
+ 2073 0002 01       		.byte	0x1
+ 2074 0003 25       		.uleb128 0x25
+ 2075 0004 0E       		.uleb128 0xe
+ 2076 0005 13       		.uleb128 0x13
+ 2077 0006 0B       		.uleb128 0xb
+ 2078 0007 03       		.uleb128 0x3
+ 2079 0008 0E       		.uleb128 0xe
+ 2080 0009 1B       		.uleb128 0x1b
+ 2081 000a 0E       		.uleb128 0xe
+ 2082 000b 55       		.uleb128 0x55
+ 2083 000c 17       		.uleb128 0x17
+ 2084 000d 11       		.uleb128 0x11
+ 2085 000e 01       		.uleb128 0x1
+ 2086 000f 10       		.uleb128 0x10
+ 2087 0010 17       		.uleb128 0x17
+ 2088 0011 00       		.byte	0
+ 2089 0012 00       		.byte	0
+ 2090 0013 02       		.uleb128 0x2
+ 2091 0014 24       		.uleb128 0x24
+ 2092 0015 00       		.byte	0
+ 2093 0016 0B       		.uleb128 0xb
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 45
+
+
+ 2094 0017 0B       		.uleb128 0xb
+ 2095 0018 3E       		.uleb128 0x3e
+ 2096 0019 0B       		.uleb128 0xb
+ 2097 001a 03       		.uleb128 0x3
+ 2098 001b 0E       		.uleb128 0xe
+ 2099 001c 00       		.byte	0
+ 2100 001d 00       		.byte	0
+ 2101 001e 03       		.uleb128 0x3
+ 2102 001f 16       		.uleb128 0x16
+ 2103 0020 00       		.byte	0
+ 2104 0021 03       		.uleb128 0x3
+ 2105 0022 0E       		.uleb128 0xe
+ 2106 0023 3A       		.uleb128 0x3a
+ 2107 0024 0B       		.uleb128 0xb
+ 2108 0025 3B       		.uleb128 0x3b
+ 2109 0026 0B       		.uleb128 0xb
+ 2110 0027 49       		.uleb128 0x49
+ 2111 0028 13       		.uleb128 0x13
+ 2112 0029 00       		.byte	0
+ 2113 002a 00       		.byte	0
+ 2114 002b 04       		.uleb128 0x4
+ 2115 002c 24       		.uleb128 0x24
+ 2116 002d 00       		.byte	0
+ 2117 002e 0B       		.uleb128 0xb
+ 2118 002f 0B       		.uleb128 0xb
+ 2119 0030 3E       		.uleb128 0x3e
+ 2120 0031 0B       		.uleb128 0xb
+ 2121 0032 03       		.uleb128 0x3
+ 2122 0033 08       		.uleb128 0x8
+ 2123 0034 00       		.byte	0
+ 2124 0035 00       		.byte	0
+ 2125 0036 05       		.uleb128 0x5
+ 2126 0037 0F       		.uleb128 0xf
+ 2127 0038 00       		.byte	0
+ 2128 0039 0B       		.uleb128 0xb
+ 2129 003a 0B       		.uleb128 0xb
+ 2130 003b 49       		.uleb128 0x49
+ 2131 003c 13       		.uleb128 0x13
+ 2132 003d 00       		.byte	0
+ 2133 003e 00       		.byte	0
+ 2134 003f 06       		.uleb128 0x6
+ 2135 0040 26       		.uleb128 0x26
+ 2136 0041 00       		.byte	0
+ 2137 0042 49       		.uleb128 0x49
+ 2138 0043 13       		.uleb128 0x13
+ 2139 0044 00       		.byte	0
+ 2140 0045 00       		.byte	0
+ 2141 0046 07       		.uleb128 0x7
+ 2142 0047 13       		.uleb128 0x13
+ 2143 0048 01       		.byte	0x1
+ 2144 0049 03       		.uleb128 0x3
+ 2145 004a 0E       		.uleb128 0xe
+ 2146 004b 0B       		.uleb128 0xb
+ 2147 004c 0B       		.uleb128 0xb
+ 2148 004d 3A       		.uleb128 0x3a
+ 2149 004e 0B       		.uleb128 0xb
+ 2150 004f 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 46
+
+
+ 2151 0050 0B       		.uleb128 0xb
+ 2152 0051 01       		.uleb128 0x1
+ 2153 0052 13       		.uleb128 0x13
+ 2154 0053 00       		.byte	0
+ 2155 0054 00       		.byte	0
+ 2156 0055 08       		.uleb128 0x8
+ 2157 0056 0D       		.uleb128 0xd
+ 2158 0057 00       		.byte	0
+ 2159 0058 03       		.uleb128 0x3
+ 2160 0059 0E       		.uleb128 0xe
+ 2161 005a 3A       		.uleb128 0x3a
+ 2162 005b 0B       		.uleb128 0xb
+ 2163 005c 3B       		.uleb128 0x3b
+ 2164 005d 0B       		.uleb128 0xb
+ 2165 005e 49       		.uleb128 0x49
+ 2166 005f 13       		.uleb128 0x13
+ 2167 0060 38       		.uleb128 0x38
+ 2168 0061 0B       		.uleb128 0xb
+ 2169 0062 00       		.byte	0
+ 2170 0063 00       		.byte	0
+ 2171 0064 09       		.uleb128 0x9
+ 2172 0065 2E       		.uleb128 0x2e
+ 2173 0066 01       		.byte	0x1
+ 2174 0067 3F       		.uleb128 0x3f
+ 2175 0068 19       		.uleb128 0x19
+ 2176 0069 03       		.uleb128 0x3
+ 2177 006a 0E       		.uleb128 0xe
+ 2178 006b 3A       		.uleb128 0x3a
+ 2179 006c 0B       		.uleb128 0xb
+ 2180 006d 3B       		.uleb128 0x3b
+ 2181 006e 05       		.uleb128 0x5
+ 2182 006f 27       		.uleb128 0x27
+ 2183 0070 19       		.uleb128 0x19
+ 2184 0071 11       		.uleb128 0x11
+ 2185 0072 01       		.uleb128 0x1
+ 2186 0073 12       		.uleb128 0x12
+ 2187 0074 06       		.uleb128 0x6
+ 2188 0075 40       		.uleb128 0x40
+ 2189 0076 18       		.uleb128 0x18
+ 2190 0077 9742     		.uleb128 0x2117
+ 2191 0079 19       		.uleb128 0x19
+ 2192 007a 01       		.uleb128 0x1
+ 2193 007b 13       		.uleb128 0x13
+ 2194 007c 00       		.byte	0
+ 2195 007d 00       		.byte	0
+ 2196 007e 0A       		.uleb128 0xa
+ 2197 007f 05       		.uleb128 0x5
+ 2198 0080 00       		.byte	0
+ 2199 0081 03       		.uleb128 0x3
+ 2200 0082 0E       		.uleb128 0xe
+ 2201 0083 3A       		.uleb128 0x3a
+ 2202 0084 0B       		.uleb128 0xb
+ 2203 0085 3B       		.uleb128 0x3b
+ 2204 0086 05       		.uleb128 0x5
+ 2205 0087 49       		.uleb128 0x49
+ 2206 0088 13       		.uleb128 0x13
+ 2207 0089 02       		.uleb128 0x2
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 47
+
+
+ 2208 008a 17       		.uleb128 0x17
+ 2209 008b 00       		.byte	0
+ 2210 008c 00       		.byte	0
+ 2211 008d 0B       		.uleb128 0xb
+ 2212 008e 898201   		.uleb128 0x4109
+ 2213 0091 00       		.byte	0
+ 2214 0092 11       		.uleb128 0x11
+ 2215 0093 01       		.uleb128 0x1
+ 2216 0094 31       		.uleb128 0x31
+ 2217 0095 13       		.uleb128 0x13
+ 2218 0096 00       		.byte	0
+ 2219 0097 00       		.byte	0
+ 2220 0098 0C       		.uleb128 0xc
+ 2221 0099 2E       		.uleb128 0x2e
+ 2222 009a 01       		.byte	0x1
+ 2223 009b 3F       		.uleb128 0x3f
+ 2224 009c 19       		.uleb128 0x19
+ 2225 009d 03       		.uleb128 0x3
+ 2226 009e 0E       		.uleb128 0xe
+ 2227 009f 3A       		.uleb128 0x3a
+ 2228 00a0 0B       		.uleb128 0xb
+ 2229 00a1 3B       		.uleb128 0x3b
+ 2230 00a2 0B       		.uleb128 0xb
+ 2231 00a3 27       		.uleb128 0x27
+ 2232 00a4 19       		.uleb128 0x19
+ 2233 00a5 11       		.uleb128 0x11
+ 2234 00a6 01       		.uleb128 0x1
+ 2235 00a7 12       		.uleb128 0x12
+ 2236 00a8 06       		.uleb128 0x6
+ 2237 00a9 40       		.uleb128 0x40
+ 2238 00aa 18       		.uleb128 0x18
+ 2239 00ab 9742     		.uleb128 0x2117
+ 2240 00ad 19       		.uleb128 0x19
+ 2241 00ae 01       		.uleb128 0x1
+ 2242 00af 13       		.uleb128 0x13
+ 2243 00b0 00       		.byte	0
+ 2244 00b1 00       		.byte	0
+ 2245 00b2 0D       		.uleb128 0xd
+ 2246 00b3 898201   		.uleb128 0x4109
+ 2247 00b6 01       		.byte	0x1
+ 2248 00b7 11       		.uleb128 0x11
+ 2249 00b8 01       		.uleb128 0x1
+ 2250 00b9 31       		.uleb128 0x31
+ 2251 00ba 13       		.uleb128 0x13
+ 2252 00bb 00       		.byte	0
+ 2253 00bc 00       		.byte	0
+ 2254 00bd 0E       		.uleb128 0xe
+ 2255 00be 8A8201   		.uleb128 0x410a
+ 2256 00c1 00       		.byte	0
+ 2257 00c2 02       		.uleb128 0x2
+ 2258 00c3 18       		.uleb128 0x18
+ 2259 00c4 9142     		.uleb128 0x2111
+ 2260 00c6 18       		.uleb128 0x18
+ 2261 00c7 00       		.byte	0
+ 2262 00c8 00       		.byte	0
+ 2263 00c9 0F       		.uleb128 0xf
+ 2264 00ca 898201   		.uleb128 0x4109
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 48
+
+
+ 2265 00cd 01       		.byte	0x1
+ 2266 00ce 11       		.uleb128 0x11
+ 2267 00cf 01       		.uleb128 0x1
+ 2268 00d0 31       		.uleb128 0x31
+ 2269 00d1 13       		.uleb128 0x13
+ 2270 00d2 01       		.uleb128 0x1
+ 2271 00d3 13       		.uleb128 0x13
+ 2272 00d4 00       		.byte	0
+ 2273 00d5 00       		.byte	0
+ 2274 00d6 10       		.uleb128 0x10
+ 2275 00d7 34       		.uleb128 0x34
+ 2276 00d8 00       		.byte	0
+ 2277 00d9 03       		.uleb128 0x3
+ 2278 00da 0E       		.uleb128 0xe
+ 2279 00db 3A       		.uleb128 0x3a
+ 2280 00dc 0B       		.uleb128 0xb
+ 2281 00dd 3B       		.uleb128 0x3b
+ 2282 00de 05       		.uleb128 0x5
+ 2283 00df 49       		.uleb128 0x49
+ 2284 00e0 13       		.uleb128 0x13
+ 2285 00e1 02       		.uleb128 0x2
+ 2286 00e2 17       		.uleb128 0x17
+ 2287 00e3 00       		.byte	0
+ 2288 00e4 00       		.byte	0
+ 2289 00e5 11       		.uleb128 0x11
+ 2290 00e6 34       		.uleb128 0x34
+ 2291 00e7 00       		.byte	0
+ 2292 00e8 03       		.uleb128 0x3
+ 2293 00e9 0E       		.uleb128 0xe
+ 2294 00ea 3A       		.uleb128 0x3a
+ 2295 00eb 0B       		.uleb128 0xb
+ 2296 00ec 3B       		.uleb128 0x3b
+ 2297 00ed 05       		.uleb128 0x5
+ 2298 00ee 49       		.uleb128 0x49
+ 2299 00ef 13       		.uleb128 0x13
+ 2300 00f0 02       		.uleb128 0x2
+ 2301 00f1 18       		.uleb128 0x18
+ 2302 00f2 00       		.byte	0
+ 2303 00f3 00       		.byte	0
+ 2304 00f4 12       		.uleb128 0x12
+ 2305 00f5 0B       		.uleb128 0xb
+ 2306 00f6 01       		.byte	0x1
+ 2307 00f7 11       		.uleb128 0x11
+ 2308 00f8 01       		.uleb128 0x1
+ 2309 00f9 12       		.uleb128 0x12
+ 2310 00fa 06       		.uleb128 0x6
+ 2311 00fb 00       		.byte	0
+ 2312 00fc 00       		.byte	0
+ 2313 00fd 13       		.uleb128 0x13
+ 2314 00fe 34       		.uleb128 0x34
+ 2315 00ff 00       		.byte	0
+ 2316 0100 03       		.uleb128 0x3
+ 2317 0101 08       		.uleb128 0x8
+ 2318 0102 3A       		.uleb128 0x3a
+ 2319 0103 0B       		.uleb128 0xb
+ 2320 0104 3B       		.uleb128 0x3b
+ 2321 0105 05       		.uleb128 0x5
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 49
+
+
+ 2322 0106 49       		.uleb128 0x49
+ 2323 0107 13       		.uleb128 0x13
+ 2324 0108 02       		.uleb128 0x2
+ 2325 0109 17       		.uleb128 0x17
+ 2326 010a 00       		.byte	0
+ 2327 010b 00       		.byte	0
+ 2328 010c 14       		.uleb128 0x14
+ 2329 010d 05       		.uleb128 0x5
+ 2330 010e 00       		.byte	0
+ 2331 010f 03       		.uleb128 0x3
+ 2332 0110 08       		.uleb128 0x8
+ 2333 0111 3A       		.uleb128 0x3a
+ 2334 0112 0B       		.uleb128 0xb
+ 2335 0113 3B       		.uleb128 0x3b
+ 2336 0114 0B       		.uleb128 0xb
+ 2337 0115 49       		.uleb128 0x49
+ 2338 0116 13       		.uleb128 0x13
+ 2339 0117 02       		.uleb128 0x2
+ 2340 0118 17       		.uleb128 0x17
+ 2341 0119 00       		.byte	0
+ 2342 011a 00       		.byte	0
+ 2343 011b 15       		.uleb128 0x15
+ 2344 011c 34       		.uleb128 0x34
+ 2345 011d 00       		.byte	0
+ 2346 011e 03       		.uleb128 0x3
+ 2347 011f 0E       		.uleb128 0xe
+ 2348 0120 3A       		.uleb128 0x3a
+ 2349 0121 0B       		.uleb128 0xb
+ 2350 0122 3B       		.uleb128 0x3b
+ 2351 0123 0B       		.uleb128 0xb
+ 2352 0124 49       		.uleb128 0x49
+ 2353 0125 13       		.uleb128 0x13
+ 2354 0126 02       		.uleb128 0x2
+ 2355 0127 18       		.uleb128 0x18
+ 2356 0128 00       		.byte	0
+ 2357 0129 00       		.byte	0
+ 2358 012a 16       		.uleb128 0x16
+ 2359 012b 01       		.uleb128 0x1
+ 2360 012c 01       		.byte	0x1
+ 2361 012d 49       		.uleb128 0x49
+ 2362 012e 13       		.uleb128 0x13
+ 2363 012f 01       		.uleb128 0x1
+ 2364 0130 13       		.uleb128 0x13
+ 2365 0131 00       		.byte	0
+ 2366 0132 00       		.byte	0
+ 2367 0133 17       		.uleb128 0x17
+ 2368 0134 21       		.uleb128 0x21
+ 2369 0135 00       		.byte	0
+ 2370 0136 49       		.uleb128 0x49
+ 2371 0137 13       		.uleb128 0x13
+ 2372 0138 2F       		.uleb128 0x2f
+ 2373 0139 0B       		.uleb128 0xb
+ 2374 013a 00       		.byte	0
+ 2375 013b 00       		.byte	0
+ 2376 013c 18       		.uleb128 0x18
+ 2377 013d 05       		.uleb128 0x5
+ 2378 013e 00       		.byte	0
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 50
+
+
+ 2379 013f 03       		.uleb128 0x3
+ 2380 0140 0E       		.uleb128 0xe
+ 2381 0141 3A       		.uleb128 0x3a
+ 2382 0142 0B       		.uleb128 0xb
+ 2383 0143 3B       		.uleb128 0x3b
+ 2384 0144 0B       		.uleb128 0xb
+ 2385 0145 49       		.uleb128 0x49
+ 2386 0146 13       		.uleb128 0x13
+ 2387 0147 02       		.uleb128 0x2
+ 2388 0148 17       		.uleb128 0x17
+ 2389 0149 00       		.byte	0
+ 2390 014a 00       		.byte	0
+ 2391 014b 19       		.uleb128 0x19
+ 2392 014c 0B       		.uleb128 0xb
+ 2393 014d 01       		.byte	0x1
+ 2394 014e 11       		.uleb128 0x11
+ 2395 014f 01       		.uleb128 0x1
+ 2396 0150 12       		.uleb128 0x12
+ 2397 0151 06       		.uleb128 0x6
+ 2398 0152 01       		.uleb128 0x1
+ 2399 0153 13       		.uleb128 0x13
+ 2400 0154 00       		.byte	0
+ 2401 0155 00       		.byte	0
+ 2402 0156 1A       		.uleb128 0x1a
+ 2403 0157 34       		.uleb128 0x34
+ 2404 0158 00       		.byte	0
+ 2405 0159 03       		.uleb128 0x3
+ 2406 015a 08       		.uleb128 0x8
+ 2407 015b 3A       		.uleb128 0x3a
+ 2408 015c 0B       		.uleb128 0xb
+ 2409 015d 3B       		.uleb128 0x3b
+ 2410 015e 0B       		.uleb128 0xb
+ 2411 015f 49       		.uleb128 0x49
+ 2412 0160 13       		.uleb128 0x13
+ 2413 0161 02       		.uleb128 0x2
+ 2414 0162 17       		.uleb128 0x17
+ 2415 0163 00       		.byte	0
+ 2416 0164 00       		.byte	0
+ 2417 0165 1B       		.uleb128 0x1b
+ 2418 0166 34       		.uleb128 0x34
+ 2419 0167 00       		.byte	0
+ 2420 0168 03       		.uleb128 0x3
+ 2421 0169 0E       		.uleb128 0xe
+ 2422 016a 3A       		.uleb128 0x3a
+ 2423 016b 0B       		.uleb128 0xb
+ 2424 016c 3B       		.uleb128 0x3b
+ 2425 016d 05       		.uleb128 0x5
+ 2426 016e 49       		.uleb128 0x49
+ 2427 016f 13       		.uleb128 0x13
+ 2428 0170 3F       		.uleb128 0x3f
+ 2429 0171 19       		.uleb128 0x19
+ 2430 0172 3C       		.uleb128 0x3c
+ 2431 0173 19       		.uleb128 0x19
+ 2432 0174 00       		.byte	0
+ 2433 0175 00       		.byte	0
+ 2434 0176 1C       		.uleb128 0x1c
+ 2435 0177 35       		.uleb128 0x35
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 51
+
+
+ 2436 0178 00       		.byte	0
+ 2437 0179 49       		.uleb128 0x49
+ 2438 017a 13       		.uleb128 0x13
+ 2439 017b 00       		.byte	0
+ 2440 017c 00       		.byte	0
+ 2441 017d 1D       		.uleb128 0x1d
+ 2442 017e 34       		.uleb128 0x34
+ 2443 017f 00       		.byte	0
+ 2444 0180 03       		.uleb128 0x3
+ 2445 0181 0E       		.uleb128 0xe
+ 2446 0182 3A       		.uleb128 0x3a
+ 2447 0183 0B       		.uleb128 0xb
+ 2448 0184 3B       		.uleb128 0x3b
+ 2449 0185 0B       		.uleb128 0xb
+ 2450 0186 49       		.uleb128 0x49
+ 2451 0187 13       		.uleb128 0x13
+ 2452 0188 3F       		.uleb128 0x3f
+ 2453 0189 19       		.uleb128 0x19
+ 2454 018a 02       		.uleb128 0x2
+ 2455 018b 18       		.uleb128 0x18
+ 2456 018c 00       		.byte	0
+ 2457 018d 00       		.byte	0
+ 2458 018e 1E       		.uleb128 0x1e
+ 2459 018f 2E       		.uleb128 0x2e
+ 2460 0190 00       		.byte	0
+ 2461 0191 3F       		.uleb128 0x3f
+ 2462 0192 19       		.uleb128 0x19
+ 2463 0193 3C       		.uleb128 0x3c
+ 2464 0194 19       		.uleb128 0x19
+ 2465 0195 6E       		.uleb128 0x6e
+ 2466 0196 0E       		.uleb128 0xe
+ 2467 0197 03       		.uleb128 0x3
+ 2468 0198 0E       		.uleb128 0xe
+ 2469 0199 3A       		.uleb128 0x3a
+ 2470 019a 0B       		.uleb128 0xb
+ 2471 019b 3B       		.uleb128 0x3b
+ 2472 019c 0B       		.uleb128 0xb
+ 2473 019d 00       		.byte	0
+ 2474 019e 00       		.byte	0
+ 2475 019f 00       		.byte	0
+ 2476              		.section	.debug_loc,"",%progbits
+ 2477              	.Ldebug_loc0:
+ 2478              	.LLST0:
+ 2479 0000 00000000 		.4byte	.LVL0
+ 2480 0004 0A000000 		.4byte	.LVL1
+ 2481 0008 0100     		.2byte	0x1
+ 2482 000a 50       		.byte	0x50
+ 2483 000b 0A000000 		.4byte	.LVL1
+ 2484 000f 14000000 		.4byte	.LFE83
+ 2485 0013 0400     		.2byte	0x4
+ 2486 0015 F3       		.byte	0xf3
+ 2487 0016 01       		.uleb128 0x1
+ 2488 0017 50       		.byte	0x50
+ 2489 0018 9F       		.byte	0x9f
+ 2490 0019 00000000 		.4byte	0
+ 2491 001d 00000000 		.4byte	0
+ 2492              	.LLST1:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 52
+
+
+ 2493 0021 00000000 		.4byte	.LVL5
+ 2494 0025 07000000 		.4byte	.LVL6-1
+ 2495 0029 0100     		.2byte	0x1
+ 2496 002b 50       		.byte	0x50
+ 2497 002c 07000000 		.4byte	.LVL6-1
+ 2498 0030 0A000000 		.4byte	.LVL7
+ 2499 0034 0400     		.2byte	0x4
+ 2500 0036 F3       		.byte	0xf3
+ 2501 0037 01       		.uleb128 0x1
+ 2502 0038 50       		.byte	0x50
+ 2503 0039 9F       		.byte	0x9f
+ 2504 003a 0A000000 		.4byte	.LVL7
+ 2505 003e 0D000000 		.4byte	.LVL8-1
+ 2506 0042 0100     		.2byte	0x1
+ 2507 0044 50       		.byte	0x50
+ 2508 0045 0D000000 		.4byte	.LVL8-1
+ 2509 0049 10000000 		.4byte	.LFE87
+ 2510 004d 0400     		.2byte	0x4
+ 2511 004f F3       		.byte	0xf3
+ 2512 0050 01       		.uleb128 0x1
+ 2513 0051 50       		.byte	0x50
+ 2514 0052 9F       		.byte	0x9f
+ 2515 0053 00000000 		.4byte	0
+ 2516 0057 00000000 		.4byte	0
+ 2517              	.LLST2:
+ 2518 005b 00000000 		.4byte	.LVL9
+ 2519 005f 08000000 		.4byte	.LVL10
+ 2520 0063 0100     		.2byte	0x1
+ 2521 0065 50       		.byte	0x50
+ 2522 0066 08000000 		.4byte	.LVL10
+ 2523 006a 22000000 		.4byte	.LFE89
+ 2524 006e 0400     		.2byte	0x4
+ 2525 0070 F3       		.byte	0xf3
+ 2526 0071 01       		.uleb128 0x1
+ 2527 0072 50       		.byte	0x50
+ 2528 0073 9F       		.byte	0x9f
+ 2529 0074 00000000 		.4byte	0
+ 2530 0078 00000000 		.4byte	0
+ 2531              	.LLST3:
+ 2532 007c 00000000 		.4byte	.LVL15
+ 2533 0080 07000000 		.4byte	.LVL16-1
+ 2534 0084 0100     		.2byte	0x1
+ 2535 0086 50       		.byte	0x50
+ 2536 0087 07000000 		.4byte	.LVL16-1
+ 2537 008b 10000000 		.4byte	.LFE91
+ 2538 008f 0400     		.2byte	0x4
+ 2539 0091 F3       		.byte	0xf3
+ 2540 0092 01       		.uleb128 0x1
+ 2541 0093 50       		.byte	0x50
+ 2542 0094 9F       		.byte	0x9f
+ 2543 0095 00000000 		.4byte	0
+ 2544 0099 00000000 		.4byte	0
+ 2545              	.LLST4:
+ 2546 009d 00000000 		.4byte	.LVL18
+ 2547 00a1 10000000 		.4byte	.LVL21
+ 2548 00a5 0100     		.2byte	0x1
+ 2549 00a7 50       		.byte	0x50
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 53
+
+
+ 2550 00a8 10000000 		.4byte	.LVL21
+ 2551 00ac 1E000000 		.4byte	.LFE90
+ 2552 00b0 0400     		.2byte	0x4
+ 2553 00b2 F3       		.byte	0xf3
+ 2554 00b3 01       		.uleb128 0x1
+ 2555 00b4 50       		.byte	0x50
+ 2556 00b5 9F       		.byte	0x9f
+ 2557 00b6 00000000 		.4byte	0
+ 2558 00ba 00000000 		.4byte	0
+ 2559              	.LLST5:
+ 2560 00be 00000000 		.4byte	.LVL18
+ 2561 00c2 13000000 		.4byte	.LVL22-1
+ 2562 00c6 0100     		.2byte	0x1
+ 2563 00c8 51       		.byte	0x51
+ 2564 00c9 13000000 		.4byte	.LVL22-1
+ 2565 00cd 1E000000 		.4byte	.LFE90
+ 2566 00d1 0400     		.2byte	0x4
+ 2567 00d3 F3       		.byte	0xf3
+ 2568 00d4 01       		.uleb128 0x1
+ 2569 00d5 51       		.byte	0x51
+ 2570 00d6 9F       		.byte	0x9f
+ 2571 00d7 00000000 		.4byte	0
+ 2572 00db 00000000 		.4byte	0
+ 2573              	.LLST6:
+ 2574 00df 08000000 		.4byte	.LVL19
+ 2575 00e3 13000000 		.4byte	.LVL22-1
+ 2576 00e7 0100     		.2byte	0x1
+ 2577 00e9 53       		.byte	0x53
+ 2578 00ea 00000000 		.4byte	0
+ 2579 00ee 00000000 		.4byte	0
+ 2580              	.LLST7:
+ 2581 00f2 00000000 		.4byte	.LVL24
+ 2582 00f6 07000000 		.4byte	.LVL25-1
+ 2583 00fa 0100     		.2byte	0x1
+ 2584 00fc 50       		.byte	0x50
+ 2585 00fd 07000000 		.4byte	.LVL25-1
+ 2586 0101 0A000000 		.4byte	.LFE84
+ 2587 0105 0400     		.2byte	0x4
+ 2588 0107 F3       		.byte	0xf3
+ 2589 0108 01       		.uleb128 0x1
+ 2590 0109 50       		.byte	0x50
+ 2591 010a 9F       		.byte	0x9f
+ 2592 010b 00000000 		.4byte	0
+ 2593 010f 00000000 		.4byte	0
+ 2594              	.LLST8:
+ 2595 0113 00000000 		.4byte	.LVL26
+ 2596 0117 08000000 		.4byte	.LVL28
+ 2597 011b 0100     		.2byte	0x1
+ 2598 011d 50       		.byte	0x50
+ 2599 011e 08000000 		.4byte	.LVL28
+ 2600 0122 16000000 		.4byte	.LFE86
+ 2601 0126 0100     		.2byte	0x1
+ 2602 0128 55       		.byte	0x55
+ 2603 0129 00000000 		.4byte	0
+ 2604 012d 00000000 		.4byte	0
+ 2605              	.LLST9:
+ 2606 0131 04000000 		.4byte	.LVL27
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 54
+
+
+ 2607 0135 08000000 		.4byte	.LVL28
+ 2608 0139 0200     		.2byte	0x2
+ 2609 013b 30       		.byte	0x30
+ 2610 013c 9F       		.byte	0x9f
+ 2611 013d 08000000 		.4byte	.LVL28
+ 2612 0141 16000000 		.4byte	.LFE86
+ 2613 0145 0100     		.2byte	0x1
+ 2614 0147 54       		.byte	0x54
+ 2615 0148 00000000 		.4byte	0
+ 2616 014c 00000000 		.4byte	0
+ 2617              	.LLST10:
+ 2618 0150 00000000 		.4byte	.LVL31
+ 2619 0154 07000000 		.4byte	.LVL32-1
+ 2620 0158 0100     		.2byte	0x1
+ 2621 015a 50       		.byte	0x50
+ 2622 015b 07000000 		.4byte	.LVL32-1
+ 2623 015f 0A000000 		.4byte	.LFE85
+ 2624 0163 0400     		.2byte	0x4
+ 2625 0165 F3       		.byte	0xf3
+ 2626 0166 01       		.uleb128 0x1
+ 2627 0167 50       		.byte	0x50
+ 2628 0168 9F       		.byte	0x9f
+ 2629 0169 00000000 		.4byte	0
+ 2630 016d 00000000 		.4byte	0
+ 2631              	.LLST11:
+ 2632 0171 00000000 		.4byte	.LVL37
+ 2633 0175 0A000000 		.4byte	.LVL38
+ 2634 0179 0100     		.2byte	0x1
+ 2635 017b 50       		.byte	0x50
+ 2636 017c 0A000000 		.4byte	.LVL38
+ 2637 0180 3C000000 		.4byte	.LFE67
+ 2638 0184 0400     		.2byte	0x4
+ 2639 0186 F3       		.byte	0xf3
+ 2640 0187 01       		.uleb128 0x1
+ 2641 0188 50       		.byte	0x50
+ 2642 0189 9F       		.byte	0x9f
+ 2643 018a 00000000 		.4byte	0
+ 2644 018e 00000000 		.4byte	0
+ 2645              	.LLST12:
+ 2646 0192 00000000 		.4byte	.LVL37
+ 2647 0196 16000000 		.4byte	.LVL39
+ 2648 019a 0100     		.2byte	0x1
+ 2649 019c 51       		.byte	0x51
+ 2650 019d 16000000 		.4byte	.LVL39
+ 2651 01a1 18000000 		.4byte	.LVL40
+ 2652 01a5 0400     		.2byte	0x4
+ 2653 01a7 F3       		.byte	0xf3
+ 2654 01a8 01       		.uleb128 0x1
+ 2655 01a9 51       		.byte	0x51
+ 2656 01aa 9F       		.byte	0x9f
+ 2657 01ab 18000000 		.4byte	.LVL40
+ 2658 01af 1C000000 		.4byte	.LVL41
+ 2659 01b3 0100     		.2byte	0x1
+ 2660 01b5 51       		.byte	0x51
+ 2661 01b6 00000000 		.4byte	0
+ 2662 01ba 00000000 		.4byte	0
+ 2663              	.LLST13:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 55
+
+
+ 2664 01be 00000000 		.4byte	.LVL55
+ 2665 01c2 08000000 		.4byte	.LVL56
+ 2666 01c6 0100     		.2byte	0x1
+ 2667 01c8 50       		.byte	0x50
+ 2668 01c9 08000000 		.4byte	.LVL56
+ 2669 01cd 0A000000 		.4byte	.LVL57
+ 2670 01d1 0100     		.2byte	0x1
+ 2671 01d3 50       		.byte	0x50
+ 2672 01d4 00000000 		.4byte	0
+ 2673 01d8 00000000 		.4byte	0
+ 2674              	.LLST14:
+ 2675 01dc 00000000 		.4byte	.LVL55
+ 2676 01e0 11000000 		.4byte	.LVL58-1
+ 2677 01e4 0100     		.2byte	0x1
+ 2678 01e6 51       		.byte	0x51
+ 2679 01e7 11000000 		.4byte	.LVL58-1
+ 2680 01eb 24000000 		.4byte	.LFE80
+ 2681 01ef 0100     		.2byte	0x1
+ 2682 01f1 55       		.byte	0x55
+ 2683 01f2 00000000 		.4byte	0
+ 2684 01f6 00000000 		.4byte	0
+ 2685              	.LLST15:
+ 2686 01fa 12000000 		.4byte	.LVL58
+ 2687 01fe 16000000 		.4byte	.LVL59
+ 2688 0202 0200     		.2byte	0x2
+ 2689 0204 30       		.byte	0x30
+ 2690 0205 9F       		.byte	0x9f
+ 2691 0206 16000000 		.4byte	.LVL59
+ 2692 020a 24000000 		.4byte	.LFE80
+ 2693 020e 0100     		.2byte	0x1
+ 2694 0210 54       		.byte	0x54
+ 2695 0211 00000000 		.4byte	0
+ 2696 0215 00000000 		.4byte	0
+ 2697              	.LLST16:
+ 2698 0219 00000000 		.4byte	.LVL62
+ 2699 021d 05000000 		.4byte	.LVL63-1
+ 2700 0221 0100     		.2byte	0x1
+ 2701 0223 50       		.byte	0x50
+ 2702 0224 05000000 		.4byte	.LVL63-1
+ 2703 0228 08000000 		.4byte	.LFE88
+ 2704 022c 0400     		.2byte	0x4
+ 2705 022e F3       		.byte	0xf3
+ 2706 022f 01       		.uleb128 0x1
+ 2707 0230 50       		.byte	0x50
+ 2708 0231 9F       		.byte	0x9f
+ 2709 0232 00000000 		.4byte	0
+ 2710 0236 00000000 		.4byte	0
+ 2711              	.LLST17:
+ 2712 023a 00000000 		.4byte	.LVL62
+ 2713 023e 05000000 		.4byte	.LVL63-1
+ 2714 0242 0100     		.2byte	0x1
+ 2715 0244 51       		.byte	0x51
+ 2716 0245 05000000 		.4byte	.LVL63-1
+ 2717 0249 08000000 		.4byte	.LFE88
+ 2718 024d 0400     		.2byte	0x4
+ 2719 024f F3       		.byte	0xf3
+ 2720 0250 01       		.uleb128 0x1
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 56
+
+
+ 2721 0251 51       		.byte	0x51
+ 2722 0252 9F       		.byte	0x9f
+ 2723 0253 00000000 		.4byte	0
+ 2724 0257 00000000 		.4byte	0
+ 2725              		.section	.debug_aranges,"",%progbits
+ 2726 0000 FC000000 		.4byte	0xfc
+ 2727 0004 0200     		.2byte	0x2
+ 2728 0006 00000000 		.4byte	.Ldebug_info0
+ 2729 000a 04       		.byte	0x4
+ 2730 000b 00       		.byte	0
+ 2731 000c 0000     		.2byte	0
+ 2732 000e 0000     		.2byte	0
+ 2733 0010 00000000 		.4byte	.LFB83
+ 2734 0014 14000000 		.4byte	.LFE83-.LFB83
+ 2735 0018 00000000 		.4byte	.LFB81
+ 2736 001c 14000000 		.4byte	.LFE81-.LFB81
+ 2737 0020 00000000 		.4byte	.LFB82
+ 2738 0024 14000000 		.4byte	.LFE82-.LFB82
+ 2739 0028 00000000 		.4byte	.LFB87
+ 2740 002c 10000000 		.4byte	.LFE87-.LFB87
+ 2741 0030 00000000 		.4byte	.LFB89
+ 2742 0034 22000000 		.4byte	.LFE89-.LFB89
+ 2743 0038 00000000 		.4byte	.LFB91
+ 2744 003c 10000000 		.4byte	.LFE91-.LFB91
+ 2745 0040 00000000 		.4byte	.LFB90
+ 2746 0044 1E000000 		.4byte	.LFE90-.LFB90
+ 2747 0048 00000000 		.4byte	.LFB84
+ 2748 004c 0A000000 		.4byte	.LFE84-.LFB84
+ 2749 0050 00000000 		.4byte	.LFB86
+ 2750 0054 16000000 		.4byte	.LFE86-.LFB86
+ 2751 0058 00000000 		.4byte	.LFB85
+ 2752 005c 0A000000 		.4byte	.LFE85-.LFB85
+ 2753 0060 00000000 		.4byte	.LFB65
+ 2754 0064 10000000 		.4byte	.LFE65-.LFB65
+ 2755 0068 00000000 		.4byte	.LFB66
+ 2756 006c 10000000 		.4byte	.LFE66-.LFB66
+ 2757 0070 00000000 		.4byte	.LFB67
+ 2758 0074 3C000000 		.4byte	.LFE67-.LFB67
+ 2759 0078 00000000 		.4byte	.LFB68
+ 2760 007c 1C000000 		.4byte	.LFE68-.LFB68
+ 2761 0080 00000000 		.4byte	.LFB69
+ 2762 0084 1C000000 		.4byte	.LFE69-.LFB69
+ 2763 0088 00000000 		.4byte	.LFB70
+ 2764 008c 1C000000 		.4byte	.LFE70-.LFB70
+ 2765 0090 00000000 		.4byte	.LFB71
+ 2766 0094 1C000000 		.4byte	.LFE71-.LFB71
+ 2767 0098 00000000 		.4byte	.LFB72
+ 2768 009c 1C000000 		.4byte	.LFE72-.LFB72
+ 2769 00a0 00000000 		.4byte	.LFB73
+ 2770 00a4 1C000000 		.4byte	.LFE73-.LFB73
+ 2771 00a8 00000000 		.4byte	.LFB74
+ 2772 00ac 0A000000 		.4byte	.LFE74-.LFB74
+ 2773 00b0 00000000 		.4byte	.LFB75
+ 2774 00b4 0A000000 		.4byte	.LFE75-.LFB75
+ 2775 00b8 00000000 		.4byte	.LFB76
+ 2776 00bc 1C000000 		.4byte	.LFE76-.LFB76
+ 2777 00c0 00000000 		.4byte	.LFB77
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 57
+
+
+ 2778 00c4 1C000000 		.4byte	.LFE77-.LFB77
+ 2779 00c8 00000000 		.4byte	.LFB78
+ 2780 00cc 1C000000 		.4byte	.LFE78-.LFB78
+ 2781 00d0 00000000 		.4byte	.LFB79
+ 2782 00d4 1C000000 		.4byte	.LFE79-.LFB79
+ 2783 00d8 00000000 		.4byte	.LFB80
+ 2784 00dc 24000000 		.4byte	.LFE80-.LFB80
+ 2785 00e0 00000000 		.4byte	.LFB88
+ 2786 00e4 08000000 		.4byte	.LFE88-.LFB88
+ 2787 00e8 00000000 		.4byte	.LFB64
+ 2788 00ec 6C000000 		.4byte	.LFE64-.LFB64
+ 2789 00f0 00000000 		.4byte	.LFB63
+ 2790 00f4 2C000000 		.4byte	.LFE63-.LFB63
+ 2791 00f8 00000000 		.4byte	0
+ 2792 00fc 00000000 		.4byte	0
+ 2793              		.section	.debug_ranges,"",%progbits
+ 2794              	.Ldebug_ranges0:
+ 2795 0000 00000000 		.4byte	.LFB83
+ 2796 0004 14000000 		.4byte	.LFE83
+ 2797 0008 00000000 		.4byte	.LFB81
+ 2798 000c 14000000 		.4byte	.LFE81
+ 2799 0010 00000000 		.4byte	.LFB82
+ 2800 0014 14000000 		.4byte	.LFE82
+ 2801 0018 00000000 		.4byte	.LFB87
+ 2802 001c 10000000 		.4byte	.LFE87
+ 2803 0020 00000000 		.4byte	.LFB89
+ 2804 0024 22000000 		.4byte	.LFE89
+ 2805 0028 00000000 		.4byte	.LFB91
+ 2806 002c 10000000 		.4byte	.LFE91
+ 2807 0030 00000000 		.4byte	.LFB90
+ 2808 0034 1E000000 		.4byte	.LFE90
+ 2809 0038 00000000 		.4byte	.LFB84
+ 2810 003c 0A000000 		.4byte	.LFE84
+ 2811 0040 00000000 		.4byte	.LFB86
+ 2812 0044 16000000 		.4byte	.LFE86
+ 2813 0048 00000000 		.4byte	.LFB85
+ 2814 004c 0A000000 		.4byte	.LFE85
+ 2815 0050 00000000 		.4byte	.LFB65
+ 2816 0054 10000000 		.4byte	.LFE65
+ 2817 0058 00000000 		.4byte	.LFB66
+ 2818 005c 10000000 		.4byte	.LFE66
+ 2819 0060 00000000 		.4byte	.LFB67
+ 2820 0064 3C000000 		.4byte	.LFE67
+ 2821 0068 00000000 		.4byte	.LFB68
+ 2822 006c 1C000000 		.4byte	.LFE68
+ 2823 0070 00000000 		.4byte	.LFB69
+ 2824 0074 1C000000 		.4byte	.LFE69
+ 2825 0078 00000000 		.4byte	.LFB70
+ 2826 007c 1C000000 		.4byte	.LFE70
+ 2827 0080 00000000 		.4byte	.LFB71
+ 2828 0084 1C000000 		.4byte	.LFE71
+ 2829 0088 00000000 		.4byte	.LFB72
+ 2830 008c 1C000000 		.4byte	.LFE72
+ 2831 0090 00000000 		.4byte	.LFB73
+ 2832 0094 1C000000 		.4byte	.LFE73
+ 2833 0098 00000000 		.4byte	.LFB74
+ 2834 009c 0A000000 		.4byte	.LFE74
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 58
+
+
+ 2835 00a0 00000000 		.4byte	.LFB75
+ 2836 00a4 0A000000 		.4byte	.LFE75
+ 2837 00a8 00000000 		.4byte	.LFB76
+ 2838 00ac 1C000000 		.4byte	.LFE76
+ 2839 00b0 00000000 		.4byte	.LFB77
+ 2840 00b4 1C000000 		.4byte	.LFE77
+ 2841 00b8 00000000 		.4byte	.LFB78
+ 2842 00bc 1C000000 		.4byte	.LFE78
+ 2843 00c0 00000000 		.4byte	.LFB79
+ 2844 00c4 1C000000 		.4byte	.LFE79
+ 2845 00c8 00000000 		.4byte	.LFB80
+ 2846 00cc 24000000 		.4byte	.LFE80
+ 2847 00d0 00000000 		.4byte	.LFB88
+ 2848 00d4 08000000 		.4byte	.LFE88
+ 2849 00d8 00000000 		.4byte	.LFB64
+ 2850 00dc 6C000000 		.4byte	.LFE64
+ 2851 00e0 00000000 		.4byte	.LFB63
+ 2852 00e4 2C000000 		.4byte	.LFE63
+ 2853 00e8 00000000 		.4byte	0
+ 2854 00ec 00000000 		.4byte	0
+ 2855              		.section	.debug_line,"",%progbits
+ 2856              	.Ldebug_line0:
+ 2857 0000 CE030000 		.section	.debug_str,"MS",%progbits,1
+ 2857      02007A01 
+ 2857      00000201 
+ 2857      FB0E0D00 
+ 2857      01010101 
+ 2858              	.LASF44:
+ 2859 0000 776F7264 		.ascii	"word\000"
+ 2859      00
+ 2860              	.LASF15:
+ 2861 0005 666C6F61 		.ascii	"float\000"
+ 2861      7400
+ 2862              	.LASF76:
+ 2863 000b 47656E65 		.ascii	"Generated_Source\\PSoC5\\LCD_I2C_FUNCS.c\000"
+ 2863      72617465 
+ 2863      645F536F 
+ 2863      75726365 
+ 2863      5C50536F 
+ 2864              	.LASF37:
+ 2865 0032 4C43445F 		.ascii	"LCD_I2C_send\000"
+ 2865      4932435F 
+ 2865      73656E64 
+ 2865      00
+ 2866              	.LASF2:
+ 2867 003f 73686F72 		.ascii	"short int\000"
+ 2867      7420696E 
+ 2867      7400
+ 2868              	.LASF25:
+ 2869 0049 726F7773 		.ascii	"rows\000"
+ 2869      00
+ 2870              	.LASF19:
+ 2871 004e 73697A65 		.ascii	"sizetype\000"
+ 2871      74797065 
+ 2871      00
+ 2872              	.LASF59:
+ 2873 0057 4C43445F 		.ascii	"LCD_I2C_leftToRight\000"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 59
+
+
+ 2873      4932435F 
+ 2873      6C656674 
+ 2873      546F5269 
+ 2873      67687400 
+ 2874              	.LASF26:
+ 2875 006b 63686172 		.ascii	"charsize\000"
+ 2875      73697A65 
+ 2875      00
+ 2876              	.LASF58:
+ 2877 0074 4C43445F 		.ascii	"LCD_I2C_scrollDisplayRight\000"
+ 2877      4932435F 
+ 2877      7363726F 
+ 2877      6C6C4469 
+ 2877      73706C61 
+ 2878              	.LASF63:
+ 2879 008f 4C43445F 		.ascii	"LCD_I2C_createChar\000"
+ 2879      4932435F 
+ 2879      63726561 
+ 2879      74654368 
+ 2879      617200
+ 2880              	.LASF23:
+ 2881 00a2 64697370 		.ascii	"displaymode\000"
+ 2881      6C61796D 
+ 2881      6F646500 
+ 2882              	.LASF18:
+ 2883 00ae 6C6F6E67 		.ascii	"long double\000"
+ 2883      20646F75 
+ 2883      626C6500 
+ 2884              	.LASF7:
+ 2885 00ba 5F5F7569 		.ascii	"__uint32_t\000"
+ 2885      6E743332 
+ 2885      5F7400
+ 2886              	.LASF39:
+ 2887 00c5 6D6F6465 		.ascii	"mode\000"
+ 2887      00
+ 2888              	.LASF47:
+ 2889 00ca 4C43445F 		.ascii	"LCD_I2C_clear\000"
+ 2889      4932435F 
+ 2889      636C6561 
+ 2889      7200
+ 2890              	.LASF38:
+ 2891 00d8 76616C75 		.ascii	"value\000"
+ 2891      6500
+ 2892              	.LASF12:
+ 2893 00de 75696E74 		.ascii	"uint8_t\000"
+ 2893      385F7400 
+ 2894              	.LASF61:
+ 2895 00e6 4C43445F 		.ascii	"LCD_I2C_autoscroll\000"
+ 2895      4932435F 
+ 2895      6175746F 
+ 2895      7363726F 
+ 2895      6C6C00
+ 2896              	.LASF42:
+ 2897 00f9 4C43445F 		.ascii	"LCD_I2C_write\000"
+ 2897      4932435F 
+ 2897      77726974 
+ 2897      6500
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 60
+
+
+ 2898              	.LASF43:
+ 2899 0107 4C43445F 		.ascii	"LCD_I2C_print\000"
+ 2899      4932435F 
+ 2899      7072696E 
+ 2899      7400
+ 2900              	.LASF9:
+ 2901 0115 6C6F6E67 		.ascii	"long long int\000"
+ 2901      206C6F6E 
+ 2901      6720696E 
+ 2901      7400
+ 2902              	.LASF54:
+ 2903 0123 4C43445F 		.ascii	"LCD_I2C_cursor\000"
+ 2903      4932435F 
+ 2903      63757273 
+ 2903      6F7200
+ 2904              	.LASF6:
+ 2905 0132 6C6F6E67 		.ascii	"long int\000"
+ 2905      20696E74 
+ 2905      00
+ 2906              	.LASF20:
+ 2907 013b 61646472 		.ascii	"addr\000"
+ 2907      00
+ 2908              	.LASF57:
+ 2909 0140 4C43445F 		.ascii	"LCD_I2C_scrollDisplayLeft\000"
+ 2909      4932435F 
+ 2909      7363726F 
+ 2909      6C6C4469 
+ 2909      73706C61 
+ 2910              	.LASF51:
+ 2911 015a 4C43445F 		.ascii	"LCD_I2C_noDisplay\000"
+ 2911      4932435F 
+ 2911      6E6F4469 
+ 2911      73706C61 
+ 2911      7900
+ 2912              	.LASF48:
+ 2913 016c 4C43445F 		.ascii	"LCD_I2C_home\000"
+ 2913      4932435F 
+ 2913      686F6D65 
+ 2913      00
+ 2914              	.LASF60:
+ 2915 0179 4C43445F 		.ascii	"LCD_I2C_rightToLeft\000"
+ 2915      4932435F 
+ 2915      72696768 
+ 2915      74546F4C 
+ 2915      65667400 
+ 2916              	.LASF27:
+ 2917 018d 6261636B 		.ascii	"backlightval\000"
+ 2917      6C696768 
+ 2917      7476616C 
+ 2917      00
+ 2918              	.LASF50:
+ 2919 019a 726F775F 		.ascii	"row_offsets\000"
+ 2919      6F666673 
+ 2919      65747300 
+ 2920              	.LASF40:
+ 2921 01a6 68696768 		.ascii	"highnib\000"
+ 2921      6E696200 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 61
+
+
+ 2922              	.LASF73:
+ 2923 01ae 43794465 		.ascii	"CyDelayUs\000"
+ 2923      6C617955 
+ 2923      7300
+ 2924              	.LASF1:
+ 2925 01b8 756E7369 		.ascii	"unsigned char\000"
+ 2925      676E6564 
+ 2925      20636861 
+ 2925      7200
+ 2926              	.LASF67:
+ 2927 01c6 63686172 		.ascii	"char_num\000"
+ 2927      5F6E756D 
+ 2927      00
+ 2928              	.LASF62:
+ 2929 01cf 4C43445F 		.ascii	"LCD_I2C_noAutoscroll\000"
+ 2929      4932435F 
+ 2929      6E6F4175 
+ 2929      746F7363 
+ 2929      726F6C6C 
+ 2930              	.LASF31:
+ 2931 01e4 4C43445F 		.ascii	"LCD_I2C_setBacklight\000"
+ 2931      4932435F 
+ 2931      73657442 
+ 2931      61636B6C 
+ 2931      69676874 
+ 2932              	.LASF0:
+ 2933 01f9 7369676E 		.ascii	"signed char\000"
+ 2933      65642063 
+ 2933      68617200 
+ 2934              	.LASF13:
+ 2935 0205 696E7433 		.ascii	"int32_t\000"
+ 2935      325F7400 
+ 2936              	.LASF10:
+ 2937 020d 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2937      206C6F6E 
+ 2937      6720756E 
+ 2937      7369676E 
+ 2937      65642069 
+ 2938              	.LASF41:
+ 2939 0224 6C6F776E 		.ascii	"lownib\000"
+ 2939      696200
+ 2940              	.LASF14:
+ 2941 022b 75696E74 		.ascii	"uint32_t\000"
+ 2941      33325F74 
+ 2941      00
+ 2942              	.LASF11:
+ 2943 0234 756E7369 		.ascii	"unsigned int\000"
+ 2943      676E6564 
+ 2943      20696E74 
+ 2943      00
+ 2944              	.LASF22:
+ 2945 0241 64697370 		.ascii	"displaycontrol\000"
+ 2945      6C617963 
+ 2945      6F6E7472 
+ 2945      6F6C00
+ 2946              	.LASF49:
+ 2947 0250 4C43445F 		.ascii	"LCD_I2C_setCursor\000"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 62
+
+
+ 2947      4932435F 
+ 2947      73657443 
+ 2947      7572736F 
+ 2947      7200
+ 2948              	.LASF55:
+ 2949 0262 4C43445F 		.ascii	"LCD_I2C_noBlink\000"
+ 2949      4932435F 
+ 2949      6E6F426C 
+ 2949      696E6B00 
+ 2950              	.LASF3:
+ 2951 0272 73686F72 		.ascii	"short unsigned int\000"
+ 2951      7420756E 
+ 2951      7369676E 
+ 2951      65642069 
+ 2951      6E7400
+ 2952              	.LASF30:
+ 2953 0285 4C43445F 		.ascii	"LCD_I2C_backlight\000"
+ 2953      4932435F 
+ 2953      6261636B 
+ 2953      6C696768 
+ 2953      7400
+ 2954              	.LASF17:
+ 2955 0297 63686172 		.ascii	"char\000"
+ 2955      00
+ 2956              	.LASF77:
+ 2957 029c 453A5C53 		.ascii	"E:\\SP21\\ECE405\\BioLock\\BioLock.cydsn\000"
+ 2957      5032315C 
+ 2957      45434534 
+ 2957      30355C42 
+ 2957      696F4C6F 
+ 2958              	.LASF71:
+ 2959 02c1 4C43445F 		.ascii	"LCD_I2C_config\000"
+ 2959      4932435F 
+ 2959      636F6E66 
+ 2959      696700
+ 2960              	.LASF52:
+ 2961 02d0 4C43445F 		.ascii	"LCD_I2C_display\000"
+ 2961      4932435F 
+ 2961      64697370 
+ 2961      6C617900 
+ 2962              	.LASF34:
+ 2963 02e0 5F426F6F 		.ascii	"_Bool\000"
+ 2963      6C00
+ 2964              	.LASF32:
+ 2965 02e6 64617461 		.ascii	"data\000"
+ 2965      00
+ 2966              	.LASF8:
+ 2967 02eb 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2967      20756E73 
+ 2967      69676E65 
+ 2967      6420696E 
+ 2967      7400
+ 2968              	.LASF36:
+ 2969 02fd 4C43445F 		.ascii	"LCD_I2C_write4bits\000"
+ 2969      4932435F 
+ 2969      77726974 
+ 2969      65346269 
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 63
+
+
+ 2969      747300
+ 2970              	.LASF24:
+ 2971 0310 636F6C73 		.ascii	"cols\000"
+ 2971      00
+ 2972              	.LASF65:
+ 2973 0315 63686172 		.ascii	"charmap\000"
+ 2973      6D617000 
+ 2974              	.LASF56:
+ 2975 031d 4C43445F 		.ascii	"LCD_I2C_blink\000"
+ 2975      4932435F 
+ 2975      626C696E 
+ 2975      6B00
+ 2976              	.LASF5:
+ 2977 032b 5F5F696E 		.ascii	"__int32_t\000"
+ 2977      7433325F 
+ 2977      7400
+ 2978              	.LASF64:
+ 2979 0335 6C6F6361 		.ascii	"location\000"
+ 2979      74696F6E 
+ 2979      00
+ 2980              	.LASF21:
+ 2981 033e 64697370 		.ascii	"displayfunction\000"
+ 2981      6C617966 
+ 2981      756E6374 
+ 2981      696F6E00 
+ 2982              	.LASF33:
+ 2983 034e 6261636B 		.ascii	"backlight\000"
+ 2983      6C696768 
+ 2983      7400
+ 2984              	.LASF45:
+ 2985 0358 4C43445F 		.ascii	"LCD_I2C_command\000"
+ 2985      4932435F 
+ 2985      636F6D6D 
+ 2985      616E6400 
+ 2986              	.LASF28:
+ 2987 0368 4C43445F 		.ascii	"LCD_I2C_expanderWrite\000"
+ 2987      4932435F 
+ 2987      65787061 
+ 2987      6E646572 
+ 2987      57726974 
+ 2988              	.LASF78:
+ 2989 037e 4C43445F 		.ascii	"LCD_I2C_Config\000"
+ 2989      4932435F 
+ 2989      436F6E66 
+ 2989      696700
+ 2990              	.LASF69:
+ 2991 038d 4C43445F 		.ascii	"LCD_I2C_start\000"
+ 2991      4932435F 
+ 2991      73746172 
+ 2991      7400
+ 2992              	.LASF53:
+ 2993 039b 4C43445F 		.ascii	"LCD_I2C_noCursor\000"
+ 2993      4932435F 
+ 2993      6E6F4375 
+ 2993      72736F72 
+ 2993      00
+ 2994              	.LASF29:
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 64
+
+
+ 2995 03ac 4C43445F 		.ascii	"LCD_I2C_noBacklight\000"
+ 2995      4932435F 
+ 2995      6E6F4261 
+ 2995      636B6C69 
+ 2995      67687400 
+ 2996              	.LASF16:
+ 2997 03c0 646F7562 		.ascii	"double\000"
+ 2997      6C6500
+ 2998              	.LASF68:
+ 2999 03c7 4C43445F 		.ascii	"LCD_I2C_begin\000"
+ 2999      4932435F 
+ 2999      62656769 
+ 2999      6E00
+ 3000              	.LASF66:
+ 3001 03d5 4C43445F 		.ascii	"LCD_I2C_loadCustomCharacter\000"
+ 3001      4932435F 
+ 3001      6C6F6164 
+ 3001      43757374 
+ 3001      6F6D4368 
+ 3002              	.LASF72:
+ 3003 03f1 4C43445F 		.ascii	"LCD_I2C_writeByte\000"
+ 3003      4932435F 
+ 3003      77726974 
+ 3003      65427974 
+ 3003      6500
+ 3004              	.LASF70:
+ 3005 0403 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 3005      52784275 
+ 3005      66666572 
+ 3005      00
+ 3006              	.LASF75:
+ 3007 0410 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 3007      43313120 
+ 3007      352E342E 
+ 3007      31203230 
+ 3007      31363036 
+ 3008 0443 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 3008      20726576 
+ 3008      6973696F 
+ 3008      6E203233 
+ 3008      37373135 
+ 3009 0476 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 3009      66756E63 
+ 3009      74696F6E 
+ 3009      2D736563 
+ 3009      74696F6E 
+ 3010              	.LASF35:
+ 3011 049e 4C43445F 		.ascii	"LCD_I2C_pulseEnable\000"
+ 3011      4932435F 
+ 3011      70756C73 
+ 3011      65456E61 
+ 3011      626C6500 
+ 3012              	.LASF74:
+ 3013 04b2 43794465 		.ascii	"CyDelay\000"
+ 3013      6C617900 
+ 3014              	.LASF46:
+ 3015 04ba 636F6D6D 		.ascii	"command\000"
+ARM GAS  C:\Users\chascha\AppData\Local\Temp\ccnwC6aB.s 			page 65
+
+
+ 3015      616E6400 
+ 3016              	.LASF4:
+ 3017 04c2 5F5F7569 		.ascii	"__uint8_t\000"
+ 3017      6E74385F 
+ 3017      7400
+ 3018              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
